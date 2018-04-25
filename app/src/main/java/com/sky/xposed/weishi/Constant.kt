@@ -16,13 +16,30 @@
 
 package com.sky.xposed.weishi
 
-import android.support.v7.app.AppCompatActivity
-import android.os.Bundle
+object Constant {
 
-class MainActivity : AppCompatActivity() {
+    object WeiShi {
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
+        val PACKAGE_NAME = "com.tencent.weishi"
+    }
+
+    object Preference {
+
+
+    }
+
+    object Action {
+
+        val REFRESH_PREFERENCE = BuildConfig.APPLICATION_ID + ".ACTION_REFRESH_PREFERENCE"
+    }
+
+    object Key {
+
+        val DATA = "data"
+    }
+
+    object Name {
+
+        val WEI_SHI = "weishi"
     }
 }

@@ -16,13 +16,13 @@
 
 package com.sky.xposed.weishi
 
-import android.support.v7.app.AppCompatActivity
-import android.os.Bundle
+import de.robv.android.xposed.IXposedHookLoadPackage
+import de.robv.android.xposed.callbacks.XC_LoadPackage
 
-class MainActivity : AppCompatActivity() {
+class Main : IXposedHookLoadPackage {
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
+    override fun handleLoadPackage(param: XC_LoadPackage.LoadPackageParam) {
+
+        
     }
 }

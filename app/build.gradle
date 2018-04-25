@@ -1,7 +1,5 @@
 apply plugin: 'com.android.application'
-
 apply plugin: 'kotlin-android'
-
 apply plugin: 'kotlin-android-extensions'
 
 android {
@@ -14,10 +12,44 @@ android {
         versionName "1.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_7
+        targetCompatibility JavaVersion.VERSION_1_7
+    }
+    signingConfigs {
+        sky {
+            storeFile file("${rootDir}/keyStore/sky.jks")
+            storePassword project.storePassword
+            keyAlias project.keyAlias
+            keyPassword project.keyPassword
+        }
+    }
     buildTypes {
         release {
-            minifyEnabled false
+            applicationVariants.all { variant ->
+                variant.outputs.all {
+                    outputFileName = "${project.name}_${variant.flavorName}_v${variant.versionName}.apk"
+                }
+            }
+
+            minifyEnabled true
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            signingConfig signingConfigs.sky
+        }
+        debug {
+            minifyEnabled false
+            signingConfig signingConfigs.sky
+        }
+    }
+
+    flavorDimensions "default"
+
+    productFlavors {
+        all { flavor ->
+            resValue 'string', 'flavor', flavor.name
+        }
+        common {
+            dimension "default"
         }
     }
 }
@@ -30,4 +62,6 @@ dependencies {
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'com.android.support.test:runner:1.0.1'
     androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.1'
+    compileOnly 'de.robv.android.xposed:api:82'
+    compileOnly 'com.rover12421.AndroidHideApi:android:1.4'
 }
