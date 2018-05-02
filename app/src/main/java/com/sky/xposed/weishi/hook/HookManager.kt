@@ -23,8 +23,9 @@ import com.sky.xposed.weishi.Constant
 import com.sky.xposed.weishi.data.CachePreferences
 import com.sky.xposed.weishi.helper.ReceiverHelper
 import de.robv.android.xposed.callbacks.XC_LoadPackage
+import java.util.*
 
-private  class HookManager {
+class HookManager private constructor() {
 
     private lateinit var mContext: Context
     private lateinit var mHandler: Handler
@@ -34,20 +35,24 @@ private  class HookManager {
 
     companion object {
 
-        val HOOK_MANAGER = lazy { HookManager }
+        private val HOOK_MANAGER by lazy { HookManager() }
 
         fun getInstance()= HOOK_MANAGER
     }
 
-    fun initialization(context: Context, param: XC_LoadPackage.LoadPackageParam) {
+    fun initialization(context: Context, param: XC_LoadPackage.LoadPackageParam): HookManager {
 
         mContext = context
         mHandler = AppHandler()
         mLoadPackageParam = param
         mCachePreferences = CachePreferences(context, Constant.Name.WEI_SHI)
+
+        // 注册监听
         mReceiverHelper = ReceiverHelper(context,
                 { action, intent ->  onReceive(action, intent) },
                 Constant.Action.REFRESH_PREFERENCE)
+
+        return this
     }
 
     fun handleLoadPackage() {
@@ -56,10 +61,23 @@ private  class HookManager {
 
     fun release() {
 
+        // 释放监听
+        mReceiverHelper.unregisterReceiver()
     }
 
     private fun onReceive(action: String, intent: Intent) {
 
+        if (Constant.Action.REFRESH_PREFERENCE == action) {
+
+            // 获取刷新的值
+            val data = intent.getSerializableExtra(
+                    Constant.Key.DATA) as ArrayList<Pair<String, Any>>
+
+            for ((first, second) in data) {
+                // 重新设置值
+                mCachePreferences.putAny(first, second)
+            }
+        }
     }
 
     private class AppHandler : Handler()
