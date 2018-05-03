@@ -25,7 +25,26 @@ object Constant {
 
     object Preference {
 
+        /** 自动播放  */
+        val AUTO_PLAY = "auto_play"
 
+        /** 自动关注  */
+        val AUTO_ATTENTION = "auto_attention"
+
+        /** 自动点赞  */
+        val AUTO_LIKE = "auto_like"
+
+        /** 自动评论  */
+        val AUTO_COMMENT = "auto_comment"
+
+        /** 自动评论内容  */
+        val AUTO_COMMENT_MESSAGE = "auto_comment_message"
+
+        /** 自动保存视频  */
+        val AUTO_SAVE_VIDEO = "auto_save_video"
+
+        /** 解除15s视频限制  */
+        val REMOVE_LIMIT = "remove_limit"
     }
 
     object Action {
@@ -41,5 +60,7 @@ object Constant {
     object Name {
 
         val WEI_SHI = "weishi"
+
+        val PLUGIN = "微视助手"
     }
 }

@@ -86,12 +86,20 @@ object ViewUtil {
 
     }
 
+    fun newDefaultBackgroundDrawable(): StateListDrawable {
+        return newBackgroundDrawable(0xFFDFDFDF.toInt(), Color.WHITE)
+    }
+
     fun newBackgroundDrawable(): StateListDrawable {
+        return newBackgroundDrawable(0x66666666, 0x00000000)
+    }
+
+    fun newBackgroundDrawable(pressed: Int, background: Int): StateListDrawable {
 
         val drawable = StateListDrawable()
 
-        drawable.addState(intArrayOf(android.R.attr.state_pressed), ColorDrawable(-0x1a1a1b))
-        drawable.addState(intArrayOf(), ColorDrawable(Color.WHITE))
+        drawable.addState(intArrayOf(android.R.attr.state_pressed), ColorDrawable(pressed))
+        drawable.addState(intArrayOf(), ColorDrawable(background))
 
         return drawable
     }

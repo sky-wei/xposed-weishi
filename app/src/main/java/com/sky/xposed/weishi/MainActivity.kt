@@ -18,11 +18,30 @@ package com.sky.xposed.weishi
 
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
+import android.view.Menu
+import android.view.MenuItem
+import com.sky.xposed.weishi.ui.dialog.SettingsDialog
 
 class MainActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu): Boolean {
+
+        menuInflater.inflate(R.menu.activity_main_menu, menu)
+
+        return true
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+
+        if (R.id.menu_settings == item.itemId) {
+            val dialog = SettingsDialog()
+            dialog.show(fragmentManager, "settings")
+        }
+        return super.onOptionsItemSelected(item)
     }
 }

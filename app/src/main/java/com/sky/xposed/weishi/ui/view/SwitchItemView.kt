@@ -34,7 +34,7 @@ class SwitchItemView : FrameLayout, View.OnClickListener, TrackViewStatus<Boolea
 
     private lateinit var tvName: TextView
     private lateinit var mSwitch: Switch
-    private var onCheckedChangeListener: OnCheckedChangeListener? = null
+    private var onCheckedChangeListener: ((view: View, isChecked: Boolean) -> Unit)? = null
 
     constructor(context: Context?) : this(context, null)
     constructor(context: Context?, attrs: AttributeSet?) : this(context, attrs, 0)
@@ -48,7 +48,7 @@ class SwitchItemView : FrameLayout, View.OnClickListener, TrackViewStatus<Boolea
 
         setPadding(left, 0, left, 0)
 
-        background = ViewUtil.newBackgroundDrawable()
+        background = ViewUtil.newDefaultBackgroundDrawable()
         layoutParams = LayoutUtil.newViewGroupParams(
                 FrameLayout.LayoutParams.MATCH_PARENT, DisplayUtil.dip2px(context, 40f))
 
@@ -89,26 +89,21 @@ class SwitchItemView : FrameLayout, View.OnClickListener, TrackViewStatus<Boolea
     override fun onClick(v: View) {
 
         isChecked = !isChecked
-
-        if (onCheckedChangeListener != null)
-            onCheckedChangeListener!!.onCheckedChanged(this, isChecked)
+        onCheckedChangeListener?.invoke(this, isChecked)
     }
 
     override fun bind(preferences: SharedPreferences,
                       key: String, defValue: Boolean, listener: TrackViewStatus.StatusChangeListener<Boolean>) {
         // 设置状态
         isChecked = preferences.getBoolean(key, defValue)
-        onCheckedChangeListener = object : OnCheckedChangeListener {
-            override fun onCheckedChanged(view: View, isChecked: Boolean) {
-                // 保存状态信息
-                preferences.edit().putBoolean(key, isChecked).apply()
-                listener.onStatusChange(view, key, isChecked)
-            }
+        setOnCheckedChangeListener { view, isChecked ->
+            // 保存状态信息
+            preferences.edit().putBoolean(key, isChecked).apply()
+            listener.onStatusChange(view, key, isChecked)
         }
     }
 
-    interface OnCheckedChangeListener {
-
-        fun onCheckedChanged(view: View, isChecked: Boolean)
+    fun setOnCheckedChangeListener(listener: (view: View, isChecked: Boolean) -> Unit) {
+        onCheckedChangeListener = listener
     }
 }

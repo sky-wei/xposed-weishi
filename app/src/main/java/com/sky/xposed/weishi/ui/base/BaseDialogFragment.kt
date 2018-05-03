@@ -28,7 +28,7 @@ import com.sky.xposed.weishi.ui.interfaces.TrackViewStatus
 
 abstract class BaseDialogFragment : DialogFragment() {
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle): View? {
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         return createView(inflater, container)
     }
 
@@ -56,7 +56,7 @@ abstract class BaseDialogFragment : DialogFragment() {
 
     abstract fun createView(inflater: LayoutInflater, container: ViewGroup?): View
 
-    abstract fun initView(view: View, args: Bundle)
+    abstract fun initView(view: View, args: Bundle?)
 
     override fun getContext(): Context {
         return activity
