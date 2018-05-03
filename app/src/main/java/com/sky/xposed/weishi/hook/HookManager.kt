@@ -21,7 +21,9 @@ import android.content.Intent
 import android.os.Handler
 import com.sky.xposed.weishi.Constant
 import com.sky.xposed.weishi.data.CachePreferences
+import com.sky.xposed.weishi.data.ConfigManager
 import com.sky.xposed.weishi.helper.ReceiverHelper
+import com.sky.xposed.weishi.util.Alog
 import de.robv.android.xposed.callbacks.XC_LoadPackage
 import java.util.*
 
@@ -31,7 +33,10 @@ class HookManager private constructor() {
     private lateinit var mHandler: Handler
     private lateinit var mLoadPackageParam: XC_LoadPackage.LoadPackageParam
     private lateinit var mCachePreferences: CachePreferences
+    private lateinit var mConfigManager: ConfigManager
     private lateinit var mReceiverHelper: ReceiverHelper
+
+    private var mWeiShiHook: WeiShiHook? = null
 
     companion object {
 
@@ -46,6 +51,7 @@ class HookManager private constructor() {
         mHandler = AppHandler()
         mLoadPackageParam = param
         mCachePreferences = CachePreferences(context, Constant.Name.WEI_SHI)
+        mConfigManager = ConfigManager(this)
 
         // 注册监听
         mReceiverHelper = ReceiverHelper(context,
@@ -55,8 +61,32 @@ class HookManager private constructor() {
         return this
     }
 
+    fun getContext(): Context {
+        return mContext
+    }
+
+    fun getHandler(): Handler {
+        return mHandler
+    }
+
+    fun getLoadPackageParam(): XC_LoadPackage.LoadPackageParam {
+        return mLoadPackageParam
+    }
+
+    fun getCachePreferences(): CachePreferences {
+        return mCachePreferences
+    }
+
+    fun getConfigManager(): ConfigManager {
+        return mConfigManager
+    }
+
     fun handleLoadPackage() {
 
+        if (!mConfigManager.isSupportVersion()) return
+
+        mWeiShiHook = WeiShiHook()
+        mWeiShiHook!!.handleLoadPackage(getLoadPackageParam())
     }
 
     fun release() {
@@ -76,6 +106,7 @@ class HookManager private constructor() {
             for ((first, second) in data) {
                 // 重新设置值
                 mCachePreferences.putAny(first, second)
+                mWeiShiHook?.onModifyValue(first, second)
             }
         }
     }
