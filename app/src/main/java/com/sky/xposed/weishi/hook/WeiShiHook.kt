@@ -16,18 +16,62 @@
 
 package com.sky.xposed.weishi.hook
 
-import android.app.Dialog
-import android.os.Bundle
+import android.app.Activity
 import android.view.View
+import com.sky.xposed.weishi.Constant
 import com.sky.xposed.weishi.hook.base.BaseHook
-import com.sky.xposed.weishi.util.Alog
+import com.sky.xposed.weishi.ui.dialog.SettingsDialog
+import de.robv.android.xposed.XposedBridge
+import de.robv.android.xposed.XposedHelpers
 import de.robv.android.xposed.callbacks.XC_LoadPackage
 
 class WeiShiHook : BaseHook() {
 
     override fun onHandleLoadPackage(param: XC_LoadPackage.LoadPackageParam) {
 
+        // 注入UI设置入口
+        injectionUISettings()
+
         testHook()
+    }
+
+    private fun injectionUISettings() {
+
+        findAndBeforeHookMethod(
+                "com.tencent.oscar.module.share.a.b",
+                "a",
+                String::class.java, Int::class.java
+        ) {
+
+            if ("复制链接" == it.args[0]) {
+                // 添加入口
+                XposedHelpers.callMethod(
+                        it.thisObject, "a",
+                        Constant.Name.PLUGIN, it.args[1])
+            }
+        }
+
+        findAndHookMethodReplacement(
+                "com.tencent.oscar.module.share.a.b",
+                "a",
+                View::class.java, Int::class.java
+        ) {
+
+            if (it.args[1] == 0) {
+                // 显示设置界面
+                val activity = XposedHelpers
+                        .getObjectField(it.thisObject, "a") as Activity
+                val dialog = SettingsDialog()
+                dialog.show(activity.fragmentManager, "settings")
+
+                // 关闭界面
+                XposedHelpers.callMethod(it.thisObject, "dismiss")
+            } else {
+                // 走原来的逻辑
+                XposedBridge.invokeOriginalMethod(it.method, it.thisObject, it.args)
+            }
+            Unit
+        }
     }
 
     private fun testHook() {
@@ -58,15 +102,23 @@ class WeiShiHook : BaseHook() {
 //            Alog.d(">>>>>>>>>>>>>>>>>>>> show " + it.thisObject.javaClass)
 //        }
 
+//        findAndAfterHookMethod(
+//                "com.tencent.oscar.module.share.a.b",
+//                "a",
+//                Int::class.java, String::class.java
+//        ) {
+//
+//            Alog.d(">>>>>>>>>>>>>>>>>>>> aaaa ${it.args[0]} ${it.args[1]}")
+//        }
 
-        findAndBeforeHookMethod(
-                "com.tencent.oscar.module.share.a.b",
-                "a",
-                View::class.java, Int::class.java
-        ) {
-
-            Alog.d(">>>>>>>>>>>>>>>>>>>> show " + it.thisObject.javaClass)
-        }
+//        findAndBeforeHookMethod(
+//                "com.tencent.oscar.module.share.a.b",
+//                "b",
+//                View::class.java, Int::class.java
+//        ) {
+//
+//            Alog.d(">>>>>>>>>>>>>>>>>>>> b ${it.args[0]} ${it.args[1]}")
+//        }
     }
 
     fun onModifyValue(key: String, value: Any) {
