@@ -22,10 +22,12 @@ import android.graphics.Typeface
 import android.graphics.drawable.ColorDrawable
 import android.graphics.drawable.StateListDrawable
 import android.view.View
+import android.view.ViewGroup
 import android.widget.EditText
 import android.widget.FrameLayout
 import android.widget.TextView
 import com.sky.xposed.weishi.ui.view.SwitchItemView
+import com.sky.xposed.weishi.util.Alog
 
 object ViewUtil {
 
@@ -119,5 +121,18 @@ object ViewUtil {
         itemView.name = name
 
         return itemView
+    }
+
+    fun findFirstView(viewGroup: ViewGroup, className: String): View? {
+
+        for (index in 0 until viewGroup.childCount) {
+
+            val view = viewGroup.getChildAt(index)
+
+            if (view.javaClass.name == className) {
+                return view
+            }
+        }
+        return null
     }
 }

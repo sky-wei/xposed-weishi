@@ -64,4 +64,5 @@ dependencies {
     androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.1'
     compileOnly 'de.robv.android.xposed:api:82'
     compileOnly 'com.rover12421.AndroidHideApi:android:1.4'
+    implementation 'org.apache.commons:commons-lang3:3.5'
 }

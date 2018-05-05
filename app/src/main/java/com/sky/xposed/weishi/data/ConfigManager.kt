@@ -33,6 +33,7 @@ class ConfigManager(hookManager: HookManager) {
 
     init {
         VERSION_MAP["4.0.1.88"] = VersionConfig40188::class.java
+        VERSION_MAP["4.2.0.88"] = VersionConfig42088::class.java
     }
 
     fun isAutoPlay(): Boolean {
@@ -105,6 +106,7 @@ class ConfigManager(hookManager: HookManager) {
         return PackageUitl.getSimplePackageInfo(mContext, mContext.packageName)
     }
 
+    class VersionConfig42088 : VersionConfig()
 
     class VersionConfig40188 : VersionConfig()
 

@@ -18,9 +18,12 @@ package com.sky.xposed.weishi.hook
 
 import android.app.Activity
 import android.view.View
+import android.view.ViewGroup
+import android.widget.TextView
 import com.sky.xposed.weishi.Constant
 import com.sky.xposed.weishi.hook.base.BaseHook
 import com.sky.xposed.weishi.ui.dialog.SettingsDialog
+import com.sky.xposed.weishi.ui.util.ViewUtil
 import de.robv.android.xposed.XposedBridge
 import de.robv.android.xposed.XposedHelpers
 import de.robv.android.xposed.callbacks.XC_LoadPackage
@@ -57,7 +60,11 @@ class WeiShiHook : BaseHook() {
                 View::class.java, Int::class.java
         ) {
 
-            if (it.args[1] == 0) {
+            val viewGroup = it.args[0] as ViewGroup
+            val textView = ViewUtil.findFirstView(viewGroup,
+                    "android.support.v7.widget.AppCompatTextView") as TextView?
+
+            if (Constant.Name.PLUGIN == textView!!.text) {
                 // 显示设置界面
                 val activity = XposedHelpers
                         .getObjectField(it.thisObject, "a") as Activity
