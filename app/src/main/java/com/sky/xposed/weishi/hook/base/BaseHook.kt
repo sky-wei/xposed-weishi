@@ -72,6 +72,13 @@ abstract class BaseHook {
         return mParam.processName
     }
 
+    fun findClass(className: String): Class<*> {
+        return findClass(className, mParam.classLoader)
+    }
+
+    fun findClass(className: String, classLoader: ClassLoader): Class<*> {
+        return XposedHelpers.findClass(className, classLoader)
+    }
     fun findAndBeforeHookMethod(className: String, methodName: String,
                                 vararg parameterTypes: Any,
                                 beforeHook: (param: XC_MethodHook.MethodHookParam) -> Unit) {

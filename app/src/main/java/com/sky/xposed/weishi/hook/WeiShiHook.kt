@@ -22,18 +22,31 @@ import android.view.ViewGroup
 import android.widget.TextView
 import com.sky.xposed.weishi.Constant
 import com.sky.xposed.weishi.hook.base.BaseHook
+import com.sky.xposed.weishi.hook.handler.AutoAttentionHandler
+import com.sky.xposed.weishi.hook.handler.AutoLikeHandler
+import com.sky.xposed.weishi.hook.handler.AutoPlayHandler
 import com.sky.xposed.weishi.ui.dialog.SettingsDialog
 import com.sky.xposed.weishi.ui.util.ViewUtil
+import com.sky.xposed.weishi.util.Alog
+import com.sky.xposed.weishi.util.ToStringUtil
 import de.robv.android.xposed.XposedBridge
 import de.robv.android.xposed.XposedHelpers
 import de.robv.android.xposed.callbacks.XC_LoadPackage
 
 class WeiShiHook : BaseHook() {
 
+    private val mAutoPlayHandler: AutoPlayHandler = AutoPlayHandler(getHookManager())
+    private val mAutoLikeHandler: AutoLikeHandler = AutoLikeHandler(getHookManager())
+    private val mAutoAttentionHandler: AutoAttentionHandler = AutoAttentionHandler(getHookManager())
+
     override fun onHandleLoadPackage(param: XC_LoadPackage.LoadPackageParam) {
 
         // 注入UI设置入口
         injectionUISettings()
+
+        autoPlayHook()
+
+        videoSwitchHook()
 
         testHook()
     }
@@ -81,6 +94,62 @@ class WeiShiHook : BaseHook() {
         }
     }
 
+    /**
+     * 自动播放Hook方法
+     * @param param
+     */
+    private fun autoPlayHook() {
+
+        findAndAfterHookMethod(
+                "com.tencent.oscar.module.feedlist.c.af",
+                "onResume") {
+
+            val viewPager = XposedHelpers.getObjectField(it.thisObject, "a")
+            getHookManager().getObjectManager().setViewPager(viewPager)
+        }
+
+        findAndAfterHookMethod(
+                "com.tencent.oscar.module.feedlist.c.af",
+                "onPause") {
+
+            getHookManager().getObjectManager().setViewPager(null)
+        }
+
+        findAndAfterHookMethod(
+                "com.tencent.oscar.module.main.feed.f",
+                "onResume") {
+
+            val viewPager = XposedHelpers.getObjectField(it.thisObject, "a")
+            getHookManager().getObjectManager().setViewPager(viewPager)
+        }
+
+        findAndAfterHookMethod(
+                "com.tencent.oscar.module.main.feed.f",
+                "onPause") {
+
+            getHookManager().getObjectManager().setViewPager(null)
+        }
+    }
+
+    private fun videoSwitchHook() {
+
+        findAndAfterHookMethod(
+                "com.lsjwzh.widget.recyclerviewpager.RecyclerViewPager",
+                "smoothScrollToPosition",
+                Int::class.java
+        ) {
+
+            // 切换的下标
+            val position = it.args[0] as Int
+
+            mAutoLikeHandler.cancel()
+            mAutoLikeHandler.like(position)
+
+            mAutoAttentionHandler.cancel()
+            mAutoAttentionHandler.attention(position)
+        }
+    }
+
     private fun testHook() {
 
 //        findAndBeforeHookMethod(
@@ -91,7 +160,45 @@ class WeiShiHook : BaseHook() {
 //
 //            Alog.d(">>>>>>>>>>>>>>>>>>>> onCreate " + it.thisObject.javaClass)
 //        }
-//
+
+
+        // 开启日志
+        val globalClass = findClass("com.tencent.base.Global")
+        XposedHelpers.setStaticBooleanField(globalClass, "isDebug", true)
+        XposedHelpers.setStaticBooleanField(globalClass, "isGray", true)
+
+        findAndAfterHookMethod(
+                "com.lsjwzh.widget.recyclerviewpager.RecyclerViewPager",
+                "smoothScrollToPosition",
+                Int::class.java
+        ) {
+
+            val viewGroup = it.thisObject as ViewGroup
+
+//            Alog.d(">>>>>>>>>>>>>>>>>>>>>> " + viewGroup.childCount)
+//            ToStringUtil.toString(XposedHelpers.callMethod(it.thisObject, "getChildViewHolder", viewGroup.getChildAt(0)))
+//            ToStringUtil.toString(XposedHelpers.callMethod(it.thisObject, "getChildViewHolder", viewGroup.getChildAt(1)))
+//            Alog.d(">>>>>>>>>>>>>>>>>>>> smoothScrollToPosition " + it.args[0])
+
+            val viewHolder = XposedHelpers.callMethod(it.thisObject,
+                    "findViewHolderForAdapterPosition", it.args[0])
+
+            val view = XposedHelpers.getObjectField(viewHolder, "n") as View
+            val view1 = XposedHelpers.getObjectField(viewHolder, "A") as View
+
+            getHookManager().getHandler().postDelayed({
+                view.performClick()
+            }, 2000)
+
+            getHookManager().getHandler().postDelayed({
+                view1.performClick()
+            }, 3000)
+
+            ToStringUtil.toString(viewHolder)
+        }
+
+
+
 //        findAndBeforeHookMethod(
 //                "android.support.v7.app.AppCompatDialog",
 //                "onCreate",

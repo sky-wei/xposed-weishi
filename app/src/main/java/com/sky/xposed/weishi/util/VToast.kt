@@ -31,6 +31,22 @@ class VToast private constructor() {
         fun getInstance(): VToast {
             return V_TOAST
         }
+
+        fun show(text: CharSequence) {
+            getInstance().showMessage(text, Toast.LENGTH_SHORT)
+        }
+
+        fun show(text: CharSequence, duration: Int) {
+            getInstance().showMessage(text, duration)
+        }
+
+        fun show(resId: Int) {
+            getInstance().showMessage(resId, Toast.LENGTH_SHORT)
+        }
+
+        fun show(resId: Int, duration: Int) {
+            getInstance().showMessage(resId, duration)
+        }
     }
 
     fun init(context: Context) {
@@ -45,21 +61,5 @@ class VToast private constructor() {
 
     fun showMessage(resId: Int, duration: Int) {
         showMessage(mContext!!.getString(resId), duration)
-    }
-
-    fun show(text: CharSequence) {
-        showMessage(text, Toast.LENGTH_SHORT)
-    }
-
-    fun show(text: CharSequence, duration: Int) {
-        showMessage(text, duration)
-    }
-
-    fun show(resId: Int) {
-        showMessage(resId, Toast.LENGTH_SHORT)
-    }
-
-    fun show(resId: Int, duration: Int) {
-        showMessage(resId, duration)
     }
 }

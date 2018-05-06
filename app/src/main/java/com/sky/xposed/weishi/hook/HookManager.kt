@@ -22,8 +22,10 @@ import android.os.Handler
 import com.sky.xposed.weishi.Constant
 import com.sky.xposed.weishi.data.CachePreferences
 import com.sky.xposed.weishi.data.ConfigManager
+import com.sky.xposed.weishi.data.ObjectManager
 import com.sky.xposed.weishi.helper.ReceiverHelper
 import com.sky.xposed.weishi.util.Alog
+import com.sky.xposed.weishi.util.VToast
 import de.robv.android.xposed.callbacks.XC_LoadPackage
 import java.util.*
 
@@ -34,6 +36,7 @@ class HookManager private constructor() {
     private lateinit var mLoadPackageParam: XC_LoadPackage.LoadPackageParam
     private lateinit var mCachePreferences: CachePreferences
     private lateinit var mConfigManager: ConfigManager
+    private lateinit var mObjectManager: ObjectManager
     private lateinit var mReceiverHelper: ReceiverHelper
 
     private var mWeiShiHook: WeiShiHook? = null
@@ -52,11 +55,14 @@ class HookManager private constructor() {
         mLoadPackageParam = param
         mCachePreferences = CachePreferences(context, Constant.Name.WEI_SHI)
         mConfigManager = ConfigManager(this)
+        mObjectManager = ObjectManager()
 
         // 注册监听
         mReceiverHelper = ReceiverHelper(context,
                 { action, intent ->  onReceive(action, intent) },
                 Constant.Action.REFRESH_PREFERENCE)
+
+        VToast.getInstance().init(context)
 
         return this
     }
@@ -79,6 +85,10 @@ class HookManager private constructor() {
 
     fun getConfigManager(): ConfigManager {
         return mConfigManager
+    }
+
+    fun getObjectManager(): ObjectManager {
+        return mObjectManager
     }
 
     fun handleLoadPackage() {

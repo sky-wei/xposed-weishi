@@ -40,13 +40,13 @@ class SettingsDialog : BaseDialogFragment() {
     private lateinit var mToolbar: TitleView
     private lateinit var mCommonFrameLayout: CommonFrameLayout
 
-    private lateinit var sivAutoPlay: SwitchItemView
+//    private lateinit var sivAutoPlay: SwitchItemView
     private lateinit var sivAutoAttention: SwitchItemView
     private lateinit var sivAutoLike: SwitchItemView
-    private lateinit var sivAutoComment: SwitchItemView
-    private lateinit var etiAutoCommentMessage: EditTextItemView
-    private lateinit var sivAutoSaveVideo: SwitchItemView
-    private lateinit var sivRemoveLimit: SwitchItemView
+//    private lateinit var sivAutoComment: SwitchItemView
+//    private lateinit var etiAutoCommentMessage: EditTextItemView
+//    private lateinit var sivAutoSaveVideo: SwitchItemView
+//    private lateinit var sivRemoveLimit: SwitchItemView
 
     override fun createView(inflater: LayoutInflater, container: ViewGroup?): View {
 
@@ -56,24 +56,24 @@ class SettingsDialog : BaseDialogFragment() {
         mCommonFrameLayout = CommonFrameLayout(context)
         mToolbar = mCommonFrameLayout.getTitleView()
 
-        sivAutoPlay = ViewUtil.newSwitchItemView(context, "自动播放")
+//        sivAutoPlay = ViewUtil.newSwitchItemView(context, "自动播放")
         sivAutoAttention = ViewUtil.newSwitchItemView(context, "自动关注")
         sivAutoLike = ViewUtil.newSwitchItemView(context, "自动点赞")
-        sivAutoComment = ViewUtil.newSwitchItemView(context, "自动评论")
-        sivRemoveLimit = ViewUtil.newSwitchItemView(context, "解除15秒限制(最大60秒)")
+//        sivAutoComment = ViewUtil.newSwitchItemView(context, "自动评论")
+//        sivRemoveLimit = ViewUtil.newSwitchItemView(context, "解除15秒限制(最大60秒)")
 
-        etiAutoCommentMessage = EditTextItemView(context)
-        etiAutoCommentMessage.setName("评论的内容")
+//        etiAutoCommentMessage = EditTextItemView(context)
+//        etiAutoCommentMessage.setName("评论的内容")
+//
+//        sivAutoSaveVideo = ViewUtil.newSwitchItemView(context, "自动保存视频")
 
-        sivAutoSaveVideo = ViewUtil.newSwitchItemView(context, "自动保存视频")
-
-        mCommonFrameLayout.addContent(sivAutoPlay, true)
+//        mCommonFrameLayout.addContent(sivAutoPlay, true)
         mCommonFrameLayout.addContent(sivAutoAttention, true)
         mCommonFrameLayout.addContent(sivAutoLike, true)
-        mCommonFrameLayout.addContent(sivAutoComment, true)
-        mCommonFrameLayout.addContent(etiAutoCommentMessage, true)
-        mCommonFrameLayout.addContent(sivAutoSaveVideo, true)
-        mCommonFrameLayout.addContent(sivRemoveLimit)
+//        mCommonFrameLayout.addContent(sivAutoComment, true)
+//        mCommonFrameLayout.addContent(etiAutoCommentMessage, true)
+//        mCommonFrameLayout.addContent(sivAutoSaveVideo, true)
+//        mCommonFrameLayout.addContent(sivRemoveLimit)
 
         return mCommonFrameLayout
     }
@@ -83,13 +83,13 @@ class SettingsDialog : BaseDialogFragment() {
         mToolbar.setTitle("${Constant.Name.PLUGIN}(V${BuildConfig.VERSION_NAME})")
 
         // 绑定事件
-        trackBind(sivAutoPlay, Constant.Preference.AUTO_PLAY, false, mBooleanChangeListener)
+//        trackBind(sivAutoPlay, Constant.Preference.AUTO_PLAY, false, mBooleanChangeListener)
         trackBind(sivAutoAttention, Constant.Preference.AUTO_ATTENTION, false, mBooleanChangeListener)
         trackBind(sivAutoLike, Constant.Preference.AUTO_LIKE, false, mBooleanChangeListener)
-        trackBind(sivAutoComment, Constant.Preference.AUTO_COMMENT, false, mBooleanChangeListener)
-        trackBind(sivAutoSaveVideo, Constant.Preference.AUTO_SAVE_VIDEO, false, mBooleanChangeListener)
-        trackBind(etiAutoCommentMessage, Constant.Preference.AUTO_COMMENT_MESSAGE, "", mStringChangeListener)
-        trackBind(sivRemoveLimit, Constant.Preference.REMOVE_LIMIT, false, mBooleanChangeListener)
+//        trackBind(sivAutoComment, Constant.Preference.AUTO_COMMENT, false, mBooleanChangeListener)
+//        trackBind(sivAutoSaveVideo, Constant.Preference.AUTO_SAVE_VIDEO, false, mBooleanChangeListener)
+//        trackBind(etiAutoCommentMessage, Constant.Preference.AUTO_COMMENT_MESSAGE, "", mStringChangeListener)
+//        trackBind(sivRemoveLimit, Constant.Preference.REMOVE_LIMIT, false, mBooleanChangeListener)
     }
 
     private val mBooleanChangeListener = object : StatusChangeListener<Boolean> {
