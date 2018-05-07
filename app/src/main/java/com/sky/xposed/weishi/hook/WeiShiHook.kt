@@ -27,8 +27,6 @@ import com.sky.xposed.weishi.hook.handler.AutoLikeHandler
 import com.sky.xposed.weishi.hook.handler.AutoPlayHandler
 import com.sky.xposed.weishi.ui.dialog.SettingsDialog
 import com.sky.xposed.weishi.ui.util.ViewUtil
-import com.sky.xposed.weishi.util.Alog
-import com.sky.xposed.weishi.util.ToStringUtil
 import de.robv.android.xposed.XposedBridge
 import de.robv.android.xposed.XposedHelpers
 import de.robv.android.xposed.callbacks.XC_LoadPackage
@@ -41,6 +39,8 @@ class WeiShiHook : BaseHook() {
 
     override fun onHandleLoadPackage(param: XC_LoadPackage.LoadPackageParam) {
 
+        debugWeiShiHook()
+
         // 注入UI设置入口
         injectionUISettings()
 
@@ -51,6 +51,9 @@ class WeiShiHook : BaseHook() {
         testHook()
     }
 
+    /**
+     * 注入UI配置入口
+     */
     private fun injectionUISettings() {
 
         findAndBeforeHookMethod(
@@ -77,7 +80,8 @@ class WeiShiHook : BaseHook() {
             val textView = ViewUtil.findFirstView(viewGroup,
                     "android.support.v7.widget.AppCompatTextView") as TextView?
 
-            if (Constant.Name.PLUGIN == textView!!.text) {
+            if (textView != null
+                    && Constant.Name.PLUGIN == textView.text) {
                 // 显示设置界面
                 val activity = XposedHelpers
                         .getObjectField(it.thisObject, "a") as Activity
@@ -131,6 +135,9 @@ class WeiShiHook : BaseHook() {
         }
     }
 
+    /**
+     * 视频切换
+     */
     private fun videoSwitchHook() {
 
         findAndAfterHookMethod(
@@ -150,6 +157,14 @@ class WeiShiHook : BaseHook() {
         }
     }
 
+    private fun debugWeiShiHook() {
+
+        // 开启日志
+        val globalClass = findClass("com.tencent.base.Global")
+        XposedHelpers.setStaticBooleanField(globalClass, "isDebug", true)
+        XposedHelpers.setStaticBooleanField(globalClass, "isGray", true)
+    }
+
     private fun testHook() {
 
 //        findAndBeforeHookMethod(
@@ -160,44 +175,6 @@ class WeiShiHook : BaseHook() {
 //
 //            Alog.d(">>>>>>>>>>>>>>>>>>>> onCreate " + it.thisObject.javaClass)
 //        }
-
-
-        // 开启日志
-        val globalClass = findClass("com.tencent.base.Global")
-        XposedHelpers.setStaticBooleanField(globalClass, "isDebug", true)
-        XposedHelpers.setStaticBooleanField(globalClass, "isGray", true)
-
-        findAndAfterHookMethod(
-                "com.lsjwzh.widget.recyclerviewpager.RecyclerViewPager",
-                "smoothScrollToPosition",
-                Int::class.java
-        ) {
-
-            val viewGroup = it.thisObject as ViewGroup
-
-//            Alog.d(">>>>>>>>>>>>>>>>>>>>>> " + viewGroup.childCount)
-//            ToStringUtil.toString(XposedHelpers.callMethod(it.thisObject, "getChildViewHolder", viewGroup.getChildAt(0)))
-//            ToStringUtil.toString(XposedHelpers.callMethod(it.thisObject, "getChildViewHolder", viewGroup.getChildAt(1)))
-//            Alog.d(">>>>>>>>>>>>>>>>>>>> smoothScrollToPosition " + it.args[0])
-
-            val viewHolder = XposedHelpers.callMethod(it.thisObject,
-                    "findViewHolderForAdapterPosition", it.args[0])
-
-            val view = XposedHelpers.getObjectField(viewHolder, "n") as View
-            val view1 = XposedHelpers.getObjectField(viewHolder, "A") as View
-
-            getHookManager().getHandler().postDelayed({
-                view.performClick()
-            }, 2000)
-
-            getHookManager().getHandler().postDelayed({
-                view1.performClick()
-            }, 3000)
-
-            ToStringUtil.toString(viewHolder)
-        }
-
-
 
 //        findAndBeforeHookMethod(
 //                "android.support.v7.app.AppCompatDialog",
