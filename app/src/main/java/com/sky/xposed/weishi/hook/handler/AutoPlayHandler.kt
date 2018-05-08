@@ -64,12 +64,12 @@ class AutoPlayHandler(hookManager: HookManager) : CommonHandler(hookManager), Ru
 
     fun stopPlay() {
         isPlaying = false
-        getHandler().removeCallbacks(this)
+        removeCallbacks(this)
     }
 
     private fun playNext(delayMillis: Long) {
         // 开始播放
-        getHandler().postDelayed(this, delayMillis)
+        postDelayed(this, delayMillis)
         VToast.show((delayMillis / 1000).toString() + "秒后播放下一个视频")
     }
 

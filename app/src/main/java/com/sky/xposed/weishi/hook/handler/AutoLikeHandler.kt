@@ -23,7 +23,7 @@ import de.robv.android.xposed.XposedHelpers
 
 class AutoLikeHandler(hookManager: HookManager) : CommonHandler(hookManager), Runnable {
 
-    var mPosition: Int = 0
+    private var mPosition: Int = 0
 
     fun like(position: Int) {
 
@@ -35,23 +35,30 @@ class AutoLikeHandler(hookManager: HookManager) : CommonHandler(hookManager), Ru
         }
 
         // 开始点赞
-        getHandler().postDelayed(this, RandomUtil.randomLong(1500, 2500))
+        postDelayed(this, RandomUtil.randomLong(1500, 2500))
     }
 
     fun cancel() {
         mPosition = -1
-        getHandler().removeCallbacks(this)
+        removeCallbacks(this)
     }
 
     override fun run() {
 
         // 获取当前显示的ViewHolder
         val viewHolder = getViewHolder(mPosition) ?: return
+        val itemView = XposedHelpers
+                .getObjectField(viewHolder, "itemView") as View
 
-        val view = XposedHelpers
-                .getObjectField(viewHolder, "n") as View
+        val likeContainer = findViewById(itemView, "feed_like_status_container")
+        val likeStatus2 = findViewById(itemView, "feed_like_status2")
+
+        if (likeStatus2 != null && likeStatus2.isShown) {
+            // 已经点赞了，不需要处理
+            return
+        }
 
         // 点赞
-        mainPerformClick(view)
+        mainPerformClick(likeContainer)
     }
 }

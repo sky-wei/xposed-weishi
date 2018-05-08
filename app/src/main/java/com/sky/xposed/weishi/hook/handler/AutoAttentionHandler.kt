@@ -18,23 +18,23 @@ package com.sky.xposed.weishi.hook.handler
 
 import android.view.View
 import com.sky.xposed.weishi.hook.HookManager
+import com.sky.xposed.weishi.util.Alog
 import com.sky.xposed.weishi.util.RandomUtil
 import de.robv.android.xposed.XposedHelpers
 
 class AutoAttentionHandler(hookManager: HookManager) : CommonHandler(hookManager), Runnable {
 
-    var mPosition: Int = 0
+    private var mPosition: Int = 0
 
     override fun run() {
 
         // 获取当前显示的ViewHolder
         val viewHolder = getViewHolder(mPosition) ?: return
+        val itemView = XposedHelpers
+                .getObjectField(viewHolder, "itemView") as View
 
-        val view = XposedHelpers
-                .getObjectField(viewHolder, "A") as View
-
-        // 点赞
-        mainPerformClick(view)
+        // 关注
+        mainPerformClick(findViewById(itemView, "follow_flag"))
     }
 
     fun attention(position: Int) {
@@ -46,12 +46,12 @@ class AutoAttentionHandler(hookManager: HookManager) : CommonHandler(hookManager
             return
         }
 
-        // 开始点赞
-        getHandler().postDelayed(this, RandomUtil.randomLong(3000, 3500))
+        // 开始关注
+        postDelayed(this, RandomUtil.randomLong(3000, 3500))
     }
 
     fun cancel() {
         mPosition = -1
-        getHandler().removeCallbacks(this)
+        removeCallbacks(this)
     }
 }

@@ -20,6 +20,7 @@ import android.app.ActivityThread
 import android.content.Context
 import com.sky.xposed.weishi.data.CachePreferences
 import com.sky.xposed.weishi.data.ConfigManager
+import com.sky.xposed.weishi.data.ObjectManager
 import com.sky.xposed.weishi.hook.HookManager
 import com.sky.xposed.weishi.util.Alog
 import de.robv.android.xposed.XC_MethodHook
@@ -54,6 +55,10 @@ abstract class BaseHook {
 
     fun getConfigManager(): ConfigManager {
         return getHookManager().getConfigManager()
+    }
+
+    fun getObjectManager(): ObjectManager {
+        return getHookManager().getObjectManager()
     }
 
     fun getContext(): Context {

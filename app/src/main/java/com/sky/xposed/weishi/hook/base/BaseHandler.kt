@@ -53,12 +53,20 @@ open class BaseHandler(private val mHookManager: HookManager) {
 
     }
 
+    fun postDelayed(runnable: Runnable, delayMillis: Long) {
+        getHandler().postDelayed(runnable, delayMillis)
+    }
+
+    fun removeCallbacks(runnable: Runnable) {
+        getHandler().removeCallbacks(runnable)
+    }
+
     fun mainPerformClick(viewGroup: View, id: String) {
 
         getHandler().post { performClick(viewGroup, id) }
     }
 
-    fun mainPerformClick(view: View) {
+    fun mainPerformClick(view: View?) {
 
         getHandler().post { performClick(view) }
     }

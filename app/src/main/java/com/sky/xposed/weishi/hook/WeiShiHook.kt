@@ -108,30 +108,30 @@ class WeiShiHook : BaseHook() {
                 "com.tencent.oscar.module.feedlist.c.af",
                 "onResume") {
 
-            val viewPager = XposedHelpers.getObjectField(it.thisObject, "a")
-            getHookManager().getObjectManager().setViewPager(viewPager)
+            getObjectManager().setViewPager(
+                    XposedHelpers.getObjectField(it.thisObject, "a"))
         }
 
         findAndAfterHookMethod(
                 "com.tencent.oscar.module.feedlist.c.af",
                 "onPause") {
 
-            getHookManager().getObjectManager().setViewPager(null)
+            getObjectManager().setViewPager(null)
         }
 
         findAndAfterHookMethod(
                 "com.tencent.oscar.module.main.feed.f",
                 "onResume") {
 
-            val viewPager = XposedHelpers.getObjectField(it.thisObject, "a")
-            getHookManager().getObjectManager().setViewPager(viewPager)
+            getObjectManager().setViewPager(
+                    XposedHelpers.getObjectField(it.thisObject, "a"))
         }
 
         findAndAfterHookMethod(
                 "com.tencent.oscar.module.main.feed.f",
                 "onPause") {
 
-            getHookManager().getObjectManager().setViewPager(null)
+            getObjectManager().setViewPager(null)
         }
     }
 

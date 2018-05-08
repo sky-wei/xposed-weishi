@@ -27,6 +27,6 @@ open class CommonHandler(hookManager: HookManager) : BaseHandler(hookManager) {
         val viewPager = getObjectManager().getViewPager() ?: return null
 
         return XposedHelpers.callMethod(viewPager,
-                "findViewHolderForAdapterPosition", viewPager)
+                "findViewHolderForAdapterPosition", position)
     }
 }
