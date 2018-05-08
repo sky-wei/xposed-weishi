@@ -1,5 +1,9 @@
 # xposed-weishi
 
+这是一个基于Xposed框架写的 `微视` 的插件
+
+### 截图
+![截图](screenshot/device-2018-05-08-213542.png)
 
 ## License
 

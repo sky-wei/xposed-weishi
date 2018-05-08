@@ -16,6 +16,7 @@
 
 package com.sky.xposed.weishi.util
 
+import android.text.TextUtils
 import android.util.Log
 import java.security.MessageDigest
 
@@ -23,20 +24,66 @@ object MD5Util {
 
     private val TAG = "MD5Util"
 
-    fun md5sum(value: String): ByteArray? {
+    /**
+     * Convert byte[] to hex string
+     * @param src byte[] data
+     * @return hex string
+     */
+    fun bytesToHexString(src: ByteArray?): String? {
+
+        if (src == null || src.isEmpty()) return null
+
+        val builder = StringBuilder()
+
+        for (i in src.indices) {
+            val v = src[i].toInt() and 0xFF
+            val hv = Integer.toHexString(v)
+            if (hv.length < 2) {
+                builder.append(0)
+            }
+            builder.append(hv)
+        }
+        return builder.toString()
+    }
+
+    fun hexStringToBytes(hexString: String): ByteArray? {
+        var hexString = hexString
+
+        if (TextUtils.isEmpty(hexString)) return null
+
+        hexString = hexString.toUpperCase()
+        val length = hexString.length / 2
+        val hexChars = hexString.toCharArray()
+        val bytes = ByteArray(length)
+        for (i in 0 until length) {
+            val pos = i * 2
+            bytes[i] = (charToByte(hexChars[pos]).toInt() shl 4 or charToByte(hexChars[pos + 1]).toInt()).toByte()
+        }
+        return bytes
+    }
+
+    private fun charToByte(c: Char): Byte {
+        return "0123456789ABCDEF".indexOf(c).toByte()
+    }
+
+    fun md5sum(value: String): String? {
         return md5sum(value, "UTF-8")
     }
 
-    fun md5sum(value: String, charsetName: String): ByteArray? {
+    fun md5sum(value: String, charsetName: String): String? {
+
+        if (TextUtils.isEmpty(value)) return null
+
         try {
             return md5sum(value.toByteArray(charset(charsetName)))
         } catch (e: Exception) {
             Log.e(TAG, "字符串编码异常", e)
         }
+
         return null
     }
 
-    fun md5sum(value: ByteArray?): ByteArray? {
+    fun md5sum(value: ByteArray?): String? {
 
         if (value == null) return null
 
@@ -46,10 +93,13 @@ object MD5Util {
             messageDigest.reset()
             messageDigest.update(value)
 
-            return messageDigest.digest()
+            val bytes = messageDigest.digest()
+
+            return bytesToHexString(bytes)
         } catch (e: Exception) {
             Log.e(TAG, "处理MD5异常", e)
         }
+
         return null
     }
 }

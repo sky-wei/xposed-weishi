@@ -36,7 +36,8 @@ class AutoDownloadHandler(hookManager: HookManager) : CommonHandler(hookManager)
 
     private val TAG = "AutoDownloadHandler"
 
-    private val mDownloadDir: File = File(Environment.getExternalStorageDirectory(), "DCIM")
+    private val mDownloadDir: File = File(
+            Environment.getExternalStorageDirectory(), "DCIM")
 
     /**
      * 延时下载视频
@@ -49,6 +50,11 @@ class AutoDownloadHandler(hookManager: HookManager) : CommonHandler(hookManager)
 
         // 下载视频
         postDelayed(this, RandomUtil.randomLong(500, 1200))
+    }
+
+    fun cancel() {
+        // 取消自动下载
+        removeCallbacks(this)
     }
 
     /**
@@ -79,19 +85,18 @@ class AutoDownloadHandler(hookManager: HookManager) : CommonHandler(hookManager)
         try {
             if (!mDownloadDir.exists()) mDownloadDir.mkdir()
 
-
-
             // 下载视频
-//            downloadVideo(urlList[0])
+            downloadVideo(XposedHelpers
+                    .getObjectField(data, "video_url") as String)
         } catch (tr: Throwable) {
             Alog.e(TAG, "下载异常了", tr)
         }
 
     }
 
-    fun downloadVideo(url: String) {
+    private fun downloadVideo(url: String) {
 
-        val fileName = Base64.encodeToString(MD5Util.md5sum(url), Base64.NO_WRAP) + ".mp4"
+        val fileName = "${MD5Util.md5sum(url)}.mp4"
         val downloadFile = File(mDownloadDir, fileName)
 
         if (downloadFile.exists()) {
@@ -108,6 +113,7 @@ class AutoDownloadHandler(hookManager: HookManager) : CommonHandler(hookManager)
                 .execute(object : FileCallBack(mDownloadDir.path, fileName) {
                     override fun onError(call: Call, e: Exception, id: Int) {
                         Alog.e(TAG, e)
+                        VToast.show("视频下载错误！")
                     }
 
                     override fun onResponse(response: File, id: Int) {

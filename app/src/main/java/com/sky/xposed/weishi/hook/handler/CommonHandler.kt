@@ -47,8 +47,8 @@ open class CommonHandler(hookManager: HookManager) : BaseHandler(hookManager) {
 
         val adapter = getAdapter() ?: return null
 
-        val list = XposedHelpers
-                .getObjectField(adapter, "h") as? ArrayList<Serializable>
+        val list = XposedHelpers.getObjectField(
+                adapter, "h") as? ArrayList<Serializable>
 
         if (list == null || list.isEmpty()) return null
 

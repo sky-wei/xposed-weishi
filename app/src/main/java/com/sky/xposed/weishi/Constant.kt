@@ -62,5 +62,7 @@ object Constant {
         val WEI_SHI = "weishi"
 
         val PLUGIN = "微视助手"
+
+        val SAVE_VIDEO = "无水印保存"
     }
 }

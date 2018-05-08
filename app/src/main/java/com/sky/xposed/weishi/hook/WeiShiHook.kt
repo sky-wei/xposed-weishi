@@ -17,29 +17,30 @@
 package com.sky.xposed.weishi.hook
 
 import android.app.Activity
+import android.content.Context
+import android.os.Bundle
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import com.sky.xposed.weishi.Constant
 import com.sky.xposed.weishi.hook.base.BaseHook
 import com.sky.xposed.weishi.hook.handler.AutoAttentionHandler
+import com.sky.xposed.weishi.hook.handler.AutoDownloadHandler
 import com.sky.xposed.weishi.hook.handler.AutoLikeHandler
 import com.sky.xposed.weishi.hook.handler.AutoPlayHandler
 import com.sky.xposed.weishi.ui.dialog.SettingsDialog
 import com.sky.xposed.weishi.ui.util.ViewUtil
 import com.sky.xposed.weishi.util.Alog
-import com.sky.xposed.weishi.util.ToStringUtil
 import de.robv.android.xposed.XposedBridge
 import de.robv.android.xposed.XposedHelpers
 import de.robv.android.xposed.callbacks.XC_LoadPackage
-import java.io.Serializable
-import java.util.ArrayList
 
 class WeiShiHook : BaseHook() {
 
-    private val mAutoPlayHandler: AutoPlayHandler = AutoPlayHandler(getHookManager())
-    private val mAutoLikeHandler: AutoLikeHandler = AutoLikeHandler(getHookManager())
-    private val mAutoAttentionHandler: AutoAttentionHandler = AutoAttentionHandler(getHookManager())
+    private val mAutoPlayHandler = AutoPlayHandler(getHookManager())
+    private val mAutoLikeHandler = AutoLikeHandler(getHookManager())
+    private val mAutoAttentionHandler = AutoAttentionHandler(getHookManager())
+    private val mAutoDownloadHandler = AutoDownloadHandler(getHookManager())
 
     override fun onHandleLoadPackage(param: XC_LoadPackage.LoadPackageParam) {
 
@@ -71,6 +72,11 @@ class WeiShiHook : BaseHook() {
                 XposedHelpers.callMethod(
                         it.thisObject, "a",
                         Constant.Name.PLUGIN, it.args[1])
+
+                // 添加下载
+                XposedHelpers.callMethod(
+                        it.thisObject, "a",
+                        Constant.Name.SAVE_VIDEO, it.args[1])
             }
         }
 
@@ -83,20 +89,30 @@ class WeiShiHook : BaseHook() {
             val viewGroup = it.args[0] as ViewGroup
             val textView = ViewUtil.findFirstView(viewGroup,
                     "android.support.v7.widget.AppCompatTextView") as TextView?
+            val name = textView?.text
 
-            if (textView != null
-                    && Constant.Name.PLUGIN == textView.text) {
-                // 显示设置界面
-                val activity = XposedHelpers
-                        .getObjectField(it.thisObject, "a") as Activity
-                val dialog = SettingsDialog()
-                dialog.show(activity.fragmentManager, "settings")
+            when(name) {
+                Constant.Name.PLUGIN -> {
+                    // 显示设置界面
+                    val activity = XposedHelpers
+                            .getObjectField(it.thisObject, "a") as Activity
+                    val dialog = SettingsDialog()
+                    dialog.show(activity.fragmentManager, "settings")
 
-                // 关闭界面
-                XposedHelpers.callMethod(it.thisObject, "dismiss")
-            } else {
-                // 走原来的逻辑
-                XposedBridge.invokeOriginalMethod(it.method, it.thisObject, it.args)
+                    // 关闭界面
+                    XposedHelpers.callMethod(it.thisObject, "dismiss")
+                }
+                Constant.Name.SAVE_VIDEO -> {
+                    // 下载视频到本地
+                    mAutoDownloadHandler.downloadToLocal()
+
+                    // 关闭界面
+                    XposedHelpers.callMethod(it.thisObject, "dismiss")
+                }
+                else -> {
+                    // 走原来的逻辑
+                    XposedBridge.invokeOriginalMethod(it.method, it.thisObject, it.args)
+                }
             }
             Unit
         }
@@ -125,20 +141,6 @@ class WeiShiHook : BaseHook() {
         findAndAfterHookMethod(
                 "com.tencent.oscar.module.feedlist.c.af",
                 "onPause") {
-
-            val adapter = XposedHelpers.callMethod(
-                    getObjectManager().getViewPager(), "getAdapter")
-
-            Alog.d(">>>>>>>>>>>>>>>>>>>>>>> $adapter")
-
-            val dataList = XposedHelpers
-                    .getObjectField(adapter, "h") as ArrayList<Serializable>
-            Alog.d(">>>>>>>>>>>>>>>>>>>>>>>>  $dataList  ${dataList.size}")
-
-            ToStringUtil.toString(dataList[0])
-
-//            val data = dataList[0] as Array<*>
-//            ToStringUtil.toString(data[0])
 
             // 停止播放
             mAutoPlayHandler.stopPlay()
@@ -197,6 +199,9 @@ class WeiShiHook : BaseHook() {
 
         mAutoAttentionHandler.cancel()
         mAutoAttentionHandler.attention()
+
+        mAutoDownloadHandler.cancel()
+        mAutoDownloadHandler.download()
     }
 
     private fun debugWeiShiHook() {
@@ -209,14 +214,23 @@ class WeiShiHook : BaseHook() {
 
     private fun testHook() {
 
-//        findAndBeforeHookMethod(
-//                "android.support.v4.app.Fragment",
-//                "onCreate",
-//                Bundle::class.java
-//        ) {
-//
-//            Alog.d(">>>>>>>>>>>>>>>>>>>> onCreate " + it.thisObject.javaClass)
-//        }
+        findAndBeforeHookMethod(
+                "android.support.v4.app.Fragment",
+                "onCreate",
+                Bundle::class.java
+        ) {
+
+            Alog.d(">>>>>>>>>>>>>>>>>>>> onCreate " + it.thisObject.javaClass)
+        }
+
+        findAndBeforeHookMethod(
+                "android.support.design.widget.BottomSheetDialog",
+                "onCreate",
+                Bundle::class.java
+        ) {
+
+            Alog.d(">>>>>>>>>>>>>>>>>>>> onCreate " + it.thisObject)
+        }
 
 //        findAndBeforeHookMethod(
 //                "android.support.v7.app.AppCompatDialog",
