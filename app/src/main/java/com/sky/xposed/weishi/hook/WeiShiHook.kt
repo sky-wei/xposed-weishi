@@ -110,11 +110,20 @@ class WeiShiHook : BaseHook() {
 
             getObjectManager().setViewPager(
                     XposedHelpers.getObjectField(it.thisObject, "a"))
+
+            // 自动播放
+            mAutoPlayHandler.startPlay()
+
+            // 开始处理
+            startHandlerLike()
         }
 
         findAndAfterHookMethod(
                 "com.tencent.oscar.module.feedlist.c.af",
                 "onPause") {
+
+            // 停止播放
+            mAutoPlayHandler.stopPlay()
 
             getObjectManager().setViewPager(null)
         }
@@ -125,11 +134,20 @@ class WeiShiHook : BaseHook() {
 
             getObjectManager().setViewPager(
                     XposedHelpers.getObjectField(it.thisObject, "a"))
+
+            // 自动播放
+            mAutoPlayHandler.startPlay()
+
+            // 开始处理
+            startHandlerLike()
         }
 
         findAndAfterHookMethod(
                 "com.tencent.oscar.module.main.feed.f",
                 "onPause") {
+
+            // 停止播放
+            mAutoPlayHandler.stopPlay()
 
             getObjectManager().setViewPager(null)
         }
@@ -146,15 +164,21 @@ class WeiShiHook : BaseHook() {
                 Int::class.java
         ) {
 
-            // 切换的下标
-            val position = it.args[0] as Int
-
-            mAutoLikeHandler.cancel()
-            mAutoLikeHandler.like(position)
-
-            mAutoAttentionHandler.cancel()
-            mAutoAttentionHandler.attention(position)
+            // 开始处理
+            startHandlerLike()
         }
+    }
+
+    /**
+     * 开始处理点赞跟关注
+     */
+    private fun startHandlerLike() {
+
+        mAutoLikeHandler.cancel()
+        mAutoLikeHandler.like()
+
+        mAutoAttentionHandler.cancel()
+        mAutoAttentionHandler.attention()
     }
 
     private fun debugWeiShiHook() {
@@ -214,5 +238,9 @@ class WeiShiHook : BaseHook() {
 
     fun onModifyValue(key: String, value: Any) {
 
+        if (Constant.Preference.AUTO_PLAY == key) {
+            // 设置自动播放
+            mAutoPlayHandler.setAutoPlay(value as Boolean)
+        }
     }
 }

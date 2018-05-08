@@ -24,12 +24,15 @@ import de.robv.android.xposed.XposedHelpers
 
 class AutoAttentionHandler(hookManager: HookManager) : CommonHandler(hookManager), Runnable {
 
-    private var mPosition: Int = 0
-
     override fun run() {
 
+        // 获取当前显示的下标
+        val position = getCurrentPosition()
+
+        if (position < 0) return
+
         // 获取当前显示的ViewHolder
-        val viewHolder = getViewHolder(mPosition) ?: return
+        val viewHolder = getViewHolder(position) ?: return
         val itemView = XposedHelpers
                 .getObjectField(viewHolder, "itemView") as View
 
@@ -37,9 +40,7 @@ class AutoAttentionHandler(hookManager: HookManager) : CommonHandler(hookManager
         mainPerformClick(findViewById(itemView, "follow_flag"))
     }
 
-    fun attention(position: Int) {
-
-        mPosition = position
+    fun attention() {
 
         if (!getConfigManager().isAutoAttention()) {
             // 不需要处理
@@ -51,7 +52,6 @@ class AutoAttentionHandler(hookManager: HookManager) : CommonHandler(hookManager
     }
 
     fun cancel() {
-        mPosition = -1
         removeCallbacks(this)
     }
 }

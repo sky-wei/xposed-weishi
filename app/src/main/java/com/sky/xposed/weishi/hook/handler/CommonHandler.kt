@@ -29,4 +29,12 @@ open class CommonHandler(hookManager: HookManager) : BaseHandler(hookManager) {
         return XposedHelpers.callMethod(viewPager,
                 "findViewHolderForAdapterPosition", position)
     }
+
+    fun getCurrentPosition(): Int {
+
+        val viewPager = getObjectManager().getViewPager() ?: return -1
+
+        return XposedHelpers.callMethod(viewPager,
+                "getCurrentPosition") as Int
+    }
 }

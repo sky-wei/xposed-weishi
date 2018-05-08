@@ -93,12 +93,11 @@ class AutoPlayHandler(hookManager: HookManager) : CommonHandler(hookManager), Ru
         }
 
         // 获取当前页
-        val currentItem = XposedHelpers
-                .callMethod(mViewPager, "getCurrentItem") as Int
+        val currentItem = getCurrentPosition()
 
         // 切换页面
-        XposedHelpers.callMethod(mViewPager, "a",
-                *arrayOf(currentItem + 1, true, true, -1270 + RandomUtil.random(100)))
+        XposedHelpers.callMethod(mViewPager,
+                "smoothScrollToPosition", currentItem + 1)
 
         // 继续播放下一个
         playNext(RandomUtil.randomLong(15000, 20000))

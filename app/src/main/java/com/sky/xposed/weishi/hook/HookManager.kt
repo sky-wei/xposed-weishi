@@ -24,7 +24,6 @@ import com.sky.xposed.weishi.data.CachePreferences
 import com.sky.xposed.weishi.data.ConfigManager
 import com.sky.xposed.weishi.data.ObjectManager
 import com.sky.xposed.weishi.helper.ReceiverHelper
-import com.sky.xposed.weishi.util.Alog
 import com.sky.xposed.weishi.util.VToast
 import de.robv.android.xposed.callbacks.XC_LoadPackage
 import java.util.*
@@ -61,6 +60,7 @@ class HookManager private constructor() {
         mReceiverHelper = ReceiverHelper(context,
                 { action, intent ->  onReceive(action, intent) },
                 Constant.Action.REFRESH_PREFERENCE)
+        mReceiverHelper.registerReceiver()
 
         VToast.getInstance().init(context)
 

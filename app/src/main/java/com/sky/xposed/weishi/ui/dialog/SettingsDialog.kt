@@ -40,7 +40,7 @@ class SettingsDialog : BaseDialogFragment() {
     private lateinit var mToolbar: TitleView
     private lateinit var mCommonFrameLayout: CommonFrameLayout
 
-//    private lateinit var sivAutoPlay: SwitchItemView
+    private lateinit var sivAutoPlay: SwitchItemView
     private lateinit var sivAutoAttention: SwitchItemView
     private lateinit var sivAutoLike: SwitchItemView
 //    private lateinit var sivAutoComment: SwitchItemView
@@ -56,7 +56,7 @@ class SettingsDialog : BaseDialogFragment() {
         mCommonFrameLayout = CommonFrameLayout(context)
         mToolbar = mCommonFrameLayout.getTitleView()
 
-//        sivAutoPlay = ViewUtil.newSwitchItemView(context, "自动播放")
+        sivAutoPlay = ViewUtil.newSwitchItemView(context, "自动播放")
         sivAutoAttention = ViewUtil.newSwitchItemView(context, "自动关注")
         sivAutoLike = ViewUtil.newSwitchItemView(context, "自动点赞")
 //        sivAutoComment = ViewUtil.newSwitchItemView(context, "自动评论")
@@ -67,7 +67,7 @@ class SettingsDialog : BaseDialogFragment() {
 //
 //        sivAutoSaveVideo = ViewUtil.newSwitchItemView(context, "自动保存视频")
 
-//        mCommonFrameLayout.addContent(sivAutoPlay, true)
+        mCommonFrameLayout.addContent(sivAutoPlay, true)
         mCommonFrameLayout.addContent(sivAutoAttention, true)
         mCommonFrameLayout.addContent(sivAutoLike, true)
 //        mCommonFrameLayout.addContent(sivAutoComment, true)
@@ -83,7 +83,7 @@ class SettingsDialog : BaseDialogFragment() {
         mToolbar.setTitle("${Constant.Name.PLUGIN}(V${BuildConfig.VERSION_NAME})")
 
         // 绑定事件
-//        trackBind(sivAutoPlay, Constant.Preference.AUTO_PLAY, false, mBooleanChangeListener)
+        trackBind(sivAutoPlay, Constant.Preference.AUTO_PLAY, false, mBooleanChangeListener)
         trackBind(sivAutoAttention, Constant.Preference.AUTO_ATTENTION, false, mBooleanChangeListener)
         trackBind(sivAutoLike, Constant.Preference.AUTO_LIKE, false, mBooleanChangeListener)
 //        trackBind(sivAutoComment, Constant.Preference.AUTO_COMMENT, false, mBooleanChangeListener)

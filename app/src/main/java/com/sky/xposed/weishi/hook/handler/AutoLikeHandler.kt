@@ -23,11 +23,7 @@ import de.robv.android.xposed.XposedHelpers
 
 class AutoLikeHandler(hookManager: HookManager) : CommonHandler(hookManager), Runnable {
 
-    private var mPosition: Int = 0
-
-    fun like(position: Int) {
-
-        mPosition = position
+    fun like() {
 
         if (!getConfigManager().isAutoLike()) {
             // 不需要处理
@@ -39,14 +35,18 @@ class AutoLikeHandler(hookManager: HookManager) : CommonHandler(hookManager), Ru
     }
 
     fun cancel() {
-        mPosition = -1
         removeCallbacks(this)
     }
 
     override fun run() {
 
+        // 获取当前显示的下标
+        val position = getCurrentPosition()
+
+        if (position < 0) return
+
         // 获取当前显示的ViewHolder
-        val viewHolder = getViewHolder(mPosition) ?: return
+        val viewHolder = getViewHolder(position) ?: return
         val itemView = XposedHelpers
                 .getObjectField(viewHolder, "itemView") as View
 
