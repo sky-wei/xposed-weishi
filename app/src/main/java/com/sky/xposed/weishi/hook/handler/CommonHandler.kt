@@ -19,15 +19,40 @@ package com.sky.xposed.weishi.hook.handler
 import com.sky.xposed.weishi.hook.HookManager
 import com.sky.xposed.weishi.hook.base.BaseHandler
 import de.robv.android.xposed.XposedHelpers
+import java.io.Serializable
+import java.util.ArrayList
 
 open class CommonHandler(hookManager: HookManager) : BaseHandler(hookManager) {
 
     fun getViewHolder(position: Int): Any? {
 
+        if (position < 0) return null
+
         val viewPager = getObjectManager().getViewPager() ?: return null
 
         return XposedHelpers.callMethod(viewPager,
                 "findViewHolderForAdapterPosition", position)
+    }
+
+    fun getAdapter(): Any? {
+
+        val viewPager = getObjectManager().getViewPager() ?: return null
+
+        return XposedHelpers.callMethod(viewPager, "getAdapter")
+    }
+
+    fun getAdapterItem(position: Int): Any? {
+
+        if (position < 0) return null
+
+        val adapter = getAdapter() ?: return null
+
+        val list = XposedHelpers
+                .getObjectField(adapter, "h") as? ArrayList<Serializable>
+
+        if (list == null || list.isEmpty()) return null
+
+        return list[position]
     }
 
     fun getCurrentPosition(): Int {

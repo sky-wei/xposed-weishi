@@ -27,9 +27,13 @@ import com.sky.xposed.weishi.hook.handler.AutoLikeHandler
 import com.sky.xposed.weishi.hook.handler.AutoPlayHandler
 import com.sky.xposed.weishi.ui.dialog.SettingsDialog
 import com.sky.xposed.weishi.ui.util.ViewUtil
+import com.sky.xposed.weishi.util.Alog
+import com.sky.xposed.weishi.util.ToStringUtil
 import de.robv.android.xposed.XposedBridge
 import de.robv.android.xposed.XposedHelpers
 import de.robv.android.xposed.callbacks.XC_LoadPackage
+import java.io.Serializable
+import java.util.ArrayList
 
 class WeiShiHook : BaseHook() {
 
@@ -121,6 +125,20 @@ class WeiShiHook : BaseHook() {
         findAndAfterHookMethod(
                 "com.tencent.oscar.module.feedlist.c.af",
                 "onPause") {
+
+            val adapter = XposedHelpers.callMethod(
+                    getObjectManager().getViewPager(), "getAdapter")
+
+            Alog.d(">>>>>>>>>>>>>>>>>>>>>>> $adapter")
+
+            val dataList = XposedHelpers
+                    .getObjectField(adapter, "h") as ArrayList<Serializable>
+            Alog.d(">>>>>>>>>>>>>>>>>>>>>>>>  $dataList  ${dataList.size}")
+
+            ToStringUtil.toString(dataList[0])
+
+//            val data = dataList[0] as Array<*>
+//            ToStringUtil.toString(data[0])
 
             // 停止播放
             mAutoPlayHandler.stopPlay()

@@ -26,6 +26,7 @@ import android.view.ViewGroup
 import android.widget.EditText
 import android.widget.FrameLayout
 import android.widget.TextView
+import com.sky.xposed.weishi.ui.view.SimpleItemView
 import com.sky.xposed.weishi.ui.view.SwitchItemView
 import com.sky.xposed.weishi.util.Alog
 
@@ -109,7 +110,7 @@ object ViewUtil {
     fun newLineView(context: Context): View {
 
         val lineView = View(context)
-        lineView.setBackgroundColor(-0x202021)
+        lineView.setBackgroundColor(0xFFDFDFDF.toInt())
         lineView.layoutParams = LayoutUtil.newViewGroupParams(
                 FrameLayout.LayoutParams.MATCH_PARENT, 2)
         return lineView
@@ -119,6 +120,14 @@ object ViewUtil {
 
         val itemView = SwitchItemView(context)
         itemView.name = name
+
+        return itemView
+    }
+
+    fun newSimpleItemView(context: Context, name: String): SimpleItemView {
+
+        val itemView = SimpleItemView(context)
+        itemView.setName(name)
 
         return itemView
     }

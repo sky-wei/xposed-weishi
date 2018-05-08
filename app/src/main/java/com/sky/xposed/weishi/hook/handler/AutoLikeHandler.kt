@@ -45,7 +45,7 @@ class AutoLikeHandler(hookManager: HookManager) : CommonHandler(hookManager), Ru
 
         if (position < 0) return
 
-        // 获取当前显示的ViewHolder
+        // 获取当前显示的ViewHolder com.tencent.oscar.module.feedlist.c.aa$b
         val viewHolder = getViewHolder(position) ?: return
         val itemView = XposedHelpers
                 .getObjectField(viewHolder, "itemView") as View

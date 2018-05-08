@@ -65,4 +65,6 @@ dependencies {
     compileOnly 'de.robv.android.xposed:api:82'
     compileOnly 'com.rover12421.AndroidHideApi:android:1.4'
     implementation 'org.apache.commons:commons-lang3:3.5'
+    implementation 'com.zhy:okhttputils:2.6.2'
+    implementation 'com.github.megatronking.stringfog:lib:1.2.2'
 }

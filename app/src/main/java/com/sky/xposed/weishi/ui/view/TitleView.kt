@@ -53,7 +53,7 @@ class TitleView : FrameLayout, View.OnClickListener {
 
         layoutParams = LayoutUtil.newViewGroupParams(
                 ViewGroup.LayoutParams.MATCH_PARENT, height)
-        setBackgroundColor(0xFF161823.toInt())
+        setBackgroundColor(0xFF16102E.toInt())
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             elevation = 6f
