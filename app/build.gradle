@@ -11,6 +11,7 @@ android {
         versionCode 1
         versionName "1.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+        resValue 'string', 'app_name', 'xposed-weishi'
     }
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_7
@@ -39,6 +40,7 @@ android {
         debug {
             minifyEnabled false
             signingConfig signingConfigs.sky
+            sourceSets.debug.manifest.srcFile 'src/debug/AndroidManifest.xml'
         }
     }
 
@@ -50,6 +52,7 @@ android {
         }
         common {
             dimension "default"
+            resValue 'string', 'app_name', '微视助手'
         }
     }
 }
@@ -57,8 +60,6 @@ android {
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
     implementation"org.jetbrains.kotlin:kotlin-stdlib-jre7:$kotlin_version"
-    implementation 'com.android.support:appcompat-v7:27.1.1'
-    implementation 'com.android.support.constraint:constraint-layout:1.1.0'
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'com.android.support.test:runner:1.0.1'
     androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.1'

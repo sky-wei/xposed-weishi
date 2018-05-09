@@ -19,11 +19,13 @@ package com.sky.xposed.weishi.hook
 import android.content.Context
 import android.content.Intent
 import android.os.Handler
+import com.sky.xposed.weishi.BuildConfig
 import com.sky.xposed.weishi.Constant
 import com.sky.xposed.weishi.data.CachePreferences
 import com.sky.xposed.weishi.data.ConfigManager
 import com.sky.xposed.weishi.data.ObjectManager
 import com.sky.xposed.weishi.helper.ReceiverHelper
+import com.sky.xposed.weishi.util.Alog
 import com.sky.xposed.weishi.util.VToast
 import de.robv.android.xposed.callbacks.XC_LoadPackage
 import java.util.*
@@ -62,6 +64,7 @@ class HookManager private constructor() {
                 Constant.Action.REFRESH_PREFERENCE)
         mReceiverHelper.registerReceiver()
 
+        Alog.debug = BuildConfig.DEBUG
         VToast.getInstance().init(context)
 
         return this

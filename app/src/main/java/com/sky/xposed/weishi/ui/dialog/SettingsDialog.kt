@@ -30,6 +30,7 @@ import com.sky.xposed.weishi.ui.base.BaseDialogFragment
 import com.sky.xposed.weishi.ui.interfaces.TrackViewStatus.StatusChangeListener
 import com.sky.xposed.weishi.ui.util.ViewUtil
 import com.sky.xposed.weishi.ui.view.*
+import com.sky.xposed.weishi.util.VToast
 import java.io.Serializable
 import java.util.*
 
@@ -97,7 +98,7 @@ class SettingsDialog : BaseDialogFragment() {
             val builder = AlertDialog.Builder(context)
             builder.setTitle("关于")
             builder.setMessage("\n插件版本: v${BuildConfig.VERSION_NAME}")
-            builder.setPositiveButton("确定", { _, _ -> dismiss() })
+            builder.setPositiveButton("确定", { dialog, _ -> dialog.dismiss() })
             builder.show()
         }
     }
@@ -105,6 +106,14 @@ class SettingsDialog : BaseDialogFragment() {
     private val mBooleanChangeListener = object : StatusChangeListener<Boolean> {
 
         override fun onStatusChange(view: View, key: String, value: Boolean): Boolean {
+
+            if (Constant.Preference.AUTO_COMMENT == key && value) {
+                // 暂时不能使用
+                sivAutoComment.isChecked = false
+                VToast.show("功能暂未开放")
+                return true
+            }
+
             sendRefreshPreferenceBroadcast(key, value)
             return true
         }

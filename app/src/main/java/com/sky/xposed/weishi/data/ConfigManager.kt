@@ -32,7 +32,7 @@ class ConfigManager(hookManager: HookManager) {
     private var mVersionConfig: VersionConfig? = null
 
     init {
-        VERSION_MAP["4.0.1.88"] = VersionConfig40188::class.java
+//        VERSION_MAP["4.0.1.88"] = VersionConfig40188::class.java
         VERSION_MAP["4.2.0.88"] = VersionConfig42088::class.java
     }
 

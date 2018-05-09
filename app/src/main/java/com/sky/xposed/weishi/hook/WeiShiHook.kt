@@ -44,7 +44,8 @@ class WeiShiHook : BaseHook() {
 
     override fun onHandleLoadPackage(param: XC_LoadPackage.LoadPackageParam) {
 
-        debugWeiShiHook()
+        if (Alog.debug) debugWeiShiHook()
+        if (Alog.debug) testHook()
 
         // 注入UI设置入口
         injectionUISettings()
@@ -52,8 +53,6 @@ class WeiShiHook : BaseHook() {
         autoPlayHook()
 
         videoSwitchHook()
-
-        testHook()
     }
 
     /**

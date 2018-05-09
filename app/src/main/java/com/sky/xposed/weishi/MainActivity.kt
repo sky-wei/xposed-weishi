@@ -16,17 +16,21 @@
 
 package com.sky.xposed.weishi
 
-import android.support.v7.app.AppCompatActivity
+import android.app.Activity
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
 import com.sky.xposed.weishi.ui.dialog.SettingsDialog
+import com.sky.xposed.weishi.util.VToast
 
-class MainActivity : AppCompatActivity() {
+class MainActivity : Activity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+
+        // 初始化
+        VToast.getInstance().init(applicationContext)
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
