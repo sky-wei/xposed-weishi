@@ -17,8 +17,6 @@
 package com.sky.xposed.weishi.hook
 
 import android.app.Activity
-import android.content.Context
-import android.os.Bundle
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
@@ -50,9 +48,14 @@ class WeiShiHook : BaseHook() {
         // 注入UI设置入口
         injectionUISettings()
 
+        // 自动播放
         autoPlayHook()
 
+        // 切换视频
         videoSwitchHook()
+
+        // 移除时间限制
+        removeLimitHook()
     }
 
     /**
@@ -189,6 +192,27 @@ class WeiShiHook : BaseHook() {
     }
 
     /**
+     * 移除时间限制
+     */
+    private fun removeLimitHook() {
+
+        findAndHookMethodReplacement(
+                "com.tencent.oscar.config.WeishiParams",
+                "getUserVideoDurationLimit",
+                Long::class.java, Long::class.java
+        ) {
+
+            if (getConfigManager().isRemoveLimit()) {
+                // 最大120s
+                60000 * 2 // 120s
+            } else {
+                // 调用默认的
+                XposedBridge.invokeOriginalMethod(it.method, it.thisObject, it.args)
+            }
+        }
+    }
+
+    /**
      * 开始处理点赞跟关注
      */
     private fun startHandlerLike() {
@@ -213,22 +237,31 @@ class WeiShiHook : BaseHook() {
 
     private fun testHook() {
 
+//        findAndBeforeHookMethod(
+//                "android.support.v4.app.Fragment",
+//                "onCreate",
+//                Bundle::class.java
+//        ) {
+//
+//            Alog.d(">>>>>>>>>>>>>>>>>>>> onCreate " + it.thisObject.javaClass)
+//        }
+//
+//        findAndBeforeHookMethod(
+//                "android.support.design.widget.BottomSheetDialog",
+//                "onCreate",
+//                Bundle::class.java
+//        ) {
+//
+//            Alog.d(">>>>>>>>>>>>>>>>>>>> onCreate " + it.thisObject)
+//        }
+
         findAndBeforeHookMethod(
-                "android.support.v4.app.Fragment",
-                "onCreate",
-                Bundle::class.java
+                "com.tencent.qzcamera.ui.widget.SegmentProgressView",
+                "setMax",
+                Float::class.java
         ) {
 
-            Alog.d(">>>>>>>>>>>>>>>>>>>> onCreate " + it.thisObject.javaClass)
-        }
-
-        findAndBeforeHookMethod(
-                "android.support.design.widget.BottomSheetDialog",
-                "onCreate",
-                Bundle::class.java
-        ) {
-
-            Alog.d(">>>>>>>>>>>>>>>>>>>> onCreate " + it.thisObject)
+            Alog.d(">>>>>>>>>>>>>>>>>>>>>> setSimualteDuration ${it.args[0]}")
         }
 
 //        findAndBeforeHookMethod(

@@ -45,7 +45,7 @@ class SettingsDialog : BaseDialogFragment() {
     private lateinit var sivAutoComment: SwitchItemView
     private lateinit var etiAutoCommentMessage: EditTextItemView
     private lateinit var sivAutoSaveVideo: SwitchItemView
-//    private lateinit var sivRemoveLimit: SwitchItemView
+    private lateinit var sivRemoveLimit: SwitchItemView
     private lateinit var sivAbout: SimpleItemView
 
     override fun createView(inflater: LayoutInflater, container: ViewGroup?): View {
@@ -60,7 +60,7 @@ class SettingsDialog : BaseDialogFragment() {
         sivAutoAttention = ViewUtil.newSwitchItemView(context, "自动关注")
         sivAutoLike = ViewUtil.newSwitchItemView(context, "自动点赞")
         sivAutoComment = ViewUtil.newSwitchItemView(context, "自动评论")
-//        sivRemoveLimit = ViewUtil.newSwitchItemView(context, "解除60秒限制")
+        sivRemoveLimit = ViewUtil.newSwitchItemView(context, "解除60秒限制(最大120秒)")
         sivAbout = ViewUtil.newSimpleItemView(context, "关于")
 
         etiAutoCommentMessage = EditTextItemView(context)
@@ -74,7 +74,7 @@ class SettingsDialog : BaseDialogFragment() {
         mCommonFrameLayout.addContent(sivAutoComment, true)
         mCommonFrameLayout.addContent(etiAutoCommentMessage, true)
         mCommonFrameLayout.addContent(sivAutoSaveVideo, true)
-//        mCommonFrameLayout.addContent(sivRemoveLimit)
+        mCommonFrameLayout.addContent(sivRemoveLimit, true)
         mCommonFrameLayout.addContent(sivAbout)
 
         return mCommonFrameLayout
@@ -91,7 +91,7 @@ class SettingsDialog : BaseDialogFragment() {
         trackBind(sivAutoComment, Constant.Preference.AUTO_COMMENT, false, mBooleanChangeListener)
         trackBind(sivAutoSaveVideo, Constant.Preference.AUTO_SAVE_VIDEO, false, mBooleanChangeListener)
         trackBind(etiAutoCommentMessage, Constant.Preference.AUTO_COMMENT_MESSAGE, "", mStringChangeListener)
-//        trackBind(sivRemoveLimit, Constant.Preference.REMOVE_LIMIT, false, mBooleanChangeListener)
+        trackBind(sivRemoveLimit, Constant.Preference.REMOVE_LIMIT, false, mBooleanChangeListener)
         sivAbout.setOnClickListener{
 
             // 显示关于
