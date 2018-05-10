@@ -60,7 +60,7 @@ class SettingsDialog : BaseDialogFragment() {
         sivAutoAttention = ViewUtil.newSwitchItemView(context, "自动关注")
         sivAutoLike = ViewUtil.newSwitchItemView(context, "自动点赞")
         sivAutoComment = ViewUtil.newSwitchItemView(context, "自动评论")
-//        sivRemoveLimit = ViewUtil.newSwitchItemView(context, "解除15秒限制(最大60秒)")
+//        sivRemoveLimit = ViewUtil.newSwitchItemView(context, "解除60秒限制")
         sivAbout = ViewUtil.newSimpleItemView(context, "关于")
 
         etiAutoCommentMessage = EditTextItemView(context)
