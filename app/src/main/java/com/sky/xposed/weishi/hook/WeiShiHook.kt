@@ -22,13 +22,11 @@ import android.view.ViewGroup
 import android.widget.TextView
 import com.sky.xposed.weishi.Constant
 import com.sky.xposed.weishi.hook.base.BaseHook
-import com.sky.xposed.weishi.hook.handler.AutoAttentionHandler
-import com.sky.xposed.weishi.hook.handler.AutoDownloadHandler
-import com.sky.xposed.weishi.hook.handler.AutoLikeHandler
-import com.sky.xposed.weishi.hook.handler.AutoPlayHandler
+import com.sky.xposed.weishi.hook.handler.*
 import com.sky.xposed.weishi.ui.dialog.SettingsDialog
 import com.sky.xposed.weishi.ui.util.ViewUtil
 import com.sky.xposed.weishi.util.Alog
+import com.sky.xposed.weishi.util.ToStringUtil
 import de.robv.android.xposed.XposedBridge
 import de.robv.android.xposed.XposedHelpers
 import de.robv.android.xposed.callbacks.XC_LoadPackage
@@ -38,6 +36,7 @@ class WeiShiHook : BaseHook() {
     private val mAutoPlayHandler = AutoPlayHandler(getHookManager())
     private val mAutoLikeHandler = AutoLikeHandler(getHookManager())
     private val mAutoAttentionHandler = AutoAttentionHandler(getHookManager())
+    private val mAutoCommentHandler = AutoCommentHandler(getHookManager())
     private val mAutoDownloadHandler = AutoDownloadHandler(getHookManager())
 
     override fun onHandleLoadPackage(param: XC_LoadPackage.LoadPackageParam) {
@@ -223,6 +222,9 @@ class WeiShiHook : BaseHook() {
         mAutoAttentionHandler.cancel()
         mAutoAttentionHandler.attention()
 
+        mAutoCommentHandler.cancel()
+        mAutoCommentHandler.comment()
+
         mAutoDownloadHandler.cancel()
         mAutoDownloadHandler.download()
     }
@@ -245,6 +247,15 @@ class WeiShiHook : BaseHook() {
 //
 //            Alog.d(">>>>>>>>>>>>>>>>>>>> onCreate " + it.thisObject.javaClass)
 //        }
+
+//        findAndBeforeHookMethod(
+//                "com.tencent.oscar.widget.comment.CommentPostBoxFragment",
+//                "onCreate",
+//                Bundle::class.java
+//        ) {
+//
+//            Alog.d(">>>>>>>>>>>>>>>>>>>> onCreate " + it.thisObject.javaClass)
+//        }
 //
 //        findAndBeforeHookMethod(
 //                "android.support.design.widget.BottomSheetDialog",
@@ -255,13 +266,23 @@ class WeiShiHook : BaseHook() {
 //            Alog.d(">>>>>>>>>>>>>>>>>>>> onCreate " + it.thisObject)
 //        }
 
+        val stMetaPersonClass = findClass("NS_KING_SOCIALIZE_META.stMetaPerson")
+        val stMetaCommentClass = findClass("NS_KING_SOCIALIZE_META.stMetaComment")
+
         findAndBeforeHookMethod(
-                "com.tencent.qzcamera.ui.widget.SegmentProgressView",
-                "setMax",
-                Float::class.java
+                "com.tencent.oscar.module.d.a.c",
+                "a",
+                String::class.java, String::class.java, stMetaPersonClass,
+                stMetaCommentClass, String::class.java, String::class.java, String::class.java
         ) {
 
-            Alog.d(">>>>>>>>>>>>>>>>>>>>>> setSimualteDuration ${it.args[0]}")
+            Alog.d(">>>>>>>>>>>>>>>>> ${it.args[0]}")
+            Alog.d(">>>>>>>>>>>>>>>>> ${it.args[1]}")
+            ToStringUtil.toString(it.args[2])
+            ToStringUtil.toString(it.args[3])
+            Alog.d(">>>>>>>>>>>>>>>>> ${it.args[4]}")
+            Alog.d(">>>>>>>>>>>>>>>>> ${it.args[5]}")
+            Alog.d(">>>>>>>>>>>>>>>>> ${it.args[6]}")
         }
 
 //        findAndBeforeHookMethod(

@@ -19,8 +19,6 @@ package com.sky.xposed.weishi.hook.handler
 import android.content.Intent
 import android.net.Uri
 import android.os.Environment
-import android.util.Base64
-import android.view.View
 import com.sky.xposed.weishi.hook.HookManager
 import com.sky.xposed.weishi.util.Alog
 import com.sky.xposed.weishi.util.MD5Util
