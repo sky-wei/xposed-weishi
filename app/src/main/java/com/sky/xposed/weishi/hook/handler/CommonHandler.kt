@@ -20,7 +20,7 @@ import com.sky.xposed.weishi.hook.HookManager
 import com.sky.xposed.weishi.hook.base.BaseHandler
 import de.robv.android.xposed.XposedHelpers
 import java.io.Serializable
-import java.util.ArrayList
+import java.util.*
 
 open class CommonHandler(hookManager: HookManager) : BaseHandler(hookManager) {
 
@@ -47,8 +47,15 @@ open class CommonHandler(hookManager: HookManager) : BaseHandler(hookManager) {
 
         val adapter = getAdapter() ?: return null
 
+        // com.tencent.oscar.module.feedlist.c.aa
+        var fieldName = "h"
+
+        if (adapter.javaClass.name == "com.tencent.oscar.module.main.feed.as") {
+            fieldName = "j"
+        }
+
         val list = XposedHelpers.getObjectField(
-                adapter, "h") as? ArrayList<Serializable>
+                adapter, fieldName) as? ArrayList<Serializable>
 
         if (list == null || list.isEmpty()) return null
 

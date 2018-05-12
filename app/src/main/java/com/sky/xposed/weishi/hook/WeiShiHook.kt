@@ -266,24 +266,24 @@ class WeiShiHook : BaseHook() {
 //            Alog.d(">>>>>>>>>>>>>>>>>>>> onCreate " + it.thisObject)
 //        }
 
-        val stMetaPersonClass = findClass("NS_KING_SOCIALIZE_META.stMetaPerson")
-        val stMetaCommentClass = findClass("NS_KING_SOCIALIZE_META.stMetaComment")
-
-        findAndBeforeHookMethod(
-                "com.tencent.oscar.module.d.a.c",
-                "a",
-                String::class.java, String::class.java, stMetaPersonClass,
-                stMetaCommentClass, String::class.java, String::class.java, String::class.java
-        ) {
-
-            Alog.d(">>>>>>>>>>>>>>>>> ${it.args[0]}")
-            Alog.d(">>>>>>>>>>>>>>>>> ${it.args[1]}")
-            ToStringUtil.toString(it.args[2])
-            ToStringUtil.toString(it.args[3])
-            Alog.d(">>>>>>>>>>>>>>>>> ${it.args[4]}")
-            Alog.d(">>>>>>>>>>>>>>>>> ${it.args[5]}")
-            Alog.d(">>>>>>>>>>>>>>>>> ${it.args[6]}")
-        }
+//        val stMetaPersonClass = findClass("NS_KING_SOCIALIZE_META.stMetaPerson")
+//        val stMetaCommentClass = findClass("NS_KING_SOCIALIZE_META.stMetaComment")
+//
+//        findAndBeforeHookMethod(
+//                "com.tencent.oscar.module.d.a.c",
+//                "a",
+//                String::class.java, String::class.java, stMetaPersonClass,
+//                stMetaCommentClass, String::class.java, String::class.java, String::class.java
+//        ) {
+//
+//            Alog.d(">>>>>>>>>>>>>>>>> ${it.args[0]}")
+//            Alog.d(">>>>>>>>>>>>>>>>> ${it.args[1]}")
+//            ToStringUtil.toString(it.args[2])
+//            ToStringUtil.toString(it.args[3])
+//            Alog.d(">>>>>>>>>>>>>>>>> ${it.args[4]}")
+//            Alog.d(">>>>>>>>>>>>>>>>> ${it.args[5]}")
+//            Alog.d(">>>>>>>>>>>>>>>>> ${it.args[6]}")
+//        }
 
 //        findAndBeforeHookMethod(
 //                "android.support.v7.app.AppCompatDialog",
