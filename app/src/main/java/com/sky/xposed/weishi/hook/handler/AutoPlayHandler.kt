@@ -97,7 +97,7 @@ class AutoPlayHandler(hookManager: HookManager) : CommonHandler(hookManager), Ru
 
         // 切换页面
         XposedHelpers.callMethod(mViewPager,
-                "smoothScrollToPosition", currentItem + 1)
+                mVersionConfig.methodViewPagerSmooth, currentItem + 1)
 
         // 继续播放下一个
         playNext(RandomUtil.randomLong(15000, 20000))

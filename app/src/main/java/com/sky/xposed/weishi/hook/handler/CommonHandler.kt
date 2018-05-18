@@ -24,6 +24,8 @@ import java.util.*
 
 open class CommonHandler(hookManager: HookManager) : BaseHandler(hookManager) {
 
+    val mVersionConfig = getConfigManager().getVersionConfig()!!
+
     fun getViewHolder(position: Int): Any? {
 
         if (position < 0) return null
@@ -31,14 +33,14 @@ open class CommonHandler(hookManager: HookManager) : BaseHandler(hookManager) {
         val viewPager = getObjectManager().getViewPager() ?: return null
 
         return XposedHelpers.callMethod(viewPager,
-                "findViewHolderForAdapterPosition", position)
+                mVersionConfig.methodViewPagerAdapterPosition, position)
     }
 
     fun getAdapter(): Any? {
 
         val viewPager = getObjectManager().getViewPager() ?: return null
 
-        return XposedHelpers.callMethod(viewPager, "getAdapter")
+        return XposedHelpers.callMethod(viewPager, mVersionConfig.methodViewPagerGetAdapter)
     }
 
     fun getAdapterItem(position: Int): Any? {
@@ -48,10 +50,10 @@ open class CommonHandler(hookManager: HookManager) : BaseHandler(hookManager) {
         val adapter = getAdapter() ?: return null
 
         // com.tencent.oscar.module.feedlist.c.aa
-        var fieldName = "h"
+        var fieldName = mVersionConfig.fieldItemModeList2
 
-        if (adapter.javaClass.name == "com.tencent.oscar.module.main.feed.as") {
-            fieldName = "j"
+        if (adapter.javaClass.name == mVersionConfig.classItemModel) {
+            fieldName = mVersionConfig.fieldItemModeList
         }
 
         val list = XposedHelpers.getObjectField(
@@ -67,6 +69,6 @@ open class CommonHandler(hookManager: HookManager) : BaseHandler(hookManager) {
         val viewPager = getObjectManager().getViewPager() ?: return -1
 
         return XposedHelpers.callMethod(viewPager,
-                "getCurrentPosition") as Int
+                mVersionConfig.methodViewPagerGetCurrentPosition) as Int
     }
 }

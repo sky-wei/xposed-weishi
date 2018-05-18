@@ -48,10 +48,10 @@ class AutoLikeHandler(hookManager: HookManager) : CommonHandler(hookManager), Ru
         // 获取当前显示的ViewHolder com.tencent.oscar.module.feedlist.c.aa$b
         val viewHolder = getViewHolder(position) ?: return
         val itemView = XposedHelpers
-                .getObjectField(viewHolder, "itemView") as View
+                .getObjectField(viewHolder, mVersionConfig.fieldViewHolder) as View
 
-        val likeContainer = findViewById(itemView, "feed_like_status_container")
-        val likeStatus2 = findViewById(itemView, "feed_like_status2")
+        val likeContainer = findViewById(itemView, mVersionConfig.idLikeContainer)
+        val likeStatus2 = findViewById(itemView, mVersionConfig.idLikeStatus2)
 
         if (likeStatus2 != null && likeStatus2.isShown) {
             // 已经点赞了，不需要处理

@@ -32,8 +32,8 @@ class ConfigManager(hookManager: HookManager) {
     private var mVersionConfig: VersionConfig? = null
 
     init {
-//        VERSION_MAP["4.0.1.88"] = VersionConfig40188::class.java
         VERSION_MAP["4.2.0.88"] = VersionConfig42088::class.java
+        VERSION_MAP["4.2.5.88"] = VersionConfig42588::class.java
     }
 
     fun isAutoPlay(): Boolean {
@@ -108,9 +108,94 @@ class ConfigManager(hookManager: HookManager) {
 
     class VersionConfig42088 : VersionConfig()
 
-    class VersionConfig40188 : VersionConfig()
+    class VersionConfig42588 : VersionConfig() {
+
+        init {
+            classFeedList = "com.tencent.oscar.module.feedlist.d.ag"
+        }
+    }
 
     open class VersionConfig {
 
+        /** ShareDialog   */
+        var classShareDialog = "com.tencent.oscar.module.share.a.b"
+
+        var classAppCompatTextView = "android.support.v7.widget.AppCompatTextView"
+
+        var classFeedList = "com.tencent.oscar.module.feedlist.c.af"
+
+        var classMainFeed = "com.tencent.oscar.module.main.feed.f"
+
+        var classRecyclerViewPager = "com.lsjwzh.widget.recyclerviewpager.RecyclerViewPager"
+
+        var classWeishiParams = "com.tencent.oscar.config.WeishiParams"
+
+        var classItemModel = "com.tencent.oscar.module.main.feed.as"
+
+        var classLifePlayApplication = "com.tencent.oscar.app.LifePlayApplication"
+
+        var classStMetaPerson = "NS_KING_SOCIALIZE_META.stMetaPerson"
+
+        var classStMetaComment = "NS_KING_SOCIALIZE_META.stMetaComment"
+
+        var classSendComment = "com.tencent.oscar.module.d.a.c"
+
+        var methodShareCreateItem = "a"
+
+        var methodShareClick = "a"
+
+        var methodShareDismiss = "dismiss"
+
+        var methodFeedListOnResume = "onResume"
+
+        var methodFeedListOnPause = "onPause"
+
+        var methodMainFeedOnResume = "onResume"
+
+        var methodMainFeedOnPause = "onPause"
+
+        var methodViewPagerSmooth = "smoothScrollToPosition"
+
+        var methodParamsLimit = "getUserVideoDurationLimit"
+
+        var methodViewPagerAdapterPosition = "findViewHolderForAdapterPosition"
+
+        var methodViewPagerGetAdapter = "getAdapter"
+
+        var methodViewPagerGetCurrentPosition = "getCurrentPosition"
+
+        var methodSendComment = "a"
+
+        var methodGetAccountManager = "getAccountManager"
+
+        var methodAccountPosterId = "b"
+
+        var fieldShareActivity = "a"
+
+        var fieldFeedListViewPager = "a"
+
+        var fieldMainFeedViewPager = "a"
+
+        var fieldViewHolder = "itemView"
+
+        var fieldItemModeList = "j"
+
+        var fieldItemModeList2 = "h"
+
+        var fieldItemModeVideoUrl = "video_url"
+
+        var fieldDataId = "id"
+
+        var fieldDataPoster = "poster"
+
+        var fieldDataTopicId = "topic_id"
+
+        var fieldDataShieldId = "shieldId"
+
+        var idAttention = "follow_flag"
+
+        var idLikeContainer = "feed_like_status_container"
+
+        var idLikeStatus2 = "feed_like_status2"
     }
 }

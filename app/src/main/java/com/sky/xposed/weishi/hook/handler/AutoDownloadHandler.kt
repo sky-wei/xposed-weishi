@@ -85,7 +85,7 @@ class AutoDownloadHandler(hookManager: HookManager) : CommonHandler(hookManager)
 
             // 下载视频
             downloadVideo(XposedHelpers
-                    .getObjectField(data, "video_url") as String)
+                    .getObjectField(data, mVersionConfig.fieldItemModeVideoUrl) as String)
         } catch (tr: Throwable) {
             Alog.e(TAG, "下载异常了", tr)
         }

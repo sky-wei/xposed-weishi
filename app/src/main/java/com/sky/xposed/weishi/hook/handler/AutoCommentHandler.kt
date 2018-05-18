@@ -37,13 +37,13 @@ class AutoCommentHandler(hookManager: HookManager) : CommonHandler(hookManager),
                 .getLoadPackageParam().classLoader
 
         lifePlayApplicationClass = XposedHelpers.findClass(
-                "com.tencent.oscar.app.LifePlayApplication", classLoader)
+                mVersionConfig.classLifePlayApplication, classLoader)
         stMetaPersonClass = XposedHelpers.findClass(
-                "NS_KING_SOCIALIZE_META.stMetaPerson", classLoader)
+                mVersionConfig.classStMetaPerson, classLoader)
         stMetaCommentClass = XposedHelpers.findClass(
-                "NS_KING_SOCIALIZE_META.stMetaComment", classLoader)
+                mVersionConfig.classStMetaComment, classLoader)
         cClass = XposedHelpers.findClass(
-                "com.tencent.oscar.module.d.a.c", classLoader)
+                mVersionConfig.classSendComment, classLoader)
 
         // 参数类型
         parameterTypes = arrayOf(String::class.java, String::class.java,
@@ -62,22 +62,22 @@ class AutoCommentHandler(hookManager: HookManager) : CommonHandler(hookManager),
         if (data == null || TextUtils.isEmpty(message)) return
 
         try {
-            val id = XposedHelpers.getObjectField(data, "id")
-            val poster = XposedHelpers.getObjectField(data, "poster")
-            val topicId = XposedHelpers.getObjectField(data, "topic_id")
-            val shieldId = XposedHelpers.getObjectField(data, "shieldId")
+            val id = XposedHelpers.getObjectField(data, mVersionConfig.fieldDataId)
+            val poster = XposedHelpers.getObjectField(data, mVersionConfig.fieldDataPoster)
+            val topicId = XposedHelpers.getObjectField(data, mVersionConfig.fieldDataTopicId)
+            val shieldId = XposedHelpers.getObjectField(data, mVersionConfig.fieldDataShieldId)
 
             // 创建评论对象 posterId与poster需要是当前用户
             val accountManager = XposedHelpers.callStaticMethod(
-                    lifePlayApplicationClass, "getAccountManager")
-            val curPosterId = XposedHelpers.callMethod(accountManager, "b")
+                    lifePlayApplicationClass, mVersionConfig.methodGetAccountManager)
+            val curPosterId = XposedHelpers.callMethod(accountManager, mVersionConfig.methodAccountPosterId)
 
             val comment = XposedHelpers.newInstance(stMetaCommentClass, parameterTypes,
                     "pending_commend_id", message, curPosterId, null, "", null, (System.currentTimeMillis() / 1000).toInt())
 
             // 发送评论
             XposedHelpers.callStaticMethod(cClass,
-                    "a", parameterTypes1, id, topicId, poster, comment, "", "", shieldId)
+                    mVersionConfig.methodSendComment, parameterTypes1, id, topicId, poster, comment, "", "", shieldId)
         } catch (tr: Throwable) {
             Alog.e("发布评论异常", tr)
         }

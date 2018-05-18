@@ -26,7 +26,6 @@ import com.sky.xposed.weishi.hook.handler.*
 import com.sky.xposed.weishi.ui.dialog.SettingsDialog
 import com.sky.xposed.weishi.ui.util.ViewUtil
 import com.sky.xposed.weishi.util.Alog
-import com.sky.xposed.weishi.util.ToStringUtil
 import de.robv.android.xposed.XposedBridge
 import de.robv.android.xposed.XposedHelpers
 import de.robv.android.xposed.callbacks.XC_LoadPackage
@@ -38,6 +37,8 @@ class WeiShiHook : BaseHook() {
     private val mAutoAttentionHandler = AutoAttentionHandler(getHookManager())
     private val mAutoCommentHandler = AutoCommentHandler(getHookManager())
     private val mAutoDownloadHandler = AutoDownloadHandler(getHookManager())
+
+    private val mVersionConfig = getConfigManager().getVersionConfig()!!
 
     override fun onHandleLoadPackage(param: XC_LoadPackage.LoadPackageParam) {
 
@@ -63,52 +64,52 @@ class WeiShiHook : BaseHook() {
     private fun injectionUISettings() {
 
         findAndBeforeHookMethod(
-                "com.tencent.oscar.module.share.a.b",
-                "a",
+                mVersionConfig.classShareDialog,
+                mVersionConfig.methodShareCreateItem,
                 String::class.java, Int::class.java
         ) {
 
             if ("复制链接" == it.args[0]) {
                 // 添加入口
                 XposedHelpers.callMethod(
-                        it.thisObject, "a",
+                        it.thisObject, mVersionConfig.methodShareCreateItem,
                         Constant.Name.PLUGIN, it.args[1])
 
                 // 添加下载
                 XposedHelpers.callMethod(
-                        it.thisObject, "a",
+                        it.thisObject, mVersionConfig.methodShareCreateItem,
                         Constant.Name.SAVE_VIDEO, it.args[1])
             }
         }
 
         findAndHookMethodReplacement(
-                "com.tencent.oscar.module.share.a.b",
-                "a",
+                mVersionConfig.classShareDialog,
+                mVersionConfig.methodShareClick,
                 View::class.java, Int::class.java
         ) {
 
             val viewGroup = it.args[0] as ViewGroup
             val textView = ViewUtil.findFirstView(viewGroup,
-                    "android.support.v7.widget.AppCompatTextView") as TextView?
+                    mVersionConfig.classAppCompatTextView) as TextView?
             val name = textView?.text
 
             when(name) {
                 Constant.Name.PLUGIN -> {
                     // 显示设置界面
                     val activity = XposedHelpers
-                            .getObjectField(it.thisObject, "a") as Activity
+                            .getObjectField(it.thisObject, mVersionConfig.fieldShareActivity) as Activity
                     val dialog = SettingsDialog()
                     dialog.show(activity.fragmentManager, "settings")
 
                     // 关闭界面
-                    XposedHelpers.callMethod(it.thisObject, "dismiss")
+                    XposedHelpers.callMethod(it.thisObject, mVersionConfig.methodShareDismiss)
                 }
                 Constant.Name.SAVE_VIDEO -> {
                     // 下载视频到本地
                     mAutoDownloadHandler.downloadToLocal()
 
                     // 关闭界面
-                    XposedHelpers.callMethod(it.thisObject, "dismiss")
+                    XposedHelpers.callMethod(it.thisObject, mVersionConfig.methodShareDismiss)
                 }
                 else -> {
                     // 走原来的逻辑
@@ -126,11 +127,11 @@ class WeiShiHook : BaseHook() {
     private fun autoPlayHook() {
 
         findAndAfterHookMethod(
-                "com.tencent.oscar.module.feedlist.c.af",
-                "onResume") {
+                mVersionConfig.classFeedList,
+                mVersionConfig.methodFeedListOnResume) {
 
             getObjectManager().setViewPager(
-                    XposedHelpers.getObjectField(it.thisObject, "a"))
+                    XposedHelpers.getObjectField(it.thisObject, mVersionConfig.fieldFeedListViewPager))
 
             // 自动播放
             mAutoPlayHandler.startPlay()
@@ -140,8 +141,8 @@ class WeiShiHook : BaseHook() {
         }
 
         findAndAfterHookMethod(
-                "com.tencent.oscar.module.feedlist.c.af",
-                "onPause") {
+                mVersionConfig.classFeedList,
+                mVersionConfig.methodFeedListOnPause) {
 
             // 停止播放
             mAutoPlayHandler.stopPlay()
@@ -150,11 +151,11 @@ class WeiShiHook : BaseHook() {
         }
 
         findAndAfterHookMethod(
-                "com.tencent.oscar.module.main.feed.f",
-                "onResume") {
+                mVersionConfig.classMainFeed,
+                mVersionConfig.methodMainFeedOnResume) {
 
             getObjectManager().setViewPager(
-                    XposedHelpers.getObjectField(it.thisObject, "a"))
+                    XposedHelpers.getObjectField(it.thisObject, mVersionConfig.fieldMainFeedViewPager))
 
             // 自动播放
             mAutoPlayHandler.startPlay()
@@ -164,8 +165,8 @@ class WeiShiHook : BaseHook() {
         }
 
         findAndAfterHookMethod(
-                "com.tencent.oscar.module.main.feed.f",
-                "onPause") {
+                mVersionConfig.classMainFeed,
+                mVersionConfig.methodMainFeedOnPause) {
 
             // 停止播放
             mAutoPlayHandler.stopPlay()
@@ -180,8 +181,8 @@ class WeiShiHook : BaseHook() {
     private fun videoSwitchHook() {
 
         findAndAfterHookMethod(
-                "com.lsjwzh.widget.recyclerviewpager.RecyclerViewPager",
-                "smoothScrollToPosition",
+                mVersionConfig.classRecyclerViewPager,
+                mVersionConfig.methodViewPagerSmooth,
                 Int::class.java
         ) {
 
@@ -196,8 +197,8 @@ class WeiShiHook : BaseHook() {
     private fun removeLimitHook() {
 
         findAndHookMethodReplacement(
-                "com.tencent.oscar.config.WeishiParams",
-                "getUserVideoDurationLimit",
+                mVersionConfig.classWeishiParams,
+                mVersionConfig.methodParamsLimit,
                 Long::class.java, Long::class.java
         ) {
 
