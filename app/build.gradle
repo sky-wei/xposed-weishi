@@ -8,8 +8,8 @@ android {
         applicationId "com.sky.xposed.weishi"
         minSdkVersion 21
         targetSdkVersion 27
-        versionCode 3
-        versionName "1.2"
+        versionCode 4
+        versionName "1.2.1"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         resValue 'string', 'app_name', 'xposed-weishi'
     }

@@ -17,13 +17,21 @@
 package com.sky.xposed.weishi
 
 import android.app.Activity
+import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
+import android.view.View
 import com.sky.xposed.weishi.ui.dialog.SettingsDialog
+import com.sky.xposed.weishi.ui.view.ItemMenu
+import com.sky.xposed.weishi.util.PackageUitl
 import com.sky.xposed.weishi.util.VToast
 
 class MainActivity : Activity() {
+
+    private lateinit var imVersion: ItemMenu
+    private lateinit var imWeiShiVersion: ItemMenu
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -31,13 +39,20 @@ class MainActivity : Activity() {
 
         // 初始化
         VToast.getInstance().init(applicationContext)
+
+        imVersion = findViewById(R.id.im_version)
+        imWeiShiVersion = findViewById(R.id.im_weishi_version)
+
+        imVersion.setDesc("v${BuildConfig.VERSION_NAME}")
+        imWeiShiVersion.setDesc(getWeiShiVersionName())
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
-
-        menuInflater.inflate(R.menu.activity_main_menu, menu)
-
-        return true
+        if (BuildConfig.DEBUG) {
+            menuInflater.inflate(R.menu.activity_main_menu, menu)
+            return true
+        }
+        return super.onCreateOptionsMenu(menu)
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
@@ -47,5 +62,42 @@ class MainActivity : Activity() {
             dialog.show(fragmentManager, "settings")
         }
         return super.onOptionsItemSelected(item)
+    }
+
+    fun onClick(view: View) {
+
+        when(view.id) {
+            R.id.im_source -> {
+                openUrl("https://github.com/jingcai-wei/xposed-weishi")
+            }
+            R.id.im_download -> {
+                openUrl("http://repo.xposed.info/module/com.sky.xposed.weishi")
+            }
+            R.id.im_about -> {
+                openUrl("https://github.com/jingcai-wei/")
+            }
+        }
+    }
+
+    private fun openUrl(url: String) {
+
+        try {
+            val intent = Intent(Intent.ACTION_VIEW)
+            intent.data = Uri.parse(url)
+
+            // 调用系统浏览器打开
+            startActivity(intent)
+        } catch (tr: Throwable) {
+            VToast.show("打开浏览器异常")
+        }
+    }
+
+    private fun getWeiShiVersionName(): String {
+
+        // 获取微视版本名
+        val info = PackageUitl.getSimplePackageInfo(
+                this, Constant.WeiShi.PACKAGE_NAME) ?: return "Unknown"
+
+        return "v${info.versionName}"
     }
 }
