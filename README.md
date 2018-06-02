@@ -15,6 +15,7 @@
 ##### 支持的版本
 1. v1.1版本支持微视(4.2.0.88)
 2. v1.2版本支持微视(4.2.0.88,4.2.5.88)
+3. v1.2.2版本支持微视(4.2.0.88,4.2.5.88,4.3.0.88)
 
 #### Xposed Module Repository
 [http://repo.xposed.info/module/com.sky.xposed.weishi](http://repo.xposed.info/module/com.sky.xposed.weishi)

@@ -25,7 +25,7 @@ import java.util.*
 
 class ConfigManager(hookManager: HookManager) {
 
-    private val VERSION_MAP = HashMap<String, Class<out VersionConfig>>()
+    val VERSION_MAP = HashMap<String, Class<out VersionConfig>>()
 
     private var mContext: Context = hookManager.getContext()
     private var mCachePreferences: CachePreferences = hookManager.getCachePreferences()
@@ -34,6 +34,7 @@ class ConfigManager(hookManager: HookManager) {
     init {
         VERSION_MAP["4.2.0.88"] = VersionConfig42088::class.java
         VERSION_MAP["4.2.5.88"] = VersionConfig42588::class.java
+        VERSION_MAP["4.3.0.88"] = VersionConfig43088::class.java
     }
 
     fun isAutoPlay(): Boolean {
@@ -106,7 +107,16 @@ class ConfigManager(hookManager: HookManager) {
         return PackageUitl.getSimplePackageInfo(mContext, mContext.packageName)
     }
 
-    class VersionConfig42088 : VersionConfig()
+    class VersionConfig43088 : VersionConfig() {
+
+        init {
+            classShareDialog = "com.tencent.oscar.module.share.b.b"
+
+            classFeedList = "com.tencent.oscar.module.feedlist.d.al"
+
+            classItemModel = "com.tencent.oscar.module.main.feed.av"
+        }
+    }
 
     class VersionConfig42588 : VersionConfig() {
 
@@ -115,6 +125,8 @@ class ConfigManager(hookManager: HookManager) {
         }
     }
 
+    class VersionConfig42088 : VersionConfig()
+
     open class VersionConfig {
 
         /** ShareDialog   */
@@ -122,8 +134,10 @@ class ConfigManager(hookManager: HookManager) {
 
         var classAppCompatTextView = "android.support.v7.widget.AppCompatTextView"
 
+        /** "RecommendPageFragment", "onLastItemVisible" */
         var classFeedList = "com.tencent.oscar.module.feedlist.c.af"
 
+        /** "FeedFragment */
         var classMainFeed = "com.tencent.oscar.module.main.feed.f"
 
         var classRecyclerViewPager = "com.lsjwzh.widget.recyclerviewpager.RecyclerViewPager"
@@ -139,6 +153,8 @@ class ConfigManager(hookManager: HookManager) {
         var classStMetaComment = "NS_KING_SOCIALIZE_META.stMetaComment"
 
         var classSendComment = "com.tencent.oscar.module.d.a.c"
+
+        var classShareType = "com.tencent.oscar.module.share.c.d"
 
         var methodShareCreateItem = "a"
 

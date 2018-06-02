@@ -23,6 +23,8 @@ import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
+import android.widget.TextView
+import com.sky.xposed.weishi.data.ConfigManager
 import com.sky.xposed.weishi.ui.dialog.SettingsDialog
 import com.sky.xposed.weishi.ui.view.ItemMenu
 import com.sky.xposed.weishi.util.PackageUitl
@@ -32,6 +34,7 @@ class MainActivity : Activity() {
 
     private lateinit var imVersion: ItemMenu
     private lateinit var imWeiShiVersion: ItemMenu
+    private lateinit var tvSupportVersion: TextView
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -42,9 +45,12 @@ class MainActivity : Activity() {
 
         imVersion = findViewById(R.id.im_version)
         imWeiShiVersion = findViewById(R.id.im_weishi_version)
+        tvSupportVersion = findViewById(R.id.tv_support_version)
 
         imVersion.setDesc("v${BuildConfig.VERSION_NAME}")
         imWeiShiVersion.setDesc(getWeiShiVersionName())
+
+        tvSupportVersion.text = "支持微视的版本: v4.2.0.88, v4.2.5.88, v4.3.0.88"
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {

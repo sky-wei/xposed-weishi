@@ -14,13 +14,15 @@
  * limitations under the License.
  */
 
-package com.sky.xposed.weishi.hook
+package com.sky.xposed.weishi.hook.version
 
 import android.app.Activity
+import android.os.Bundle
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import com.sky.xposed.weishi.Constant
+import com.sky.xposed.weishi.ex.XposedPlus
 import com.sky.xposed.weishi.hook.base.BaseHook
 import com.sky.xposed.weishi.hook.handler.*
 import com.sky.xposed.weishi.ui.dialog.SettingsDialog
@@ -30,15 +32,15 @@ import de.robv.android.xposed.XposedBridge
 import de.robv.android.xposed.XposedHelpers
 import de.robv.android.xposed.callbacks.XC_LoadPackage
 
-class WeiShiHook : BaseHook() {
+open class WeiShiHook : BaseHook() {
 
-    private val mAutoPlayHandler = AutoPlayHandler(getHookManager())
-    private val mAutoLikeHandler = AutoLikeHandler(getHookManager())
-    private val mAutoAttentionHandler = AutoAttentionHandler(getHookManager())
-    private val mAutoCommentHandler = AutoCommentHandler(getHookManager())
-    private val mAutoDownloadHandler = AutoDownloadHandler(getHookManager())
+    val mAutoPlayHandler = AutoPlayHandler(getHookManager())
+    val mAutoLikeHandler = AutoLikeHandler(getHookManager())
+    val mAutoAttentionHandler = AutoAttentionHandler(getHookManager())
+    val mAutoCommentHandler = AutoCommentHandler(getHookManager())
+    val mAutoDownloadHandler = AutoDownloadHandler(getHookManager())
 
-    private val mVersionConfig = getConfigManager().getVersionConfig()!!
+    val mVersionConfig = getConfigManager().getVersionConfig()!!
 
     override fun onHandleLoadPackage(param: XC_LoadPackage.LoadPackageParam) {
 
@@ -61,9 +63,9 @@ class WeiShiHook : BaseHook() {
     /**
      * 注入UI配置入口
      */
-    private fun injectionUISettings() {
+    open fun injectionUISettings() {
 
-        findAndBeforeHookMethod(
+        XposedPlus.findAndBeforeHookMethod(
                 mVersionConfig.classShareDialog,
                 mVersionConfig.methodShareCreateItem,
                 String::class.java, Int::class.java
@@ -82,7 +84,7 @@ class WeiShiHook : BaseHook() {
             }
         }
 
-        findAndHookMethodReplacement(
+        XposedPlus.findAndHookMethodReplacement(
                 mVersionConfig.classShareDialog,
                 mVersionConfig.methodShareClick,
                 View::class.java, Int::class.java
@@ -124,9 +126,9 @@ class WeiShiHook : BaseHook() {
      * 自动播放Hook方法
      * @param param
      */
-    private fun autoPlayHook() {
+    open fun autoPlayHook() {
 
-        findAndAfterHookMethod(
+        XposedPlus.findAndAfterHookMethod(
                 mVersionConfig.classFeedList,
                 mVersionConfig.methodFeedListOnResume) {
 
@@ -140,7 +142,7 @@ class WeiShiHook : BaseHook() {
             startHandlerLike()
         }
 
-        findAndAfterHookMethod(
+        XposedPlus.findAndAfterHookMethod(
                 mVersionConfig.classFeedList,
                 mVersionConfig.methodFeedListOnPause) {
 
@@ -150,7 +152,7 @@ class WeiShiHook : BaseHook() {
             getObjectManager().setViewPager(null)
         }
 
-        findAndAfterHookMethod(
+        XposedPlus.findAndAfterHookMethod(
                 mVersionConfig.classMainFeed,
                 mVersionConfig.methodMainFeedOnResume) {
 
@@ -164,7 +166,7 @@ class WeiShiHook : BaseHook() {
             startHandlerLike()
         }
 
-        findAndAfterHookMethod(
+        XposedPlus.findAndAfterHookMethod(
                 mVersionConfig.classMainFeed,
                 mVersionConfig.methodMainFeedOnPause) {
 
@@ -178,9 +180,9 @@ class WeiShiHook : BaseHook() {
     /**
      * 视频切换
      */
-    private fun videoSwitchHook() {
+    open fun videoSwitchHook() {
 
-        findAndAfterHookMethod(
+        XposedPlus.findAndAfterHookMethod(
                 mVersionConfig.classRecyclerViewPager,
                 mVersionConfig.methodViewPagerSmooth,
                 Int::class.java
@@ -194,9 +196,9 @@ class WeiShiHook : BaseHook() {
     /**
      * 移除时间限制
      */
-    private fun removeLimitHook() {
+    open fun removeLimitHook() {
 
-        findAndHookMethodReplacement(
+        XposedPlus.findAndHookMethodReplacement(
                 mVersionConfig.classWeishiParams,
                 mVersionConfig.methodParamsLimit,
                 Long::class.java, Long::class.java
@@ -215,7 +217,7 @@ class WeiShiHook : BaseHook() {
     /**
      * 开始处理点赞跟关注
      */
-    private fun startHandlerLike() {
+    open fun startHandlerLike() {
 
         mAutoLikeHandler.cancel()
         mAutoLikeHandler.like()
@@ -230,26 +232,26 @@ class WeiShiHook : BaseHook() {
         mAutoDownloadHandler.download()
     }
 
-    private fun debugWeiShiHook() {
+    open fun debugWeiShiHook() {
 
         // 开启日志
-        val globalClass = findClass("com.tencent.base.Global")
+        val globalClass = XposedPlus.findClass("com.tencent.base.Global")
         XposedHelpers.setStaticBooleanField(globalClass, "isDebug", true)
         XposedHelpers.setStaticBooleanField(globalClass, "isGray", true)
     }
 
-    private fun testHook() {
+    open fun testHook() {
 
-//        findAndBeforeHookMethod(
-//                "android.support.v4.app.Fragment",
-//                "onCreate",
-//                Bundle::class.java
-//        ) {
+        XposedPlus.findAndBeforeHookMethod(
+                "android.support.v4.app.Fragment",
+                "onCreate",
+                Bundle::class.java
+        ) {
+
+            Alog.d(">>>>>>>>>>>>>>>>>>>> onCreate " + it.thisObject.javaClass)
+        }
 //
-//            Alog.d(">>>>>>>>>>>>>>>>>>>> onCreate " + it.thisObject.javaClass)
-//        }
-
-//        findAndBeforeHookMethod(
+//        XposedPlus.findAndBeforeHookMethod(
 //                "com.tencent.oscar.widget.comment.CommentPostBoxFragment",
 //                "onCreate",
 //                Bundle::class.java
@@ -258,7 +260,7 @@ class WeiShiHook : BaseHook() {
 //            Alog.d(">>>>>>>>>>>>>>>>>>>> onCreate " + it.thisObject.javaClass)
 //        }
 //
-//        findAndBeforeHookMethod(
+//        XposedPlus.findAndBeforeHookMethod(
 //                "android.support.design.widget.BottomSheetDialog",
 //                "onCreate",
 //                Bundle::class.java
@@ -322,7 +324,7 @@ class WeiShiHook : BaseHook() {
 //        }
     }
 
-    fun onModifyValue(key: String, value: Any) {
+    open fun onModifyValue(key: String, value: Any) {
 
         if (Constant.Preference.AUTO_PLAY == key) {
             // 设置自动播放

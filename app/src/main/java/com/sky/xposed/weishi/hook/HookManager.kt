@@ -24,7 +24,10 @@ import com.sky.xposed.weishi.Constant
 import com.sky.xposed.weishi.data.CachePreferences
 import com.sky.xposed.weishi.data.ConfigManager
 import com.sky.xposed.weishi.data.ObjectManager
+import com.sky.xposed.weishi.ex.XposedPlus
 import com.sky.xposed.weishi.helper.ReceiverHelper
+import com.sky.xposed.weishi.hook.version.VersionManager
+import com.sky.xposed.weishi.hook.version.WeiShiHook
 import com.sky.xposed.weishi.util.Alog
 import com.sky.xposed.weishi.util.VToast
 import de.robv.android.xposed.callbacks.XC_LoadPackage
@@ -50,6 +53,8 @@ class HookManager private constructor() {
     }
 
     fun initialization(context: Context, param: XC_LoadPackage.LoadPackageParam): HookManager {
+
+        XposedPlus.initDefaultLoadPackage(param)
 
         mContext = context
         mHandler = AppHandler()
@@ -98,7 +103,7 @@ class HookManager private constructor() {
 
         if (!mConfigManager.isSupportVersion()) return
 
-        mWeiShiHook = WeiShiHook()
+        mWeiShiHook = VersionManager.getSupportWeiShiHook(VersionManager.getPackageInfo(mContext))
         mWeiShiHook!!.handleLoadPackage(getLoadPackageParam())
     }
 
