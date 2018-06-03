@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.sky.xposed.weishi.hook.version
+package com.sky.xposed.weishi.hook.support
 
 import android.app.Activity
 import android.os.Bundle
@@ -34,13 +34,13 @@ import de.robv.android.xposed.callbacks.XC_LoadPackage
 
 open class WeiShiHook : BaseHook() {
 
-    val mAutoPlayHandler = AutoPlayHandler(getHookManager())
-    val mAutoLikeHandler = AutoLikeHandler(getHookManager())
-    val mAutoAttentionHandler = AutoAttentionHandler(getHookManager())
-    val mAutoCommentHandler = AutoCommentHandler(getHookManager())
-    val mAutoDownloadHandler = AutoDownloadHandler(getHookManager())
+    val mAutoPlayHandler = AutoPlayHandler(mHookManager)
+    val mAutoLikeHandler = AutoLikeHandler(mHookManager)
+    val mAutoAttentionHandler = AutoAttentionHandler(mHookManager)
+    val mAutoCommentHandler = AutoCommentHandler(mHookManager)
+    val mAutoDownloadHandler = AutoDownloadHandler(mHookManager)
 
-    val mVersionConfig = getConfigManager().getVersionConfig()!!
+    val mVersionConfig = mVersionManager.getSupportConfig()!!
 
     override fun onHandleLoadPackage(param: XC_LoadPackage.LoadPackageParam) {
 
@@ -132,7 +132,7 @@ open class WeiShiHook : BaseHook() {
                 mVersionConfig.classFeedList,
                 mVersionConfig.methodFeedListOnResume) {
 
-            getObjectManager().setViewPager(
+            mObjectManager.setViewPager(
                     XposedHelpers.getObjectField(it.thisObject, mVersionConfig.fieldFeedListViewPager))
 
             // 自动播放
@@ -149,14 +149,14 @@ open class WeiShiHook : BaseHook() {
             // 停止播放
             mAutoPlayHandler.stopPlay()
 
-            getObjectManager().setViewPager(null)
+            mObjectManager.setViewPager(null)
         }
 
         XposedPlus.findAndAfterHookMethod(
                 mVersionConfig.classMainFeed,
                 mVersionConfig.methodMainFeedOnResume) {
 
-            getObjectManager().setViewPager(
+            mObjectManager.setViewPager(
                     XposedHelpers.getObjectField(it.thisObject, mVersionConfig.fieldMainFeedViewPager))
 
             // 自动播放
@@ -173,7 +173,7 @@ open class WeiShiHook : BaseHook() {
             // 停止播放
             mAutoPlayHandler.stopPlay()
 
-            getObjectManager().setViewPager(null)
+            mObjectManager.setViewPager(null)
         }
     }
 
@@ -204,7 +204,7 @@ open class WeiShiHook : BaseHook() {
                 Long::class.java, Long::class.java
         ) {
 
-            if (getConfigManager().isRemoveLimit()) {
+            if (mUserConfigManager.isRemoveLimit()) {
                 // 最大120s
                 60000 * 2 // 120s
             } else {

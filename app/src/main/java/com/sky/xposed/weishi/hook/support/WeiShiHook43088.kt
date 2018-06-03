@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.sky.xposed.weishi.hook.version
+package com.sky.xposed.weishi.hook.support
 
 import android.app.Activity
 import android.view.View

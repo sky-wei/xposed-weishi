@@ -22,12 +22,11 @@ import android.os.Handler
 import com.sky.xposed.weishi.BuildConfig
 import com.sky.xposed.weishi.Constant
 import com.sky.xposed.weishi.data.CachePreferences
-import com.sky.xposed.weishi.data.ConfigManager
 import com.sky.xposed.weishi.data.ObjectManager
+import com.sky.xposed.weishi.data.UserConfigManager
 import com.sky.xposed.weishi.ex.XposedPlus
 import com.sky.xposed.weishi.helper.ReceiverHelper
-import com.sky.xposed.weishi.hook.version.VersionManager
-import com.sky.xposed.weishi.hook.version.WeiShiHook
+import com.sky.xposed.weishi.hook.support.WeiShiHook
 import com.sky.xposed.weishi.util.Alog
 import com.sky.xposed.weishi.util.VToast
 import de.robv.android.xposed.callbacks.XC_LoadPackage
@@ -39,8 +38,9 @@ class HookManager private constructor() {
     private lateinit var mHandler: Handler
     private lateinit var mLoadPackageParam: XC_LoadPackage.LoadPackageParam
     private lateinit var mCachePreferences: CachePreferences
-    private lateinit var mConfigManager: ConfigManager
+    private lateinit var mUserConfigManager: UserConfigManager
     private lateinit var mObjectManager: ObjectManager
+    private lateinit var mVersionManager: VersionManager
     private lateinit var mReceiverHelper: ReceiverHelper
 
     private var mWeiShiHook: WeiShiHook? = null
@@ -60,7 +60,8 @@ class HookManager private constructor() {
         mHandler = AppHandler()
         mLoadPackageParam = param
         mCachePreferences = CachePreferences(context, Constant.Name.WEI_SHI)
-        mConfigManager = ConfigManager(this)
+        mUserConfigManager = UserConfigManager(this)
+        mVersionManager = VersionManager(this)
         mObjectManager = ObjectManager()
 
         // 注册监听
@@ -91,19 +92,23 @@ class HookManager private constructor() {
         return mCachePreferences
     }
 
-    fun getConfigManager(): ConfigManager {
-        return mConfigManager
+    fun getUserConfigManager(): UserConfigManager {
+        return mUserConfigManager
     }
 
     fun getObjectManager(): ObjectManager {
         return mObjectManager
     }
 
+    fun getVersionManager(): VersionManager {
+        return mVersionManager
+    }
+
     fun handleLoadPackage() {
 
-        if (!mConfigManager.isSupportVersion()) return
+        if (!mVersionManager.isSupportVersion()) return
 
-        mWeiShiHook = VersionManager.getSupportWeiShiHook(VersionManager.getPackageInfo(mContext))
+        mWeiShiHook = mVersionManager.getSupportWeiShiHook()
         mWeiShiHook!!.handleLoadPackage(getLoadPackageParam())
     }
 

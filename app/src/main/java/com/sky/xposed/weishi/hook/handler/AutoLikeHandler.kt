@@ -25,7 +25,7 @@ class AutoLikeHandler(hookManager: HookManager) : CommonHandler(hookManager), Ru
 
     fun like() {
 
-        if (!getConfigManager().isAutoLike()) {
+        if (!mUserConfigManager.isAutoLike()) {
             // 不需要处理
             return
         }

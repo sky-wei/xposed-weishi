@@ -45,7 +45,7 @@ class AutoPlayHandler(hookManager: HookManager) : CommonHandler(hookManager), Ru
 
     fun startPlay(delayMillis: Long) {
 
-        if (!getConfigManager().isAutoPlay()) {
+        if (!mUserConfigManager.isAutoPlay()) {
             // 不进行播放处理
             return
         }
@@ -77,9 +77,9 @@ class AutoPlayHandler(hookManager: HookManager) : CommonHandler(hookManager), Ru
 
         if (!isPlaying) return
 
-        val mViewPager = getObjectManager().getViewPager() as ViewGroup
+        val mViewPager = mObjectManager.getViewPager() as ViewGroup
 
-        if (mViewPager == null || !getConfigManager().isAutoPlay()) {
+        if (mViewPager == null || !mUserConfigManager.isAutoPlay()) {
             // 停止播放处理
             stopPlay()
             return

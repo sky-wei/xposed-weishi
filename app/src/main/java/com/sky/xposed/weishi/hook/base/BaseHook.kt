@@ -18,9 +18,6 @@ package com.sky.xposed.weishi.hook.base
 
 import android.app.ActivityThread
 import android.content.Context
-import com.sky.xposed.weishi.data.CachePreferences
-import com.sky.xposed.weishi.data.ConfigManager
-import com.sky.xposed.weishi.data.ObjectManager
 import com.sky.xposed.weishi.hook.HookManager
 import com.sky.xposed.weishi.util.Alog
 import de.robv.android.xposed.callbacks.XC_LoadPackage
@@ -28,6 +25,13 @@ import de.robv.android.xposed.callbacks.XC_LoadPackage
 abstract class BaseHook {
 
     private lateinit var mParam: XC_LoadPackage.LoadPackageParam
+
+    val mHookManager by lazy { HookManager.getInstance() }
+    val mCachePreferences by lazy { mHookManager.getCachePreferences() }
+    val mUserConfigManager by lazy { mHookManager.getUserConfigManager() }
+    val mObjectManager by lazy { mHookManager.getObjectManager() }
+    val mVersionManager by lazy { mHookManager.getVersionManager() }
+    val mContext by lazy { mHookManager.getContext() }
 
     fun handleLoadPackage(lpparam: XC_LoadPackage.LoadPackageParam) {
         this.mParam = lpparam
@@ -41,26 +45,6 @@ abstract class BaseHook {
     }
 
     abstract fun onHandleLoadPackage(param: XC_LoadPackage.LoadPackageParam)
-
-    fun getHookManager(): HookManager {
-        return HookManager.getInstance()
-    }
-
-    fun getCachePreferences(): CachePreferences {
-        return getHookManager().getCachePreferences()
-    }
-
-    fun getConfigManager(): ConfigManager {
-        return getHookManager().getConfigManager()
-    }
-
-    fun getObjectManager(): ObjectManager {
-        return getHookManager().getObjectManager()
-    }
-
-    fun getContext(): Context {
-        return getHookManager().getContext()
-    }
 
     fun getSystemContext(): Context {
         return ActivityThread.currentActivityThread().systemContext

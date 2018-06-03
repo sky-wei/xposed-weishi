@@ -14,80 +14,50 @@
  * limitations under the License.
  */
 
-package com.sky.xposed.weishi.data
+package com.sky.xposed.weishi.hook
 
 import android.content.Context
-import com.sky.xposed.weishi.Constant
-import com.sky.xposed.weishi.hook.HookManager
+import com.sky.xposed.weishi.hook.support.WeiShiHook
+import com.sky.xposed.weishi.hook.support.WeiShiHook43088
 import com.sky.xposed.weishi.util.Alog
 import com.sky.xposed.weishi.util.PackageUitl
-import java.util.*
 
-class ConfigManager(hookManager: HookManager) {
+/**
+ * Created by sky on 18-6-2.
+ */
+class VersionManager(hookManager: HookManager) {
 
-    val VERSION_MAP = HashMap<String, Class<out VersionConfig>>()
+    private val CONFIG_MAP = HashMap<String, Class<out Config>>()
+    private val HOOK_MAP = HashMap<String, Class<out WeiShiHook>>()
 
     private var mContext: Context = hookManager.getContext()
-    private var mCachePreferences: CachePreferences = hookManager.getCachePreferences()
-    private var mVersionConfig: VersionConfig? = null
+    private var mVersionConfig: VersionManager.Config? = null
 
     init {
-        VERSION_MAP["4.2.0.88"] = VersionConfig42088::class.java
-        VERSION_MAP["4.2.5.88"] = VersionConfig42588::class.java
-        VERSION_MAP["4.3.0.88"] = VersionConfig43088::class.java
-    }
+        /** 版本配置 */
+        CONFIG_MAP["4.2.0.88"] = Config42088::class.java
+        CONFIG_MAP["4.2.5.88"] = Config42588::class.java
+        CONFIG_MAP["4.3.0.88"] = Config43088::class.java
 
-    fun isAutoPlay(): Boolean {
-        return getBoolean(Constant.Preference.AUTO_PLAY)!!
-    }
-
-    fun isAutoAttention(): Boolean {
-        return getBoolean(Constant.Preference.AUTO_ATTENTION)!!
-    }
-
-    fun isAutoLike(): Boolean {
-        return getBoolean(Constant.Preference.AUTO_LIKE)!!
-    }
-
-    fun isAutoComment(): Boolean {
-        return getBoolean(Constant.Preference.AUTO_COMMENT)!!
-    }
-
-    fun isAutoSaveVideo(): Boolean {
-        return getBoolean(Constant.Preference.AUTO_SAVE_VIDEO)!!
-    }
-
-    fun isRemoveLimit(): Boolean {
-        return getBoolean(Constant.Preference.REMOVE_LIMIT)!!
-    }
-
-    fun getCommentMessage(): String {
-        return getString(Constant.Preference.AUTO_COMMENT_MESSAGE)
-    }
-
-    private fun getBoolean(key: String): Boolean? {
-        return mCachePreferences.getBoolean(key, false)
-    }
-
-    private fun getString(key: String): String {
-        return mCachePreferences.getString(key, "")
+        /** Hook */
+        HOOK_MAP["4.3.0.88"] = WeiShiHook43088::class.java
     }
 
     fun isSupportVersion(): Boolean {
 
         val info = getPackageInfo() ?: return false
 
-        return VERSION_MAP.containsKey(info.versionName)
+        return CONFIG_MAP.containsKey(info.versionName)
     }
 
-    fun getVersionConfig(): VersionConfig? {
+    fun getSupportConfig(): Config? {
 
         val info = getPackageInfo() ?: return null
 
-        return getSupportVersionConfig(VERSION_MAP[info.versionName])
+        return getSupportConfig(CONFIG_MAP[info.versionName])
     }
 
-    private fun getSupportVersionConfig(vClass: Class<out VersionConfig>?): VersionConfig? {
+    private fun getSupportConfig(vClass: Class<out Config>?): Config? {
 
         if (vClass == null) return null
 
@@ -103,11 +73,43 @@ class ConfigManager(hookManager: HookManager) {
         return mVersionConfig
     }
 
-    private fun getPackageInfo(): PackageUitl.SimplePackageInfo? {
+    fun getSupportWeiShiHook(): WeiShiHook {
+
+        val info = getPackageInfo() ?: return WeiShiHook()
+
+        if (info == null
+                || !HOOK_MAP.containsKey(info.versionName)) {
+            // 返回默认的
+            return WeiShiHook()
+        }
+
+        // 获取支持的版本
+        return getSupportWeiShiHook(HOOK_MAP[info.versionName])
+    }
+
+    fun getSupportWeiShiHook(tClass: Class<out WeiShiHook>?): WeiShiHook {
+
+        if (tClass == null) return WeiShiHook()
+
+        try {
+            // 创建实例
+            return tClass.newInstance()
+        } catch (tr: Throwable) {
+            Alog.d("创建版本Hook异常", tr)
+        }
+        return WeiShiHook()
+    }
+
+    fun getPackageInfo(): PackageUitl.SimplePackageInfo? {
         return PackageUitl.getSimplePackageInfo(mContext, mContext.packageName)
     }
 
-    class VersionConfig43088 : VersionConfig() {
+    fun getPackageInfo(context: Context): PackageUitl.SimplePackageInfo? {
+        return PackageUitl.getSimplePackageInfo(context, context.packageName)
+    }
+
+
+    class Config43088 : Config() {
 
         init {
             classShareDialog = "com.tencent.oscar.module.share.b.b"
@@ -118,16 +120,19 @@ class ConfigManager(hookManager: HookManager) {
         }
     }
 
-    class VersionConfig42588 : VersionConfig() {
+    class Config42588 : Config() {
 
         init {
             classFeedList = "com.tencent.oscar.module.feedlist.d.ag"
         }
     }
 
-    class VersionConfig42088 : VersionConfig()
+    class Config42088 : Config()
 
-    open class VersionConfig {
+    /**
+     * 类与字段名相关配置字段信息
+     */
+    open class Config {
 
         /** ShareDialog   */
         var classShareDialog = "com.tencent.oscar.module.share.a.b"

@@ -24,13 +24,13 @@ import java.util.*
 
 open class CommonHandler(hookManager: HookManager) : BaseHandler(hookManager) {
 
-    val mVersionConfig = getConfigManager().getVersionConfig()!!
+    val mVersionConfig = mVersionManager.getSupportConfig()!!
 
     fun getViewHolder(position: Int): Any? {
 
         if (position < 0) return null
 
-        val viewPager = getObjectManager().getViewPager() ?: return null
+        val viewPager = mObjectManager.getViewPager() ?: return null
 
         return XposedHelpers.callMethod(viewPager,
                 mVersionConfig.methodViewPagerAdapterPosition, position)
@@ -38,7 +38,7 @@ open class CommonHandler(hookManager: HookManager) : BaseHandler(hookManager) {
 
     fun getAdapter(): Any? {
 
-        val viewPager = getObjectManager().getViewPager() ?: return null
+        val viewPager = mObjectManager.getViewPager() ?: return null
 
         return XposedHelpers.callMethod(viewPager, mVersionConfig.methodViewPagerGetAdapter)
     }
@@ -66,7 +66,7 @@ open class CommonHandler(hookManager: HookManager) : BaseHandler(hookManager) {
 
     fun getCurrentPosition(): Int {
 
-        val viewPager = getObjectManager().getViewPager() ?: return -1
+        val viewPager = mObjectManager.getViewPager() ?: return -1
 
         return XposedHelpers.callMethod(viewPager,
                 mVersionConfig.methodViewPagerGetCurrentPosition) as Int

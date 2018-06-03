@@ -42,7 +42,7 @@ class AutoDownloadHandler(hookManager: HookManager) : CommonHandler(hookManager)
      */
     fun download() {
 
-        if (!getConfigManager().isAutoSaveVideo()) {
+        if (!mUserConfigManager.isAutoSaveVideo()) {
             return
         }
 
@@ -76,7 +76,7 @@ class AutoDownloadHandler(hookManager: HookManager) : CommonHandler(hookManager)
 
         if (data == null) return
 
-        if (!skip && !getConfigManager().isAutoSaveVideo()) {
+        if (!skip && !mUserConfigManager.isAutoSaveVideo()) {
             return
         }
 
@@ -119,7 +119,7 @@ class AutoDownloadHandler(hookManager: HookManager) : CommonHandler(hookManager)
                         VToast.show("视频下载完成：" + response.path)
 
                         val data = Uri.parse("file://" + response.path)
-                        getContext().sendBroadcast(Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE, data))
+                        mContext.sendBroadcast(Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE, data))
                     }
                 })
 

@@ -41,7 +41,7 @@ class AutoAttentionHandler(hookManager: HookManager) : CommonHandler(hookManager
 
     fun attention() {
 
-        if (!getConfigManager().isAutoAttention()) {
+        if (!mUserConfigManager.isAutoAttention()) {
             // 不需要处理
             return
         }

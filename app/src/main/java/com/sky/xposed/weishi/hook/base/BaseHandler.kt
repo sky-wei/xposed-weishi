@@ -16,59 +16,41 @@
 
 package com.sky.xposed.weishi.hook.base
 
-import android.content.Context
-import android.os.Handler
 import android.view.View
-import com.sky.xposed.weishi.data.CachePreferences
-import com.sky.xposed.weishi.data.ConfigManager
-import com.sky.xposed.weishi.data.ObjectManager
 import com.sky.xposed.weishi.hook.HookManager
 import com.sky.xposed.weishi.util.ResourceUtil
 
 open class BaseHandler(private val mHookManager: HookManager) {
 
-    fun getContext(): Context {
-        return mHookManager.getContext()
-    }
-
-    fun getHandler(): Handler {
-        return mHookManager.getHandler()
-    }
-
-    fun getCachePreferences(): CachePreferences {
-        return mHookManager.getCachePreferences()
-    }
-
-    fun getConfigManager(): ConfigManager {
-        return mHookManager.getConfigManager()
-    }
-
-    fun getObjectManager(): ObjectManager {
-        return mHookManager.getObjectManager()
-    }
+    val mContext by lazy { mHookManager.getContext() }
+    val mCachePreferences by lazy { mHookManager.getCachePreferences() }
+    val mUserConfigManager by lazy { mHookManager.getUserConfigManager() }
+    val mObjectManager by lazy { mHookManager.getObjectManager() }
+    val mVersionManager by lazy { mHookManager.getVersionManager() }
+    val mHandler by lazy { mHookManager.getHandler() }
 
     fun findViewById(view: View?, id: String): View? {
 
-        return view?.findViewById(ResourceUtil.getId(getContext(), id))
+        return view?.findViewById(ResourceUtil.getId(mContext, id))
 
     }
 
     fun postDelayed(runnable: Runnable, delayMillis: Long) {
-        getHandler().postDelayed(runnable, delayMillis)
+        mHandler.postDelayed(runnable, delayMillis)
     }
 
     fun removeCallbacks(runnable: Runnable) {
-        getHandler().removeCallbacks(runnable)
+        mHandler.removeCallbacks(runnable)
     }
 
     fun mainPerformClick(viewGroup: View, id: String) {
 
-        getHandler().post { performClick(viewGroup, id) }
+        mHandler.post { performClick(viewGroup, id) }
     }
 
     fun mainPerformClick(view: View?) {
 
-        getHandler().post { performClick(view) }
+        mHandler.post { performClick(view) }
     }
 
     fun performClick(viewGroup: View?, id: String) {

@@ -57,7 +57,7 @@ class AutoCommentHandler(hookManager: HookManager) : CommonHandler(hookManager),
 
         // 获取当前分享视频的相关信息
         val data = getAdapterItem(getCurrentPosition())
-        val message = getConfigManager().getCommentMessage()
+        val message = mUserConfigManager.getCommentMessage()
 
         if (data == null || TextUtils.isEmpty(message)) return
 
@@ -87,16 +87,16 @@ class AutoCommentHandler(hookManager: HookManager) : CommonHandler(hookManager),
 
         if (!isComment()) return
 
-        getHandler().postDelayed(this, RandomUtil.randomLong(1500, 3000))
+        mHandler.postDelayed(this, RandomUtil.randomLong(1500, 3000))
     }
 
     fun isComment(): Boolean {
 
-        if (!getConfigManager().isAutoComment()) {
+        if (!mUserConfigManager.isAutoComment()) {
             return false
         }
 
-        if (TextUtils.isEmpty(getConfigManager().getCommentMessage())) {
+        if (TextUtils.isEmpty(mUserConfigManager.getCommentMessage())) {
             VToast.show("请先设置发送消息")
             return false
         }
@@ -104,6 +104,6 @@ class AutoCommentHandler(hookManager: HookManager) : CommonHandler(hookManager),
     }
 
     fun cancel() {
-        getHandler().removeCallbacks(this)
+        mHandler.removeCallbacks(this)
     }
 }

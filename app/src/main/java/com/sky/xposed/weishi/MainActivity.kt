@@ -24,7 +24,6 @@ import android.view.Menu
 import android.view.MenuItem
 import android.view.View
 import android.widget.TextView
-import com.sky.xposed.weishi.data.ConfigManager
 import com.sky.xposed.weishi.ui.dialog.SettingsDialog
 import com.sky.xposed.weishi.ui.view.ItemMenu
 import com.sky.xposed.weishi.util.PackageUitl
