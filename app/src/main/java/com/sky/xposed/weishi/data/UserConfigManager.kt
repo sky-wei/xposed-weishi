@@ -18,6 +18,7 @@ package com.sky.xposed.weishi.data
 
 import com.sky.xposed.weishi.Constant
 import com.sky.xposed.weishi.hook.HookManager
+import com.sky.xposed.weishi.util.ConversionUtil
 
 class UserConfigManager(hookManager: HookManager) {
 
@@ -51,11 +52,49 @@ class UserConfigManager(hookManager: HookManager) {
         return getString(Constant.Preference.AUTO_COMMENT_MESSAGE)
     }
 
+    fun getAutoPlaySleepTime(): Long {
+
+        val time = ConversionUtil.parseInt(getString(
+                Constant.Preference.AUTO_PLAY_SLEEP_TIME,
+                Constant.DefaultValue.AUTO_PLAY_SLEEP_TIME.toString()))
+
+        if (time <= 0) {
+            return Constant.DefaultValue.AUTO_PLAY_SLEEP_TIME.toLong() * 1000
+        }
+
+        return time.toLong() * 1000
+    }
+
+    fun getRecordVideoTime(): Long {
+
+        val time = ConversionUtil.parseInt(getString(
+                Constant.Preference.RECORD_VIDEO_TIME,
+                Constant.DefaultValue.RECORD_VIDEO_TIME.toString()))
+
+        if (time <= 0) {
+            return Constant.DefaultValue.RECORD_VIDEO_TIME.toLong() * 1000
+        }
+
+        return time.toLong() * 1000
+    }
+
     private fun getBoolean(key: String): Boolean? {
         return mCachePreferences.getBoolean(key, false)
     }
 
     private fun getString(key: String): String {
-        return mCachePreferences.getString(key, "")
+        return getString(key, "")
+    }
+
+    private fun getString(key: String, defValue: String): String {
+        return mCachePreferences.getString(key, defValue)
+    }
+
+    private fun getInt(key: String): Int {
+        return getInt(key, 0)
+    }
+
+    private fun getInt(key: String, defValue: Int): Int {
+        return mCachePreferences.getInt(key, defValue)
     }
 }

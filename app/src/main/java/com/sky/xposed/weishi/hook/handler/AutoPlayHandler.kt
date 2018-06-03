@@ -19,7 +19,6 @@ package com.sky.xposed.weishi.hook.handler
 import android.view.ViewGroup
 import com.sky.xposed.weishi.hook.HookManager
 import com.sky.xposed.weishi.util.Alog
-import com.sky.xposed.weishi.util.RandomUtil
 import com.sky.xposed.weishi.util.VToast
 import de.robv.android.xposed.XposedHelpers
 
@@ -40,7 +39,7 @@ class AutoPlayHandler(hookManager: HookManager) : CommonHandler(hookManager), Ru
     }
 
     fun startPlay() {
-        startPlay(RandomUtil.randomLong(15000, 20000))
+        startPlay(mUserConfigManager.getAutoPlaySleepTime())
     }
 
     fun startPlay(delayMillis: Long) {
@@ -77,7 +76,7 @@ class AutoPlayHandler(hookManager: HookManager) : CommonHandler(hookManager), Ru
 
         if (!isPlaying) return
 
-        val mViewPager = mObjectManager.getViewPager() as ViewGroup
+        val mViewPager = mObjectManager.getViewPager() as? ViewGroup
 
         if (mViewPager == null || !mUserConfigManager.isAutoPlay()) {
             // 停止播放处理
@@ -100,6 +99,6 @@ class AutoPlayHandler(hookManager: HookManager) : CommonHandler(hookManager), Ru
                 mVersionConfig.methodViewPagerSmooth, currentItem + 1)
 
         // 继续播放下一个
-        playNext(RandomUtil.randomLong(15000, 20000))
+        playNext(mUserConfigManager.getAutoPlaySleepTime())
     }
 }

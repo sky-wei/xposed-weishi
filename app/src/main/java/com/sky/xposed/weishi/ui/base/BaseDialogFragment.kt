@@ -18,13 +18,17 @@ package com.sky.xposed.weishi.ui.base
 
 import android.app.DialogFragment
 import android.content.Context
+import android.content.Intent
 import android.content.SharedPreferences
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.sky.xposed.weishi.Constant
+import com.sky.xposed.weishi.helper.ReceiverHelper
 import com.sky.xposed.weishi.ui.interfaces.TrackViewStatus
+import java.io.Serializable
+import java.util.*
 
 abstract class BaseDialogFragment : DialogFragment() {
 
@@ -80,5 +84,16 @@ abstract class BaseDialogFragment : DialogFragment() {
 
     fun <T> trackBind(track: TrackViewStatus<T>, key: String, defValue: T, listener: TrackViewStatus.StatusChangeListener<T>) {
         track.bind(getDefaultSharedPreferences(), key, defValue, listener)
+    }
+
+    fun sendRefreshPreferenceBroadcast(key: String, value: Any) {
+
+        val data = Arrays.asList<Pair<String, Any>>(Pair(key, value))
+
+        val intent = Intent(Constant.Action.REFRESH_PREFERENCE)
+        intent.putExtra(Constant.Key.DATA, data as Serializable)
+
+        // 发送广播
+        ReceiverHelper.sendBroadcastReceiver(activity, intent)
     }
 }

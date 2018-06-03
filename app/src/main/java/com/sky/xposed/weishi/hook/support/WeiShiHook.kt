@@ -205,8 +205,8 @@ open class WeiShiHook : BaseHook() {
         ) {
 
             if (mUserConfigManager.isRemoveLimit()) {
-                // 最大120s
-                60000 * 2 // 120s
+                // 最大录制时间
+                mUserConfigManager.getRecordVideoTime()
             } else {
                 // 调用默认的
                 XposedBridge.invokeOriginalMethod(it.method, it.thisObject, it.args)

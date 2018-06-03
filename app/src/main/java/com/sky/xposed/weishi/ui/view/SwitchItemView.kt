@@ -97,9 +97,11 @@ class SwitchItemView : FrameLayout, View.OnClickListener, TrackViewStatus<Boolea
         // 设置状态
         isChecked = preferences.getBoolean(key, defValue)
         setOnCheckedChangeListener { view, isChecked ->
-            // 保存状态信息
-            preferences.edit().putBoolean(key, isChecked).apply()
-            listener.onStatusChange(view, key, isChecked)
+
+            if (listener.onStatusChange(view, key, isChecked)) {
+                // 保存状态信息
+                preferences.edit().putBoolean(key, isChecked).apply()
+            }
         }
     }
 

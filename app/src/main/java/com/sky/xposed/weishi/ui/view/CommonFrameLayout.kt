@@ -29,8 +29,9 @@ import com.sky.xposed.weishi.util.DisplayUtil
 
 class CommonFrameLayout : LinearLayout {
 
-    private lateinit var mContent: LinearLayout
     private lateinit var mTitleView: TitleView
+    private lateinit var mScrollView: ScrollView
+    private lateinit var mContent: LinearLayout
 
     constructor(context: Context?) : this(context, null)
 
@@ -50,16 +51,16 @@ class CommonFrameLayout : LinearLayout {
         mTitleView = TitleView(context)
         addView(mTitleView)
 
-        val scrollView = ScrollView(context)
-        scrollView.layoutParams = LayoutUtil.newMatchLinearLayoutParams()
+        mScrollView = ScrollView(context)
+        mScrollView.layoutParams = LayoutUtil.newMatchLinearLayoutParams()
 
         val top = DisplayUtil.dip2px(context, 5f)
 
         mContent = LayoutUtil.newCommonLayout(context)
         mContent.setPadding(0, top, 0, top)
-        scrollView.addView(mContent)
+        mScrollView.addView(mContent)
 
-        addView(scrollView)
+        addView(mScrollView)
     }
 
     fun getTitleView(): TitleView {
@@ -77,6 +78,11 @@ class CommonFrameLayout : LinearLayout {
     fun addContent(child: View, line: Boolean) {
         mContent.addView(child)
         if (line) mContent.addView(ViewUtil.newLineView(context))
+    }
+
+    fun setContent(view: View) {
+        removeView(mScrollView)
+        addView(view)
     }
 
     fun addContent(child: View, params: ViewGroup.LayoutParams) {

@@ -45,6 +45,12 @@ object Constant {
 
         /** 解除15s视频限制  */
         val REMOVE_LIMIT = "remove_limit"
+
+        /** 自动播放休眠时间 */
+        val AUTO_PLAY_SLEEP_TIME = "auto_play_sleep_time"
+
+        /** 录制视频的最大时间 */
+        val RECORD_VIDEO_TIME = "record_video_time"
     }
 
     object Action {
@@ -64,5 +70,29 @@ object Constant {
         val PLUGIN = "微视助手"
 
         val SAVE_VIDEO = "无水印保存"
+    }
+
+    object InputType {
+
+        val NUMBER = 0
+
+        val NUMBER_SIGNED = 1
+
+        val NUMBER_DECIMAL = 2
+
+        val TEXT = 3
+
+        val PHONE = 4
+
+        val TEXT_PASSWORD = 5
+
+        val NUMBER_PASSWORD = 6
+    }
+
+    object DefaultValue {
+
+        val AUTO_PLAY_SLEEP_TIME = 15   // 单位:秒
+
+        val RECORD_VIDEO_TIME = 120     // 单位:秒
     }
 }

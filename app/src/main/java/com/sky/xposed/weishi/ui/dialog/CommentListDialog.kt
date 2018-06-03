@@ -46,5 +46,6 @@ class CommentListDialog : BaseDialogFragment() {
 
     override fun initView(view: View, args: Bundle?) {
 
+        mToolbar.setTitle("评论内容列表")
     }
 }

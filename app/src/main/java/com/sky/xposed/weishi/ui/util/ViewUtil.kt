@@ -23,9 +23,11 @@ import android.graphics.drawable.ColorDrawable
 import android.graphics.drawable.StateListDrawable
 import android.view.View
 import android.view.ViewGroup
+import android.view.inputmethod.EditorInfo
 import android.widget.EditText
 import android.widget.FrameLayout
 import android.widget.TextView
+import com.sky.xposed.weishi.Constant
 import com.sky.xposed.weishi.ui.view.SimpleItemView
 import com.sky.xposed.weishi.ui.view.SwitchItemView
 import com.sky.xposed.weishi.util.Alog
@@ -143,5 +145,18 @@ object ViewUtil {
             }
         }
         return null
+    }
+
+    fun setInputType(editText: EditText, inputType: Int) {
+
+        when (inputType) {
+            Constant.InputType.NUMBER -> editText.inputType = EditorInfo.TYPE_CLASS_NUMBER
+            Constant.InputType.NUMBER_DECIMAL -> editText.inputType = EditorInfo.TYPE_NUMBER_FLAG_DECIMAL or EditorInfo.TYPE_CLASS_NUMBER
+            Constant.InputType.NUMBER_SIGNED -> editText.inputType = EditorInfo.TYPE_NUMBER_FLAG_SIGNED or EditorInfo.TYPE_CLASS_NUMBER
+            Constant.InputType.PHONE -> editText.inputType = EditorInfo.TYPE_CLASS_PHONE
+            Constant.InputType.TEXT -> editText.inputType = EditorInfo.TYPE_CLASS_TEXT or EditorInfo.TYPE_TEXT_FLAG_MULTI_LINE
+            Constant.InputType.TEXT_PASSWORD -> editText.inputType = EditorInfo.TYPE_CLASS_TEXT or EditorInfo.TYPE_TEXT_VARIATION_PASSWORD
+            Constant.InputType.NUMBER_PASSWORD -> editText.inputType = EditorInfo.TYPE_CLASS_NUMBER or EditorInfo.TYPE_NUMBER_VARIATION_PASSWORD
+        }
     }
 }

@@ -17,7 +17,6 @@
 package com.sky.xposed.weishi.ui.dialog
 
 import android.app.AlertDialog
-import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -25,13 +24,13 @@ import android.view.ViewGroup
 import android.view.Window
 import com.sky.xposed.weishi.BuildConfig
 import com.sky.xposed.weishi.Constant
-import com.sky.xposed.weishi.helper.ReceiverHelper
 import com.sky.xposed.weishi.ui.base.BaseDialogFragment
 import com.sky.xposed.weishi.ui.interfaces.TrackViewStatus.StatusChangeListener
 import com.sky.xposed.weishi.ui.util.ViewUtil
-import com.sky.xposed.weishi.ui.view.*
-import java.io.Serializable
-import java.util.*
+import com.sky.xposed.weishi.ui.view.CommonFrameLayout
+import com.sky.xposed.weishi.ui.view.SimpleItemView
+import com.sky.xposed.weishi.ui.view.SwitchItemView
+import com.sky.xposed.weishi.ui.view.TitleView
 
 class SettingsDialog : BaseDialogFragment() {
 
@@ -42,9 +41,10 @@ class SettingsDialog : BaseDialogFragment() {
     private lateinit var sivAutoAttention: SwitchItemView
     private lateinit var sivAutoLike: SwitchItemView
     private lateinit var sivAutoComment: SwitchItemView
-    private lateinit var etiAutoCommentMessage: EditTextItemView
+    private lateinit var etiAutoCommentList: SimpleItemView
     private lateinit var sivAutoSaveVideo: SwitchItemView
     private lateinit var sivRemoveLimit: SwitchItemView
+    private lateinit var sivMoreSettings: SimpleItemView
     private lateinit var sivAbout: SimpleItemView
 
     override fun createView(inflater: LayoutInflater, container: ViewGroup?): View {
@@ -59,11 +59,10 @@ class SettingsDialog : BaseDialogFragment() {
         sivAutoAttention = ViewUtil.newSwitchItemView(context, "自动关注")
         sivAutoLike = ViewUtil.newSwitchItemView(context, "自动点赞")
         sivAutoComment = ViewUtil.newSwitchItemView(context, "自动评论")
-        sivRemoveLimit = ViewUtil.newSwitchItemView(context, "解除60秒限制(最大120秒)")
+        etiAutoCommentList = ViewUtil.newSimpleItemView(context, "评论内容")
+        sivRemoveLimit = ViewUtil.newSwitchItemView(context, "解除录制视频时间限制")
+        sivMoreSettings = ViewUtil.newSimpleItemView(context, "更多设置")
         sivAbout = ViewUtil.newSimpleItemView(context, "关于")
-
-        etiAutoCommentMessage = EditTextItemView(context)
-        etiAutoCommentMessage.setName("评论的内容")
 
         sivAutoSaveVideo = ViewUtil.newSwitchItemView(context, "自动保存视频")
 
@@ -71,9 +70,10 @@ class SettingsDialog : BaseDialogFragment() {
         mCommonFrameLayout.addContent(sivAutoAttention, true)
         mCommonFrameLayout.addContent(sivAutoLike, true)
         mCommonFrameLayout.addContent(sivAutoComment, true)
-        mCommonFrameLayout.addContent(etiAutoCommentMessage, true)
+        mCommonFrameLayout.addContent(etiAutoCommentList, true)
         mCommonFrameLayout.addContent(sivAutoSaveVideo, true)
         mCommonFrameLayout.addContent(sivRemoveLimit, true)
+        mCommonFrameLayout.addContent(sivMoreSettings, true)
         mCommonFrameLayout.addContent(sivAbout)
 
         return mCommonFrameLayout
@@ -89,8 +89,8 @@ class SettingsDialog : BaseDialogFragment() {
         trackBind(sivAutoLike, Constant.Preference.AUTO_LIKE, false, mBooleanChangeListener)
         trackBind(sivAutoComment, Constant.Preference.AUTO_COMMENT, false, mBooleanChangeListener)
         trackBind(sivAutoSaveVideo, Constant.Preference.AUTO_SAVE_VIDEO, false, mBooleanChangeListener)
-        trackBind(etiAutoCommentMessage, Constant.Preference.AUTO_COMMENT_MESSAGE, "", mStringChangeListener)
         trackBind(sivRemoveLimit, Constant.Preference.REMOVE_LIMIT, false, mBooleanChangeListener)
+
         sivAbout.setOnClickListener{
 
             // 显示关于
@@ -100,6 +100,20 @@ class SettingsDialog : BaseDialogFragment() {
             builder.setPositiveButton("确定", { dialog, _ -> dialog.dismiss() })
             builder.show()
         }
+
+        etiAutoCommentList.setOnClickListener {
+
+            // 显示评论列表
+            val commonListDialog = CommentListDialog()
+            commonListDialog.show(fragmentManager, "commonList")
+        }
+
+        sivMoreSettings.setOnClickListener {
+
+            // 更多设置
+            val moreSettingsDialog = MoreSettingsDialog()
+            moreSettingsDialog.show(fragmentManager, "moreSettings")
+        }
     }
 
     private val mBooleanChangeListener = object : StatusChangeListener<Boolean> {
@@ -108,24 +122,5 @@ class SettingsDialog : BaseDialogFragment() {
             sendRefreshPreferenceBroadcast(key, value)
             return true
         }
-    }
-
-    private val mStringChangeListener = object : StatusChangeListener<String> {
-
-        override fun onStatusChange(view: View, key: String, value: String): Boolean {
-            sendRefreshPreferenceBroadcast(key, value)
-            return true
-        }
-    }
-
-    private fun sendRefreshPreferenceBroadcast(key: String, value: Any) {
-
-        val data = Arrays.asList<Pair<String, Any>>(Pair(key, value))
-
-        val intent = Intent(Constant.Action.REFRESH_PREFERENCE)
-        intent.putExtra(Constant.Key.DATA, data as Serializable)
-
-        // 发送广播
-        ReceiverHelper.sendBroadcastReceiver(activity, intent)
     }
 }
