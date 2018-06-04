@@ -21,8 +21,8 @@ import android.os.Bundle
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
+import com.sky.xposed.ktx.XposedPlus
 import com.sky.xposed.weishi.Constant
-import com.sky.xposed.weishi.ex.XposedPlus
 import com.sky.xposed.weishi.hook.base.BaseHook
 import com.sky.xposed.weishi.hook.handler.*
 import com.sky.xposed.weishi.ui.dialog.SettingsDialog

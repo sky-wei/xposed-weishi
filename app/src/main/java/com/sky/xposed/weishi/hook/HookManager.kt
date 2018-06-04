@@ -19,12 +19,12 @@ package com.sky.xposed.weishi.hook
 import android.content.Context
 import android.content.Intent
 import android.os.Handler
+import com.sky.xposed.ktx.XposedPlus
 import com.sky.xposed.weishi.BuildConfig
 import com.sky.xposed.weishi.Constant
 import com.sky.xposed.weishi.data.CachePreferences
 import com.sky.xposed.weishi.data.ObjectManager
 import com.sky.xposed.weishi.data.UserConfigManager
-import com.sky.xposed.weishi.ex.XposedPlus
 import com.sky.xposed.weishi.helper.ReceiverHelper
 import com.sky.xposed.weishi.hook.support.WeiShiHook
 import com.sky.xposed.weishi.util.Alog

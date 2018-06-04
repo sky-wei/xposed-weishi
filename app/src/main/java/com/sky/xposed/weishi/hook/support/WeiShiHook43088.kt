@@ -20,8 +20,8 @@ import android.app.Activity
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
+import com.sky.xposed.ktx.XposedPlus
 import com.sky.xposed.weishi.Constant
-import com.sky.xposed.weishi.ex.XposedPlus
 import com.sky.xposed.weishi.ui.dialog.SettingsDialog
 import com.sky.xposed.weishi.ui.util.ViewUtil
 import de.robv.android.xposed.XposedBridge
