@@ -20,79 +20,79 @@ object Constant {
 
     object WeiShi {
 
-        val PACKAGE_NAME = "com.tencent.weishi"
+        const val PACKAGE_NAME = "com.tencent.weishi"
     }
 
     object Preference {
 
         /** 自动播放  */
-        val AUTO_PLAY = "auto_play"
+        const val AUTO_PLAY = "auto_play"
 
         /** 自动关注  */
-        val AUTO_ATTENTION = "auto_attention"
+        const val AUTO_ATTENTION = "auto_attention"
 
         /** 自动点赞  */
-        val AUTO_LIKE = "auto_like"
+        const val AUTO_LIKE = "auto_like"
 
         /** 自动评论  */
-        val AUTO_COMMENT = "auto_comment"
+        const val AUTO_COMMENT = "auto_comment"
 
-        /** 自动评论内容  */
-        val AUTO_COMMENT_MESSAGE = "auto_comment_message"
+        /** 自动评论内容列表  */
+        const val AUTO_COMMENT_LIST = "auto_comment_list"
 
         /** 自动保存视频  */
-        val AUTO_SAVE_VIDEO = "auto_save_video"
+        const val AUTO_SAVE_VIDEO = "auto_save_video"
 
         /** 解除15s视频限制  */
-        val REMOVE_LIMIT = "remove_limit"
+        const val REMOVE_LIMIT = "remove_limit"
 
         /** 自动播放休眠时间 */
-        val AUTO_PLAY_SLEEP_TIME = "auto_play_sleep_time"
+        const val AUTO_PLAY_SLEEP_TIME = "auto_play_sleep_time"
 
         /** 录制视频的最大时间 */
-        val RECORD_VIDEO_TIME = "record_video_time"
+        const val RECORD_VIDEO_TIME = "record_video_time"
     }
 
     object Action {
 
-        val REFRESH_PREFERENCE = BuildConfig.APPLICATION_ID + ".ACTION_REFRESH_PREFERENCE"
+        const val REFRESH_PREFERENCE = BuildConfig.APPLICATION_ID + ".ACTION_REFRESH_PREFERENCE"
     }
 
     object Key {
 
-        val DATA = "data"
+        const val DATA = "data"
     }
 
     object Name {
 
-        val WEI_SHI = "weishi"
+        const val WEI_SHI = "weishi"
 
-        val PLUGIN = "微视助手"
+        const val PLUGIN = "微视助手"
 
-        val SAVE_VIDEO = "无水印保存"
+        const val SAVE_VIDEO = "无水印保存"
     }
 
     object InputType {
 
-        val NUMBER = 0
+        const val NUMBER = 0
 
-        val NUMBER_SIGNED = 1
+        const val NUMBER_SIGNED = 1
 
-        val NUMBER_DECIMAL = 2
+        const val NUMBER_DECIMAL = 2
 
-        val TEXT = 3
+        const val TEXT = 3
 
-        val PHONE = 4
+        const val PHONE = 4
 
-        val TEXT_PASSWORD = 5
+        const val TEXT_PASSWORD = 5
 
-        val NUMBER_PASSWORD = 6
+        const val NUMBER_PASSWORD = 6
     }
 
     object DefaultValue {
 
-        val AUTO_PLAY_SLEEP_TIME = 15   // 单位:秒
+        const val AUTO_PLAY_SLEEP_TIME = 15   // 单位:秒
 
-        val RECORD_VIDEO_TIME = 120     // 单位:秒
+        const val RECORD_VIDEO_TIME = 120     // 单位:秒
     }
 }

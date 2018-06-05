@@ -57,11 +57,14 @@ class AutoCommentHandler(hookManager: HookManager) : CommonHandler(hookManager),
 
         // 获取当前分享视频的相关信息
         val data = getAdapterItem(getCurrentPosition())
-        val message = mUserConfigManager.getCommentMessage()
+        val messageList = mUserConfigManager.getCommentList()
 
-        if (data == null || TextUtils.isEmpty(message)) return
+        if (data == null || messageList.isEmpty()) return
 
         try {
+            // 获取随机评论
+            val message = messageList[RandomUtil.random(messageList.size)]
+
             val id = XposedHelpers.getObjectField(data, mVersionConfig.fieldDataId)
             val poster = XposedHelpers.getObjectField(data, mVersionConfig.fieldDataPoster)
             val topicId = XposedHelpers.getObjectField(data, mVersionConfig.fieldDataTopicId)
@@ -96,8 +99,8 @@ class AutoCommentHandler(hookManager: HookManager) : CommonHandler(hookManager),
             return false
         }
 
-        if (TextUtils.isEmpty(mUserConfigManager.getCommentMessage())) {
-            VToast.show("请先设置发送消息")
+        if (mUserConfigManager.isCommentListEmpty()) {
+            VToast.show("请先设置发送评论")
             return false
         }
         return true

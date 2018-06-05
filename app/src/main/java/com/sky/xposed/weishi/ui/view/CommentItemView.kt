@@ -54,7 +54,7 @@ class CommentItemView : FrameLayout {
         tvContent.gravity = Gravity.CENTER_VERTICAL
         tvContent.ellipsize = TextUtils.TruncateAt.END
 
-        val topMargin = DisplayUtil.dip2px(context, 8f)
+        val topMargin = DisplayUtil.dip2px(context, 6f)
         val leftMargin = DisplayUtil.dip2px(context, 15f)
 
         val params = LayoutUtil.newWrapFrameLayoutParams()

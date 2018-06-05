@@ -50,6 +50,10 @@ class CachePreferences(mContext: Context, mName: String) {
         return mMap[key] as Boolean? ?: defValue
     }
 
+    fun getStringSet(key: String, defValue: Set<String>): Set<String> {
+        return mMap[key] as Set<String>? ?: defValue
+    }
+
     fun contains(key: String): Boolean {
         return mMap.containsKey(key)
     }

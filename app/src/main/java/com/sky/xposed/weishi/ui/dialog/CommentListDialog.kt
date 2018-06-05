@@ -17,16 +17,14 @@
 package com.sky.xposed.weishi.ui.dialog
 
 import android.app.AlertDialog
+import android.content.DialogInterface
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
 import android.text.TextUtils
 import android.view.*
 import android.view.animation.BounceInterpolator
-import android.widget.AdapterView
-import android.widget.Button
-import android.widget.EditText
-import android.widget.FrameLayout
+import android.widget.*
 import com.baoyz.swipemenulistview.SwipeMenu
 import com.baoyz.swipemenulistview.SwipeMenuCreator
 import com.baoyz.swipemenulistview.SwipeMenuItem
@@ -54,6 +52,7 @@ class CommentListDialog : BaseDialogFragment(),
 
     private lateinit var mCommentListAdapter: CommentListAdapter
     private val mCommentList = ArrayList<String>()
+    private var mSaveCommentList = false
 
     override fun createView(inflater: LayoutInflater, container: ViewGroup?): View {
 
@@ -70,14 +69,26 @@ class CommentListDialog : BaseDialogFragment(),
                 FrameLayout.LayoutParams.MATCH_PARENT,
                 FrameLayout.LayoutParams.WRAP_CONTENT)
 
+        val tvTips = TextView(context)
+        tvTips.setTextColor(0xffafafaf.toInt())
+        tvTips.textSize = 10f
+        tvTips.text = "提示:单击编辑左滑可删除"
+
         mAddCommonButton = Button(context)
         mAddCommonButton.text = "添加"
         mAddCommonButton.textSize = 14f
         mAddCommonButton.setTextColor(0xFFF93F25.toInt())
         mAddCommonButton.setBackgroundColor(0x00000000)
 
-        val params = LayoutUtil.newWrapFrameLayoutParams()
-        params.gravity = Gravity.CENTER_VERTICAL or Gravity.RIGHT
+        val tipsParams = LayoutUtil.newWrapFrameLayoutParams()
+        tipsParams.leftMargin = DisplayUtil.dip2px(context, 15f)
+        tipsParams.gravity = Gravity.CENTER_VERTICAL
+
+        val params = LayoutUtil.newFrameLayoutParams(
+                DisplayUtil.dip2px(context, 70f), DisplayUtil.dip2px(context, 40f))
+        params.gravity = Gravity.RIGHT or Gravity.CENTER_VERTICAL
+
+        headLayout.addView(tvTips, tipsParams)
         headLayout.addView(mAddCommonButton, params)
 
         mSwipeMenuListView = SwipeMenuListView(context)
@@ -111,6 +122,7 @@ class CommentListDialog : BaseDialogFragment(),
                     VToast.show("无法添加空评论!")
                 } else {
                     // 添加到列表中
+                    mSaveCommentList = true
                     mCommentList.add(it)
                     mCommentListAdapter.notifyDataSetChanged()
                 }
@@ -120,6 +132,20 @@ class CommentListDialog : BaseDialogFragment(),
         mSwipeMenuListView.onItemClickListener = this
         mSwipeMenuListView.setOnMenuItemClickListener(this)
         mSwipeMenuListView.adapter = mCommentListAdapter
+
+        // 设置加载的评论信息
+        mCommentList.clear()
+        mCommentList.addAll(loadUserComment())
+        mCommentListAdapter.notifyDataSetChanged()
+    }
+
+    override fun onDismiss(dialog: DialogInterface?) {
+        super.onDismiss(dialog)
+
+        if (mSaveCommentList) {
+            // 保存评论列表
+            saveUserComment(mCommentList)
+        }
     }
 
     override fun onItemClick(parent: AdapterView<*>, view: View, position: Int, id: Long) {
@@ -131,6 +157,7 @@ class CommentListDialog : BaseDialogFragment(),
                 VToast.show("编辑的评论不能为空!")
             } else {
                 // 添加到列表中
+                mSaveCommentList = true
                 mCommentList[position] = it
                 mCommentListAdapter.notifyDataSetChanged()
             }
@@ -140,12 +167,43 @@ class CommentListDialog : BaseDialogFragment(),
     override fun onMenuItemClick(position: Int, menu: SwipeMenu, index: Int): Boolean {
 
         // 删除指定评论
+        mSaveCommentList = true
         mCommentList.removeAt(position)
         mCommentListAdapter.notifyDataSetChanged()
 
         return true
     }
 
+    /**
+     * 加载用户评论
+     */
+    private fun loadUserComment(): List<String> {
+
+        val commentSet = getDefaultSharedPreferences()
+                .getStringSet(Constant.Preference.AUTO_COMMENT_LIST, HashSet<String>())
+
+        return commentSet.map { it }
+    }
+
+    /**
+     * 保存用户评论
+     */
+    private fun saveUserComment(commentList: List<String>) {
+
+        val commentSet = commentList.toHashSet()
+
+        getDefaultSharedPreferences()
+                .edit()
+                .putStringSet(Constant.Preference.AUTO_COMMENT_LIST, commentSet)
+                .apply()
+
+        // 发送修改广播
+        sendRefreshPreferenceBroadcast(Constant.Preference.AUTO_COMMENT_LIST, commentSet)
+    }
+
+    /**
+     * 显示编辑的Dialog提示框
+     */
     private fun showEditDialog(title: String, content: String, onTextChange:(content: String) -> Unit) {
 
         val top = DisplayUtil.dip2px(context, 10f)
@@ -174,6 +232,9 @@ class CommentListDialog : BaseDialogFragment(),
         builder.show()
     }
 
+    /**
+     * 创建左滑菜单
+     */
     private fun newMenuCreator(): SwipeMenuCreator {
 
         return SwipeMenuCreator { menu ->

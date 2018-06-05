@@ -48,8 +48,20 @@ class UserConfigManager(hookManager: HookManager) {
         return getBoolean(Constant.Preference.REMOVE_LIMIT)!!
     }
 
-    fun getCommentMessage(): String {
-        return getString(Constant.Preference.AUTO_COMMENT_MESSAGE)
+    fun isCommentListEmpty(): Boolean {
+
+        val commentSet = mCachePreferences.getStringSet(
+                Constant.Preference.AUTO_COMMENT_LIST, HashSet())
+
+        return commentSet.isEmpty()
+    }
+
+    fun getCommentList(): List<String> {
+
+        val commentSet = mCachePreferences.getStringSet(
+                Constant.Preference.AUTO_COMMENT_LIST, HashSet())
+
+        return commentSet.map { it }
     }
 
     fun getAutoPlaySleepTime(): Long {
