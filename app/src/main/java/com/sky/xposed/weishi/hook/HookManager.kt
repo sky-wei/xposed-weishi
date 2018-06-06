@@ -29,6 +29,7 @@ import com.sky.xposed.weishi.helper.ReceiverHelper
 import com.sky.xposed.weishi.hook.support.WeiShiHook
 import com.sky.xposed.weishi.util.Alog
 import com.sky.xposed.weishi.util.VToast
+import com.squareup.picasso.Picasso
 import de.robv.android.xposed.callbacks.XC_LoadPackage
 import java.util.*
 
@@ -55,6 +56,7 @@ class HookManager private constructor() {
     fun initialization(context: Context, param: XC_LoadPackage.LoadPackageParam): HookManager {
 
         XposedPlus.initDefaultLoadPackage(param)
+        Picasso.setSingletonInstance(Picasso.Builder(context).build())
 
         mContext = context
         mHandler = AppHandler()

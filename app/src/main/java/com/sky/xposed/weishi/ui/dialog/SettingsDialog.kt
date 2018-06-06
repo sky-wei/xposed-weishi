@@ -16,16 +16,15 @@
 
 package com.sky.xposed.weishi.ui.dialog
 
-import android.app.AlertDialog
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.Window
-import com.sky.xposed.weishi.BuildConfig
 import com.sky.xposed.weishi.Constant
 import com.sky.xposed.weishi.ui.base.BaseDialogFragment
 import com.sky.xposed.weishi.ui.interfaces.TrackViewStatus.StatusChangeListener
+import com.sky.xposed.weishi.ui.util.CommUtil
 import com.sky.xposed.weishi.ui.util.ViewUtil
 import com.sky.xposed.weishi.ui.view.CommonFrameLayout
 import com.sky.xposed.weishi.ui.view.SimpleItemView
@@ -94,11 +93,7 @@ class SettingsDialog : BaseDialogFragment() {
         sivAbout.setOnClickListener{
 
             // 显示关于
-            val builder = AlertDialog.Builder(context)
-            builder.setTitle("关于")
-            builder.setMessage("\n插件版本: v${BuildConfig.VERSION_NAME}")
-            builder.setPositiveButton("确定", { dialog, _ -> dialog.dismiss() })
-            builder.show()
+            CommUtil.showAboutDialog(context)
         }
 
         etiAutoCommentList.setOnClickListener {

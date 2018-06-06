@@ -25,6 +25,7 @@ import android.view.MenuItem
 import android.view.View
 import android.widget.TextView
 import com.sky.xposed.weishi.ui.dialog.SettingsDialog
+import com.sky.xposed.weishi.ui.util.CommUtil
 import com.sky.xposed.weishi.ui.view.ItemMenu
 import com.sky.xposed.weishi.util.PackageUitl
 import com.sky.xposed.weishi.util.VToast
@@ -79,7 +80,7 @@ class MainActivity : Activity() {
                 openUrl("http://repo.xposed.info/module/com.sky.xposed.weishi")
             }
             R.id.im_about -> {
-                openUrl("https://github.com/jingcai-wei/")
+                CommUtil.showAboutDialog(this)
             }
         }
     }

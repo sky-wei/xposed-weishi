@@ -8,8 +8,8 @@ android {
         applicationId "com.sky.xposed.weishi"
         minSdkVersion 21
         targetSdkVersion 27
-        versionCode 6
-        versionName "1.3"
+        versionCode 7
+        versionName "1.4"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         resValue 'string', 'app_name', 'xposed-weishi'
     }
@@ -69,4 +69,5 @@ dependencies {
     implementation 'com.zhy:okhttputils:2.6.2'
     implementation 'com.baoyz.swipemenulistview:library:1.3.0'
     implementation 'com.github.jingcai-wei:xposed-ktx:1.1'
+    implementation 'com.squareup.picasso:picasso:2.71828'
 }
