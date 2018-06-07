@@ -16,10 +16,9 @@
 
 package com.sky.xposed.weishi.hook.handler
 
-import android.content.Intent
-import android.net.Uri
 import android.os.Environment
 import com.sky.xposed.weishi.hook.HookManager
+import com.sky.xposed.weishi.ui.util.CommUtil
 import com.sky.xposed.weishi.util.Alog
 import com.sky.xposed.weishi.util.MD5Util
 import com.sky.xposed.weishi.util.RandomUtil
@@ -117,9 +116,7 @@ class AutoDownloadHandler(hookManager: HookManager) : CommonHandler(hookManager)
                     override fun onResponse(response: File, id: Int) {
                         Alog.e(TAG, "onResponse :$response")
                         VToast.show("视频下载完成：" + response.path)
-
-                        val data = Uri.parse("file://" + response.path)
-                        mContext.sendBroadcast(Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE, data))
+                        CommUtil.scanFile(mContext, response.path)
                     }
                 })
 

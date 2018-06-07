@@ -62,6 +62,18 @@
             />
 
         <com.sky.xposed.weishi.ui.view.ItemMenu
+            android:id="@+id/im_donate"
+            android:layout_width="match_parent"
+            android:layout_height="45dp"
+            android:onClick="onClick"
+            app:sky_itemMenuLine="true"
+            app:sky_itemMenuTextSize="15sp"
+            app:sky_itemMenuShowMore="true"
+            app:sky_itemMenuName="捐赠我们"
+            android:background="@drawable/selector_item_menu"
+            />
+
+        <com.sky.xposed.weishi.ui.view.ItemMenu
             android:id="@+id/im_about"
             android:layout_width="match_parent"
             android:layout_height="45dp"

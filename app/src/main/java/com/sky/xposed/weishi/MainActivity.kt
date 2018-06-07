@@ -24,6 +24,7 @@ import android.view.Menu
 import android.view.MenuItem
 import android.view.View
 import android.widget.TextView
+import com.sky.xposed.weishi.ui.dialog.DonateDialog
 import com.sky.xposed.weishi.ui.dialog.SettingsDialog
 import com.sky.xposed.weishi.ui.util.CommUtil
 import com.sky.xposed.weishi.ui.view.ItemMenu
@@ -78,6 +79,11 @@ class MainActivity : Activity() {
             }
             R.id.im_download -> {
                 openUrl("http://repo.xposed.info/module/com.sky.xposed.weishi")
+            }
+            R.id.im_donate -> {
+                // 捐赠
+                val donateDialog = DonateDialog()
+                donateDialog.show(fragmentManager, "donate")
             }
             R.id.im_about -> {
                 CommUtil.showAboutDialog(this)

@@ -44,6 +44,7 @@ class SettingsDialog : BaseDialogFragment() {
     private lateinit var sivAutoSaveVideo: SwitchItemView
     private lateinit var sivRemoveLimit: SwitchItemView
     private lateinit var sivMoreSettings: SimpleItemView
+    private lateinit var sivDonate: SimpleItemView
     private lateinit var sivAbout: SimpleItemView
 
     override fun createView(inflater: LayoutInflater, container: ViewGroup?): View {
@@ -61,6 +62,7 @@ class SettingsDialog : BaseDialogFragment() {
         etiAutoCommentList = ViewUtil.newSimpleItemView(context, "评论内容")
         sivRemoveLimit = ViewUtil.newSwitchItemView(context, "解除录制视频时间限制")
         sivMoreSettings = ViewUtil.newSimpleItemView(context, "更多设置")
+        sivDonate = ViewUtil.newSimpleItemView(context, "捐赠我们")
         sivAbout = ViewUtil.newSimpleItemView(context, "关于")
 
         sivAutoSaveVideo = ViewUtil.newSwitchItemView(context, "自动保存视频")
@@ -73,6 +75,7 @@ class SettingsDialog : BaseDialogFragment() {
         mCommonFrameLayout.addContent(sivAutoSaveVideo, true)
         mCommonFrameLayout.addContent(sivRemoveLimit, true)
         mCommonFrameLayout.addContent(sivMoreSettings, true)
+        mCommonFrameLayout.addContent(sivDonate, true)
         mCommonFrameLayout.addContent(sivAbout)
 
         return mCommonFrameLayout
@@ -108,6 +111,13 @@ class SettingsDialog : BaseDialogFragment() {
             // 更多设置
             val moreSettingsDialog = MoreSettingsDialog()
             moreSettingsDialog.show(fragmentManager, "moreSettings")
+        }
+
+        sivDonate.setOnClickListener {
+
+            // 捐赠
+            val donateDialog = DonateDialog()
+            donateDialog.show(fragmentManager, "donate")
         }
     }
 
