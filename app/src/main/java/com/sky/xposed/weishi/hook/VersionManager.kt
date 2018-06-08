@@ -38,9 +38,11 @@ class VersionManager(hookManager: HookManager) {
         CONFIG_MAP["4.2.0.88"] = Config42088::class.java
         CONFIG_MAP["4.2.5.88"] = Config42588::class.java
         CONFIG_MAP["4.3.0.88"] = Config43088::class.java
+        CONFIG_MAP["4.3.2.88"] = Config43288::class.java
 
         /** Hook */
         HOOK_MAP["4.3.0.88"] = WeiShiHook43088::class.java
+        HOOK_MAP["4.3.2.88"] = WeiShiHook43088::class.java
     }
 
     fun isSupportVersion(): Boolean {
@@ -108,6 +110,16 @@ class VersionManager(hookManager: HookManager) {
         return PackageUitl.getSimplePackageInfo(context, context.packageName)
     }
 
+    class Config43288 : Config() {
+
+        init {
+            classShareDialog = "com.tencent.oscar.module.share.b.b"
+
+            classFeedList = "com.tencent.oscar.module.feedlist.d.al"
+
+            classItemModel = "com.tencent.oscar.module.main.feed.av"
+        }
+    }
 
     class Config43088 : Config() {
 
