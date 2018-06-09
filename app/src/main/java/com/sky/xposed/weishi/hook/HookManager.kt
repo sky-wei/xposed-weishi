@@ -30,6 +30,7 @@ import com.sky.xposed.weishi.hook.support.WeiShiHook
 import com.sky.xposed.weishi.util.Alog
 import com.sky.xposed.weishi.util.VToast
 import com.squareup.picasso.Picasso
+import com.tencent.bugly.crashreport.CrashReport
 import de.robv.android.xposed.callbacks.XC_LoadPackage
 import java.util.*
 
@@ -74,6 +75,10 @@ class HookManager private constructor() {
 
         Alog.debug = BuildConfig.DEBUG
         VToast.getInstance().init(context)
+
+        // 添加统计
+        CrashReport.initCrashReport(context, Constant.Bugly.APP_ID, BuildConfig.DEBUG)
+        CrashReport.setAppChannel(context, BuildConfig.FLAVOR)
 
         return this
     }

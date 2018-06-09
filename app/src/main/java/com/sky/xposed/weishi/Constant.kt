@@ -95,4 +95,9 @@ object Constant {
 
         const val RECORD_VIDEO_TIME = 120     // 单位:秒
     }
+
+    object Bugly {
+
+        const val APP_ID = "3443561b97"
+    }
 }
