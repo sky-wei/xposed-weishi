@@ -43,8 +43,8 @@ class Main : IXposedHookLoadPackage {
                 "onCreate",
                 object : XC_MethodHook() {
 
-                    override fun afterHookedMethod(param: MethodHookParam) {
-                        super.afterHookedMethod(param)
+                    override fun beforeHookedMethod(param: MethodHookParam) {
+                        super.beforeHookedMethod(param)
 
                         val application = param.thisObject as Application
                         val context = application.applicationContext
