@@ -38,3 +38,6 @@
 #okio
 -dontwarn okio.**
 -keep class okio.**{*;}
+
+-dontwarn com.tencent.bugly.**
+-keep public class com.tencent.bugly.**{*;}
