@@ -51,6 +51,9 @@ object Constant {
 
         /** 录制视频的最大时间 */
         const val RECORD_VIDEO_TIME = "record_video_time"
+
+        /** 红包的最大时间  */
+        const val HB_LAST_TIME = "hb_last_time"
     }
 
     object Action {
@@ -99,5 +102,11 @@ object Constant {
     object Bugly {
 
         const val APP_ID = "3443561b97"
+    }
+
+    object Time {
+
+        /** 红包最大间隔时间 */
+        const val HB_MAX_TIME = 1000 * 60 * 60 * 24
     }
 }

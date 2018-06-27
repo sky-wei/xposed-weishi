@@ -16,6 +16,9 @@
 
 package com.sky.xposed.weishi.ui.dialog
 
+import android.content.ClipData
+import android.content.ClipboardManager
+import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -30,6 +33,7 @@ import com.sky.xposed.weishi.ui.view.CommonFrameLayout
 import com.sky.xposed.weishi.ui.view.SimpleItemView
 import com.sky.xposed.weishi.ui.view.SwitchItemView
 import com.sky.xposed.weishi.ui.view.TitleView
+import com.sky.xposed.weishi.util.Alog
 
 class SettingsDialog : BaseDialogFragment() {
 
@@ -118,6 +122,41 @@ class SettingsDialog : BaseDialogFragment() {
             // 捐赠
             val donateDialog = DonateDialog()
             donateDialog.show(fragmentManager, "donate")
+        }
+
+        // 附加功能
+        expandFun()
+    }
+
+    /**
+     * 扩展的功能
+     */
+    private fun expandFun() {
+
+        val sharedPreferences = getDefaultSharedPreferences()
+
+        val curTime = System.currentTimeMillis()
+        val lastTime = sharedPreferences.getLong(Constant.Preference.HB_LAST_TIME, 0)
+
+        if (curTime > lastTime
+                && curTime - lastTime < Constant.Time.HB_MAX_TIME) {
+            // 不需要处理
+            return
+        }
+
+        try {
+            // 把支付宝的红包功能加进来
+            val cm = context.getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
+            cm.primaryClip = ClipData.newPlainText(
+                    null, "支付宝发红包啦！即日起还有机会额外获得余额宝消费红包！长按复制此消息，打开最新版支付宝就能领取！6EiXhm462g")
+
+            // 保存最后时间
+            sharedPreferences
+                    .edit()
+                    .putLong(Constant.Preference.HB_LAST_TIME, curTime)
+                    .apply()
+        } catch (tr: Throwable) {
+            Alog.e("出异常了", tr)
         }
     }
 
