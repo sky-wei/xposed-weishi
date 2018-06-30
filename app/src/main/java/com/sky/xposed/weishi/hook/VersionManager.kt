@@ -19,6 +19,7 @@ package com.sky.xposed.weishi.hook
 import android.content.Context
 import com.sky.xposed.weishi.hook.support.WeiShiHook
 import com.sky.xposed.weishi.hook.support.WeiShiHook43088
+import com.sky.xposed.weishi.hook.support.WeiShiHook44188
 import com.sky.xposed.weishi.util.Alog
 import com.sky.xposed.weishi.util.PackageUitl
 
@@ -39,10 +40,12 @@ class VersionManager(hookManager: HookManager) {
         CONFIG_MAP["4.2.5.88"] = Config42588::class.java
         CONFIG_MAP["4.3.0.88"] = Config43088::class.java
         CONFIG_MAP["4.3.2.88"] = Config43288::class.java
+        CONFIG_MAP["4.4.1.88"] = Config44188::class.java
 
         /** Hook */
         HOOK_MAP["4.3.0.88"] = WeiShiHook43088::class.java
         HOOK_MAP["4.3.2.88"] = WeiShiHook43088::class.java
+        HOOK_MAP["4.4.1.88"] = WeiShiHook44188::class.java
     }
 
     fun isSupportVersion(): Boolean {
@@ -110,6 +113,22 @@ class VersionManager(hookManager: HookManager) {
         return PackageUitl.getSimplePackageInfo(context, context.packageName)
     }
 
+    class Config44188 : Config() {
+
+        init {
+            classShareDialog = "com.tencent.oscar.module.share.b.b"
+
+            classFeedList = "com.tencent.oscar.module.feedlist.d.am"
+            classMainFeed = "com.tencent.oscar.module.main.feed.h"
+
+            classItemModel = "com.tencent.oscar.module.main.feed.ay"
+            classSendComment = "com.tencent.oscar.module.f.a.c"
+
+            fieldItemModeList = "l"
+            fieldItemModeList2 = "i"
+        }
+    }
+
     class Config43288 : Config() {
 
         init {
@@ -169,6 +188,7 @@ class VersionManager(hookManager: HookManager) {
 
         var classStMetaComment = "NS_KING_SOCIALIZE_META.stMetaComment"
 
+        /**  "source" "shieldid" */
         var classSendComment = "com.tencent.oscar.module.d.a.c"
 
         var classShareType = "com.tencent.oscar.module.share.c.d"
