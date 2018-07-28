@@ -73,7 +73,10 @@ class AutoDownloadHandler(hookManager: HookManager) : CommonHandler(hookManager)
 
     private fun download(data: Any?, skip: Boolean) {
 
-        if (data == null) return
+        if (data == null) {
+            Alog.d("download data is null!")
+            return
+        }
 
         if (!skip && !mUserConfigManager.isAutoSaveVideo()) {
             return

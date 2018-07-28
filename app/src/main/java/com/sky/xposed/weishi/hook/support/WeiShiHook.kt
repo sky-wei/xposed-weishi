@@ -242,14 +242,14 @@ open class WeiShiHook : BaseHook() {
 
     open fun testHook() {
 
-        XposedPlus.findAndBeforeHookMethod(
-                "android.support.v4.app.Fragment",
-                "onCreate",
-                Bundle::class.java
-        ) {
-
-            Alog.d(">>>>>>>>>>>>>>>>>>>> onCreate " + it.thisObject.javaClass)
-        }
+//        XposedPlus.findAndBeforeHookMethod(
+//                "android.support.v4.app.Fragment",
+//                "onCreate",
+//                Bundle::class.java
+//        ) {
+//
+//            Alog.d(">>>>>>>>>>>>>>>>>>>> onCreate " + it.thisObject.javaClass)
+//        }
 //
 //        XposedPlus.findAndBeforeHookMethod(
 //                "com.tencent.oscar.widget.comment.CommentPostBoxFragment",
