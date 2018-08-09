@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018. The sky Authors
+ * Copyright (c) 2018 The sky Authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,11 +14,26 @@
  * limitations under the License.
  */
 
-package com.sky.xposed.weishi.ui.interfaces
+package com.sky.xposed.weishi.util
 
 import android.view.View
+import android.view.ViewGroup
 
-interface OnItemEventListener {
+/**
+ * Created by sky on 2018/8/9.
+ */
+object FindUtil {
 
-    fun onItemEvent(event: Int, view: View, position: Int, vararg args: Any)
+    fun findFirstView(viewGroup: ViewGroup, className: String): View? {
+
+        for (index in 0 until viewGroup.childCount) {
+
+            val view = viewGroup.getChildAt(index)
+
+            if (view.javaClass.name == className) {
+                return view
+            }
+        }
+        return null
+    }
 }

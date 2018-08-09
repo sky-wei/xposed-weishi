@@ -17,8 +17,8 @@
 package com.sky.xposed.weishi.hook.handler
 
 import android.view.View
+import com.sky.xposed.common.util.RandomUtil
 import com.sky.xposed.weishi.hook.HookManager
-import com.sky.xposed.weishi.util.RandomUtil
 import de.robv.android.xposed.XposedHelpers
 
 class AutoLikeHandler(hookManager: HookManager) : CommonHandler(hookManager), Runnable {
@@ -31,7 +31,7 @@ class AutoLikeHandler(hookManager: HookManager) : CommonHandler(hookManager), Ru
         }
 
         // 开始点赞
-        postDelayed(this, RandomUtil.randomLong(1500, 2500))
+        postDelayed(this, RandomUtil.random(1500, 2500).toLong())
     }
 
     fun cancel() {

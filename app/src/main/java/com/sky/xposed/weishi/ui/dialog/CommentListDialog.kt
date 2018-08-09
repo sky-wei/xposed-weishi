@@ -29,20 +29,20 @@ import com.baoyz.swipemenulistview.SwipeMenu
 import com.baoyz.swipemenulistview.SwipeMenuCreator
 import com.baoyz.swipemenulistview.SwipeMenuItem
 import com.baoyz.swipemenulistview.SwipeMenuListView
+import com.sky.xposed.common.ui.adapter.CommentListAdapter
+import com.sky.xposed.common.ui.util.LayoutUtil
+import com.sky.xposed.common.ui.util.ViewUtil
+import com.sky.xposed.common.ui.view.CommonFrameLayout
+import com.sky.xposed.common.ui.view.TitleView
+import com.sky.xposed.common.util.DisplayUtil
+import com.sky.xposed.common.util.ToastUtil
 import com.sky.xposed.weishi.Constant
-import com.sky.xposed.weishi.ui.adapter.CommentListAdapter
-import com.sky.xposed.weishi.ui.base.BaseDialogFragment
-import com.sky.xposed.weishi.ui.util.LayoutUtil
-import com.sky.xposed.weishi.ui.util.ViewUtil
-import com.sky.xposed.weishi.ui.view.CommonFrameLayout
-import com.sky.xposed.weishi.ui.view.TitleView
-import com.sky.xposed.weishi.util.DisplayUtil
-import com.sky.xposed.weishi.util.VToast
+import com.sky.xposed.weishi.ui.base.BaseDialog
 
 /**
  * Created by sky on 18-6-3.
  */
-class CommentListDialog : BaseDialogFragment(),
+class CommentListDialog : BaseDialog(),
         SwipeMenuListView.OnMenuItemClickListener, AdapterView.OnItemClickListener {
 
     private lateinit var mToolbar: TitleView
@@ -119,7 +119,7 @@ class CommentListDialog : BaseDialogFragment(),
 
                 if (TextUtils.isEmpty(it)) {
                     // 异常情况
-                    VToast.show("无法添加空评论!")
+                    ToastUtil.show("无法添加空评论!")
                 } else {
                     // 添加到列表中
                     mSaveCommentList = true
@@ -154,7 +154,7 @@ class CommentListDialog : BaseDialogFragment(),
 
             if (TextUtils.isEmpty(it)) {
                 // 异常情况
-                VToast.show("编辑的评论不能为空!")
+                ToastUtil.show("编辑的评论不能为空!")
             } else {
                 // 添加到列表中
                 mSaveCommentList = true
@@ -218,7 +218,7 @@ class CommentListDialog : BaseDialogFragment(),
         editText.setText(content)
         editText.layoutParams = LayoutUtil.newViewGroupParams(
                 ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT)
-        ViewUtil.setInputType(editText, Constant.InputType.TEXT)
+        ViewUtil.setInputType(editText, com.sky.xposed.common.Constant.InputType.TEXT)
         frameLayout.addView(editText)
 
         val builder = AlertDialog.Builder(context)

@@ -17,9 +17,9 @@
 package com.sky.xposed.weishi.hook.handler
 
 import android.view.ViewGroup
+import com.sky.xposed.common.util.Alog
+import com.sky.xposed.common.util.ToastUtil
 import com.sky.xposed.weishi.hook.HookManager
-import com.sky.xposed.weishi.util.Alog
-import com.sky.xposed.weishi.util.VToast
 import de.robv.android.xposed.XposedHelpers
 
 class AutoPlayHandler(hookManager: HookManager) : CommonHandler(hookManager), Runnable {
@@ -32,7 +32,7 @@ class AutoPlayHandler(hookManager: HookManager) : CommonHandler(hookManager), Ru
             // 开始自动播放
             startPlay()
         } else {
-            if (isPlaying) VToast.show("停止自动播放")
+            if (isPlaying) ToastUtil.show("停止自动播放")
             // 关闭自动播放
             stopPlay()
         }
@@ -69,7 +69,7 @@ class AutoPlayHandler(hookManager: HookManager) : CommonHandler(hookManager), Ru
     private fun playNext(delayMillis: Long) {
         // 开始播放
         postDelayed(this, delayMillis)
-        VToast.show((delayMillis / 1000).toString() + "秒后播放下一个视频")
+        ToastUtil.show((delayMillis / 1000).toString() + "秒后播放下一个视频")
     }
 
     override fun run() {
@@ -87,7 +87,7 @@ class AutoPlayHandler(hookManager: HookManager) : CommonHandler(hookManager), Ru
         if (!mViewPager.isShown) {
             // 停止播放(界面不可见了)
             stopPlay()
-            VToast.show("界面切换，自动播放将暂停")
+            ToastUtil.show("界面切换，自动播放将暂停")
             return
         }
 

@@ -14,17 +14,18 @@
  * limitations under the License.
  */
 
-package com.sky.xposed.weishi.ui.interfaces
+package com.sky.xposed.weishi.ui.base
 
 import android.content.SharedPreferences
-import android.view.View
+import com.sky.xposed.common.ui.base.BaseDialogFragment
+import com.sky.xposed.weishi.Constant
 
-interface TrackViewStatus<T> {
+/**
+ * Created by sky on 2018/8/9.
+ */
+abstract class BaseDialog : BaseDialogFragment() {
 
-    abstract fun bind(preferences: SharedPreferences, key: String, defValue: T, listener: StatusChangeListener<T>)
-
-    interface StatusChangeListener<in T> {
-
-        fun onStatusChange(view: View, key: String, value: T): Boolean
+    override fun getDefaultSharedPreferences(): SharedPreferences {
+        return getSharedPreferences(Constant.Name.WEI_SHI)
     }
 }

@@ -17,8 +17,8 @@
 package com.sky.xposed.weishi.hook.handler
 
 import android.view.View
+import com.sky.xposed.common.util.RandomUtil
 import com.sky.xposed.weishi.hook.HookManager
-import com.sky.xposed.weishi.util.RandomUtil
 import de.robv.android.xposed.XposedHelpers
 
 class AutoAttentionHandler(hookManager: HookManager) : CommonHandler(hookManager), Runnable {
@@ -47,7 +47,7 @@ class AutoAttentionHandler(hookManager: HookManager) : CommonHandler(hookManager
         }
 
         // 开始关注
-        postDelayed(this, RandomUtil.randomLong(3000, 3500))
+        postDelayed(this, RandomUtil.random(3000, 3500).toLong())
     }
 
     fun cancel() {

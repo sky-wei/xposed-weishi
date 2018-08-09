@@ -24,12 +24,12 @@ import android.view.Menu
 import android.view.MenuItem
 import android.view.View
 import android.widget.TextView
+import com.sky.xposed.common.ui.view.ItemMenu
+import com.sky.xposed.common.util.PackageUtil
+import com.sky.xposed.common.util.ToastUtil
 import com.sky.xposed.weishi.ui.dialog.DonateDialog
 import com.sky.xposed.weishi.ui.dialog.SettingsDialog
-import com.sky.xposed.weishi.ui.util.CommUtil
-import com.sky.xposed.weishi.ui.view.ItemMenu
-import com.sky.xposed.weishi.util.PackageUitl
-import com.sky.xposed.weishi.util.VToast
+import com.sky.xposed.weishi.ui.util.DialogUtil
 
 class MainActivity : Activity() {
 
@@ -42,7 +42,7 @@ class MainActivity : Activity() {
         setContentView(R.layout.activity_main)
 
         // 初始化
-        VToast.getInstance().init(applicationContext)
+        ToastUtil.getInstance().init(applicationContext)
 
         imVersion = findViewById(R.id.im_version)
         imWeiShiVersion = findViewById(R.id.im_weishi_version)
@@ -86,7 +86,7 @@ class MainActivity : Activity() {
                 donateDialog.show(fragmentManager, "donate")
             }
             R.id.im_about -> {
-                CommUtil.showAboutDialog(this)
+                DialogUtil.showAboutDialog(this)
             }
         }
     }
@@ -100,14 +100,14 @@ class MainActivity : Activity() {
             // 调用系统浏览器打开
             startActivity(intent)
         } catch (tr: Throwable) {
-            VToast.show("打开浏览器异常")
+            ToastUtil.show("打开浏览器异常")
         }
     }
 
     private fun getWeiShiVersionName(): String {
 
         // 获取微视版本名
-        val info = PackageUitl.getSimplePackageInfo(
+        val info = PackageUtil.getSimplePackageInfo(
                 this, Constant.WeiShi.PACKAGE_NAME) ?: return "Unknown"
 
         return "v${info.versionName}"

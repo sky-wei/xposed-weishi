@@ -17,11 +17,11 @@
 package com.sky.xposed.weishi.hook
 
 import android.content.Context
+import com.sky.xposed.common.util.Alog
+import com.sky.xposed.common.util.PackageUtil
 import com.sky.xposed.weishi.hook.support.WeiShiHook
 import com.sky.xposed.weishi.hook.support.WeiShiHook43088
 import com.sky.xposed.weishi.hook.support.WeiShiHook44188
-import com.sky.xposed.weishi.util.Alog
-import com.sky.xposed.weishi.util.PackageUitl
 
 /**
  * Created by sky on 18-6-2.
@@ -73,7 +73,7 @@ class VersionManager(hookManager: HookManager) {
                 // 创建实例
                 mVersionConfig = vClass.newInstance()
             } catch (tr: Throwable) {
-                Alog.d("创建版本配置异常", tr)
+                Alog.e("创建版本配置异常", tr)
             }
 
         }
@@ -102,17 +102,17 @@ class VersionManager(hookManager: HookManager) {
             // 创建实例
             return tClass.newInstance()
         } catch (tr: Throwable) {
-            Alog.d("创建版本Hook异常", tr)
+            Alog.e("创建版本Hook异常", tr)
         }
         return WeiShiHook()
     }
 
-    fun getPackageInfo(): PackageUitl.SimplePackageInfo? {
-        return PackageUitl.getSimplePackageInfo(mContext, mContext.packageName)
+    fun getPackageInfo(): PackageUtil.SimplePackageInfo? {
+        return PackageUtil.getSimplePackageInfo(mContext, mContext.packageName)
     }
 
-    fun getPackageInfo(context: Context): PackageUitl.SimplePackageInfo? {
-        return PackageUitl.getSimplePackageInfo(context, context.packageName)
+    fun getPackageInfo(context: Context): PackageUtil.SimplePackageInfo? {
+        return PackageUtil.getSimplePackageInfo(context, context.packageName)
     }
 
     class Config450588 : Config() {

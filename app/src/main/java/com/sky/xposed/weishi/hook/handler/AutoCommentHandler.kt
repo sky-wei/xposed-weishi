@@ -16,11 +16,10 @@
 
 package com.sky.xposed.weishi.hook.handler
 
-import android.text.TextUtils
+import com.sky.xposed.common.util.Alog
+import com.sky.xposed.common.util.RandomUtil
+import com.sky.xposed.common.util.ToastUtil
 import com.sky.xposed.weishi.hook.HookManager
-import com.sky.xposed.weishi.util.Alog
-import com.sky.xposed.weishi.util.RandomUtil
-import com.sky.xposed.weishi.util.VToast
 import de.robv.android.xposed.XposedHelpers
 
 class AutoCommentHandler(hookManager: HookManager) : CommonHandler(hookManager), Runnable {
@@ -90,7 +89,7 @@ class AutoCommentHandler(hookManager: HookManager) : CommonHandler(hookManager),
 
         if (!isComment()) return
 
-        mHandler.postDelayed(this, RandomUtil.randomLong(1500, 3000))
+        mHandler.postDelayed(this, RandomUtil.random(1500, 3000).toLong())
     }
 
     fun isComment(): Boolean {
@@ -100,7 +99,7 @@ class AutoCommentHandler(hookManager: HookManager) : CommonHandler(hookManager),
         }
 
         if (mUserConfigManager.isCommentListEmpty()) {
-            VToast.show("请先设置发送评论")
+            ToastUtil.show("请先设置发送评论")
             return false
         }
         return true

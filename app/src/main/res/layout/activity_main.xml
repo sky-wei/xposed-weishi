@@ -13,7 +13,7 @@
         android:orientation="vertical"
         android:layout_marginTop="20dp">
 
-        <com.sky.xposed.weishi.ui.view.ItemMenu
+        <com.sky.xposed.common.ui.view.ItemMenu
             android:id="@+id/im_version"
             android:layout_width="match_parent"
             android:layout_height="45dp"
@@ -25,7 +25,7 @@
             android:background="@drawable/selector_item_menu"
             />
 
-        <com.sky.xposed.weishi.ui.view.ItemMenu
+        <com.sky.xposed.common.ui.view.ItemMenu
             android:id="@+id/im_weishi_version"
             android:layout_width="match_parent"
             android:layout_height="45dp"
@@ -37,7 +37,7 @@
             android:background="@drawable/selector_item_menu"
             />
 
-        <com.sky.xposed.weishi.ui.view.ItemMenu
+        <com.sky.xposed.common.ui.view.ItemMenu
             android:id="@+id/im_source"
             android:layout_width="match_parent"
             android:layout_height="45dp"
@@ -49,7 +49,7 @@
             android:background="@drawable/selector_item_menu"
             />
 
-        <com.sky.xposed.weishi.ui.view.ItemMenu
+        <com.sky.xposed.common.ui.view.ItemMenu
             android:id="@+id/im_download"
             android:layout_width="match_parent"
             android:layout_height="45dp"
@@ -61,7 +61,7 @@
             android:background="@drawable/selector_item_menu"
             />
 
-        <com.sky.xposed.weishi.ui.view.ItemMenu
+        <com.sky.xposed.common.ui.view.ItemMenu
             android:id="@+id/im_donate"
             android:layout_width="match_parent"
             android:layout_height="45dp"
@@ -69,11 +69,11 @@
             app:sky_itemMenuLine="true"
             app:sky_itemMenuTextSize="15sp"
             app:sky_itemMenuShowMore="true"
-            app:sky_itemMenuName="捐赠我们"
+            app:sky_itemMenuName="支持我们"
             android:background="@drawable/selector_item_menu"
             />
 
-        <com.sky.xposed.weishi.ui.view.ItemMenu
+        <com.sky.xposed.common.ui.view.ItemMenu
             android:id="@+id/im_about"
             android:layout_width="match_parent"
             android:layout_height="45dp"

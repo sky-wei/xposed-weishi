@@ -17,8 +17,8 @@
 package com.sky.xposed.weishi.hook.base
 
 import android.view.View
+import com.sky.xposed.common.util.ResourceUtil
 import com.sky.xposed.weishi.hook.HookManager
-import com.sky.xposed.weishi.util.ResourceUtil
 
 open class BaseHandler(private val mHookManager: HookManager) {
 

@@ -21,19 +21,19 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.Window
+import com.sky.xposed.common.ui.interfaces.TrackViewStatus
+import com.sky.xposed.common.ui.view.CommonFrameLayout
+import com.sky.xposed.common.ui.view.EditTextItemView
+import com.sky.xposed.common.ui.view.TitleView
+import com.sky.xposed.common.util.ConversionUtil
+import com.sky.xposed.common.util.ToastUtil
 import com.sky.xposed.weishi.Constant
-import com.sky.xposed.weishi.ui.base.BaseDialogFragment
-import com.sky.xposed.weishi.ui.interfaces.TrackViewStatus
-import com.sky.xposed.weishi.ui.view.CommonFrameLayout
-import com.sky.xposed.weishi.ui.view.EditTextItemView
-import com.sky.xposed.weishi.ui.view.TitleView
-import com.sky.xposed.weishi.util.ConversionUtil
-import com.sky.xposed.weishi.util.VToast
+import com.sky.xposed.weishi.ui.base.BaseDialog
 
 /**
  * Created by sky on 18-6-3.
  */
-class MoreSettingsDialog : BaseDialogFragment() {
+class MoreSettingsDialog : BaseDialog() {
 
     private lateinit var mToolbar: TitleView
     private lateinit var mCommonFrameLayout: CommonFrameLayout
@@ -53,13 +53,13 @@ class MoreSettingsDialog : BaseDialogFragment() {
         mAutoPlaySleepTime.name = "自动播放休眠时间"
         mAutoPlaySleepTime.setExtendHint("未设置")
         mAutoPlaySleepTime.unit = "秒"
-        mAutoPlaySleepTime.inputType = Constant.InputType.NUMBER_SIGNED
+        mAutoPlaySleepTime.inputType = com.sky.xposed.common.Constant.InputType.NUMBER_SIGNED
 
         mRecordVideoTime = EditTextItemView(context)
         mRecordVideoTime.name = "录制视频最大限制时间"
         mRecordVideoTime.setExtendHint("未设置")
         mRecordVideoTime.unit = "秒"
-        mRecordVideoTime.inputType = Constant.InputType.NUMBER_SIGNED
+        mRecordVideoTime.inputType = com.sky.xposed.common.Constant.InputType.NUMBER_SIGNED
 
         mCommonFrameLayout.addContent(mAutoPlaySleepTime, true)
         mCommonFrameLayout.addContent(mRecordVideoTime)
@@ -77,36 +77,32 @@ class MoreSettingsDialog : BaseDialogFragment() {
                 Constant.DefaultValue.RECORD_VIDEO_TIME.toString(), mStringChangeListener)
     }
 
-    private val mStringChangeListener = object : TrackViewStatus.StatusChangeListener<String> {
+    private val mStringChangeListener = TrackViewStatus.StatusChangeListener<String> { _, key, value ->
+        when(key) {
+            Constant.Preference.AUTO_PLAY_SLEEP_TIME -> {
 
-        override fun onStatusChange(view: View, key: String, value: String): Boolean {
+                val sleepTime = ConversionUtil.parseInt(value)
 
-            when(key) {
-                Constant.Preference.AUTO_PLAY_SLEEP_TIME -> {
-
-                    val sleepTime = ConversionUtil.parseInt(value)
-
-                    if (sleepTime <= 5) {
-                        VToast.show("设置的休眠数不能少于5秒，请重新设置")
-                        return false
-                    }
-                }
-                Constant.Preference.RECORD_VIDEO_TIME -> {
-
-                    val recordTime = ConversionUtil.parseInt(value)
-
-                    if (recordTime <= 0) {
-                        VToast.show("设置的最大录制视频时间无效，请重新设置")
-                        return false
-                    }
-
-                    if (recordTime > 120) {
-                        VToast.show("设置时间值过大，请慎重！")
-                    }
+                if (sleepTime <= 5) {
+                    ToastUtil.show("设置的休眠数不能少于5秒，请重新设置")
+                    return@StatusChangeListener false
                 }
             }
-            sendRefreshPreferenceBroadcast(key, value)
-            return true
+            Constant.Preference.RECORD_VIDEO_TIME -> {
+
+                val recordTime = ConversionUtil.parseInt(value)
+
+                if (recordTime <= 0) {
+                    ToastUtil.show("设置的最大录制视频时间无效，请重新设置")
+                    return@StatusChangeListener false
+                }
+
+                if (recordTime > 120) {
+                    ToastUtil.show("设置时间值过大，请慎重！")
+                }
+            }
         }
+        sendRefreshPreferenceBroadcast(key, value)
+        true
     }
 }

@@ -25,10 +25,12 @@ import android.net.Uri
 import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
+import com.sky.xposed.common.ui.util.LayoutUtil
+import com.sky.xposed.common.util.Alog
+import com.sky.xposed.common.util.DisplayUtil
+import com.sky.xposed.common.util.ResourceUtil
 import com.sky.xposed.weishi.BuildConfig
 import com.sky.xposed.weishi.R
-import com.sky.xposed.weishi.util.Alog
-import com.sky.xposed.weishi.util.DisplayUtil
 import com.squareup.picasso.Picasso
 import java.io.File
 import java.io.FileOutputStream
@@ -38,7 +40,7 @@ import java.io.IOException
 /**
  * Created by sky on 18-6-6
  */
-object CommUtil {
+object DialogUtil {
 
     fun showAboutDialog(context: Context) {
 
@@ -84,11 +86,10 @@ object CommUtil {
     }
 
     fun resourceIdToUri(resourceId: Int): Uri {
-        return Uri.parse("android.resource://${BuildConfig.APPLICATION_ID}/$resourceId")
+        return ResourceUtil.resourceIdToUri(BuildConfig.APPLICATION_ID, resourceId)
     }
 
     fun scanFile(context: Context, file: String) {
-
         val data = Uri.parse("file://$file")
         context.sendBroadcast(Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE, data))
     }

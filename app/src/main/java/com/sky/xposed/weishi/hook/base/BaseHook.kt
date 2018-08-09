@@ -18,8 +18,8 @@ package com.sky.xposed.weishi.hook.base
 
 import android.app.ActivityThread
 import android.content.Context
+import com.sky.xposed.common.util.Alog
 import com.sky.xposed.weishi.hook.HookManager
-import com.sky.xposed.weishi.util.Alog
 import de.robv.android.xposed.callbacks.XC_LoadPackage
 
 abstract class BaseHook {

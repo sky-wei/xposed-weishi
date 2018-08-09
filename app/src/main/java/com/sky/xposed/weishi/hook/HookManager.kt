@@ -19,16 +19,16 @@ package com.sky.xposed.weishi.hook
 import android.content.Context
 import android.content.Intent
 import android.os.Handler
+import com.sky.xposed.common.data.CachePreferences
+import com.sky.xposed.common.helper.ReceiverHelper
+import com.sky.xposed.common.util.Alog
+import com.sky.xposed.common.util.ToastUtil
 import com.sky.xposed.ktx.XposedPlus
 import com.sky.xposed.weishi.BuildConfig
 import com.sky.xposed.weishi.Constant
-import com.sky.xposed.weishi.data.CachePreferences
 import com.sky.xposed.weishi.data.ObjectManager
 import com.sky.xposed.weishi.data.UserConfigManager
-import com.sky.xposed.weishi.helper.ReceiverHelper
 import com.sky.xposed.weishi.hook.support.WeiShiHook
-import com.sky.xposed.weishi.util.Alog
-import com.sky.xposed.weishi.util.VToast
 import com.squareup.picasso.Picasso
 import com.tencent.bugly.crashreport.CrashReport
 import de.robv.android.xposed.callbacks.XC_LoadPackage
@@ -69,12 +69,14 @@ class HookManager private constructor() {
 
         // 注册监听
         mReceiverHelper = ReceiverHelper(context,
-                { action, intent ->  onReceive(action, intent) },
-                Constant.Action.REFRESH_PREFERENCE)
+                ReceiverHelper.ReceiverCallback {
+                    action, intent ->  onReceive(action, intent)
+                },
+                com.sky.xposed.common.Constant.Action.REFRESH_PREFERENCE)
         mReceiverHelper.registerReceiver()
 
-        Alog.debug = BuildConfig.DEBUG
-        VToast.getInstance().init(context)
+        Alog.setDebug(BuildConfig.DEBUG)
+        ToastUtil.getInstance().init(context)
 
         // 添加统计
         CrashReport.initCrashReport(context, Constant.Bugly.APP_ID, BuildConfig.DEBUG)
@@ -127,15 +129,15 @@ class HookManager private constructor() {
 
     private fun onReceive(action: String, intent: Intent) {
 
-        if (Constant.Action.REFRESH_PREFERENCE == action) {
+        if (com.sky.xposed.common.Constant.Action.REFRESH_PREFERENCE == action) {
 
             // 获取刷新的值
             val data = intent.getSerializableExtra(
-                    Constant.Key.DATA) as ArrayList<Pair<String, Any>>
+                    com.sky.xposed.common.Constant.Key.DATA) as ArrayList<Pair<String, Any>>
 
             for ((first, second) in data) {
                 // 重新设置值
-                mCachePreferences.putAny(first, second)
+                mCachePreferences.putObject(first, second)
                 mWeiShiHook?.onModifyValue(first, second)
             }
         }

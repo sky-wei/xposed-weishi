@@ -16,7 +16,7 @@
 
 package com.sky.xposed.weishi.util
 
-import org.apache.commons.lang3.builder.ToStringBuilder
+import com.sky.xposed.common.util.Alog
 
 object ToStringUtil {
 
@@ -28,7 +28,7 @@ object ToStringUtil {
         }
 
         // 直接输出
-        Alog.d(ToStringBuilder.reflectionToString(any))
+//        Alog.d(ToStringBuilder.reflectionToString(any))
     }
 
     fun toString(tag: String, any: Any?) {
@@ -39,6 +39,6 @@ object ToStringUtil {
         }
 
         // 直接输出
-        Alog.d(tag + " " + ToStringBuilder.reflectionToString(any))
+//        Alog.d(tag + " " + ToStringBuilder.reflectionToString(any))
     }
 }

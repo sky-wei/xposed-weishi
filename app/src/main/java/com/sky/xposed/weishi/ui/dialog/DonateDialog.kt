@@ -31,17 +31,17 @@ import android.view.Window
 import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
+import com.sky.xposed.common.ui.util.LayoutUtil
+import com.sky.xposed.common.ui.util.ViewUtil
+import com.sky.xposed.common.ui.view.CommonFrameLayout
+import com.sky.xposed.common.ui.view.SimpleItemView
+import com.sky.xposed.common.ui.view.TitleView
+import com.sky.xposed.common.util.Alog
+import com.sky.xposed.common.util.DisplayUtil
+import com.sky.xposed.common.util.ToastUtil
 import com.sky.xposed.weishi.R
-import com.sky.xposed.weishi.ui.base.BaseDialogFragment
-import com.sky.xposed.weishi.ui.util.CommUtil
-import com.sky.xposed.weishi.ui.util.LayoutUtil
-import com.sky.xposed.weishi.ui.util.ViewUtil
-import com.sky.xposed.weishi.ui.view.CommonFrameLayout
-import com.sky.xposed.weishi.ui.view.SimpleItemView
-import com.sky.xposed.weishi.ui.view.TitleView
-import com.sky.xposed.weishi.util.Alog
-import com.sky.xposed.weishi.util.DisplayUtil
-import com.sky.xposed.weishi.util.VToast
+import com.sky.xposed.weishi.ui.base.BaseDialog
+import com.sky.xposed.weishi.ui.util.DialogUtil
 import com.squareup.picasso.Picasso
 import com.squareup.picasso.Target
 import java.io.File
@@ -51,7 +51,7 @@ import java.lang.Exception
 /**
  * Created by sky on 18-6-7
  */
-class DonateDialog : BaseDialogFragment() {
+class DonateDialog : BaseDialog() {
 
     private lateinit var mToolbar: TitleView
     private lateinit var mCommonFrameLayout: CommonFrameLayout
@@ -92,11 +92,11 @@ class DonateDialog : BaseDialogFragment() {
             // 启动支付宝
             showDonateImageDialog(
                     "*点击支付二维码即可打开支付宝*",
-                    CommUtil.resourceIdToUri(R.drawable.alipay),
+                    DialogUtil.resourceIdToUri(R.drawable.alipay),
                     CLICK) { _, _ ->
 
                 // 直接拉起支付宝
-                VToast.show("正在启动支付宝，感谢您的支持！")
+                ToastUtil.show("正在启动支付宝，感谢您的支持！")
                 aliPayDonate()
                 true
             }
@@ -106,13 +106,13 @@ class DonateDialog : BaseDialogFragment() {
             // 微信捐赠
             showDonateImageDialog(
                     "*长按保存到相册,再通过微信扫码二维码*",
-                    CommUtil.resourceIdToUri(R.drawable.wechat),
+                    DialogUtil.resourceIdToUri(R.drawable.wechat),
                     LONG_CLICK) { _, uri ->
 
                 Picasso.get().load(uri).into(object : Target {
 
                     override fun onBitmapFailed(e: Exception?, errorDrawable: Drawable?) {
-                        VToast.show("保存图片失败")
+                        ToastUtil.show("保存图片失败")
                     }
 
                     override fun onPrepareLoad(placeHolderDrawable: Drawable?) {
@@ -126,11 +126,11 @@ class DonateDialog : BaseDialogFragment() {
                                 .getExternalStorageDirectory(), "DCIM/wecaht.png")
 
                         // 保存图片
-                        if (CommUtil.saveImage2SDCard(imagePath.path, bitmap)) {
-                            CommUtil.scanFile(context, imagePath.path)
-                            VToast.show("图片已保存到本地，感谢您的支持！")
+                        if (DialogUtil.saveImage2SDCard(imagePath.path, bitmap)) {
+                            DialogUtil.scanFile(context, imagePath.path)
+                            ToastUtil.show("图片已保存到本地，感谢您的支持！")
                         } else {
-                            VToast.show("图片保存失败！")
+                            ToastUtil.show("图片保存失败！")
                         }
                     }
                 })
@@ -161,7 +161,7 @@ class DonateDialog : BaseDialogFragment() {
             }
         } catch (tr: Throwable) {
             Alog.e("启动失败", tr)
-            VToast.show("启动支付宝失败")
+            ToastUtil.show("启动支付宝失败")
         }
     }
 

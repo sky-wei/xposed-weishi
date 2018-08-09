@@ -23,7 +23,7 @@ import android.widget.TextView
 import com.sky.xposed.ktx.XposedPlus
 import com.sky.xposed.weishi.Constant
 import com.sky.xposed.weishi.ui.dialog.SettingsDialog
-import com.sky.xposed.weishi.ui.util.ViewUtil
+import com.sky.xposed.weishi.util.FindUtil
 import de.robv.android.xposed.XposedBridge
 import de.robv.android.xposed.XposedHelpers
 
@@ -64,7 +64,7 @@ class WeiShiHook44188 : WeiShiHook() {
 
             val shareAny = it.args[0]
             val viewGroup = it.args[1] as ViewGroup
-            val textView = ViewUtil.findFirstView(viewGroup,
+            val textView = FindUtil.findFirstView(viewGroup,
                     mVersionConfig.classAppCompatTextView) as TextView?
             val name = textView?.text
 

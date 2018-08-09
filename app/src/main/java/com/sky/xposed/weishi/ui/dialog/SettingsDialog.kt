@@ -24,18 +24,18 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.Window
+import com.sky.xposed.common.ui.interfaces.TrackViewStatus
+import com.sky.xposed.common.ui.util.ViewUtil
+import com.sky.xposed.common.ui.view.CommonFrameLayout
+import com.sky.xposed.common.ui.view.SimpleItemView
+import com.sky.xposed.common.ui.view.SwitchItemView
+import com.sky.xposed.common.ui.view.TitleView
+import com.sky.xposed.common.util.Alog
 import com.sky.xposed.weishi.Constant
-import com.sky.xposed.weishi.ui.base.BaseDialogFragment
-import com.sky.xposed.weishi.ui.interfaces.TrackViewStatus.StatusChangeListener
-import com.sky.xposed.weishi.ui.util.CommUtil
-import com.sky.xposed.weishi.ui.util.ViewUtil
-import com.sky.xposed.weishi.ui.view.CommonFrameLayout
-import com.sky.xposed.weishi.ui.view.SimpleItemView
-import com.sky.xposed.weishi.ui.view.SwitchItemView
-import com.sky.xposed.weishi.ui.view.TitleView
-import com.sky.xposed.weishi.util.Alog
+import com.sky.xposed.weishi.ui.base.BaseDialog
+import com.sky.xposed.weishi.ui.util.DialogUtil
 
-class SettingsDialog : BaseDialogFragment() {
+class SettingsDialog : BaseDialog() {
 
     private lateinit var mToolbar: TitleView
     private lateinit var mCommonFrameLayout: CommonFrameLayout
@@ -66,7 +66,7 @@ class SettingsDialog : BaseDialogFragment() {
         etiAutoCommentList = ViewUtil.newSimpleItemView(context, "评论内容")
         sivRemoveLimit = ViewUtil.newSwitchItemView(context, "解除录制视频时间限制")
         sivMoreSettings = ViewUtil.newSimpleItemView(context, "更多设置")
-        sivDonate = ViewUtil.newSimpleItemView(context, "捐赠我们")
+        sivDonate = ViewUtil.newSimpleItemView(context, "支持我们")
         sivAbout = ViewUtil.newSimpleItemView(context, "关于")
 
         sivAutoSaveVideo = ViewUtil.newSwitchItemView(context, "自动保存视频")
@@ -100,7 +100,7 @@ class SettingsDialog : BaseDialogFragment() {
         sivAbout.setOnClickListener{
 
             // 显示关于
-            CommUtil.showAboutDialog(context)
+            DialogUtil.showAboutDialog(context)
         }
 
         etiAutoCommentList.setOnClickListener {
@@ -133,7 +133,7 @@ class SettingsDialog : BaseDialogFragment() {
      */
     private fun expandFun() {
 
-        val sharedPreferences = getDefaultSharedPreferences()
+        val sharedPreferences = defaultSharedPreferences
 
         val curTime = System.currentTimeMillis()
         val lastTime = sharedPreferences.getLong(Constant.Preference.HB_LAST_TIME, 0)
@@ -160,11 +160,8 @@ class SettingsDialog : BaseDialogFragment() {
         }
     }
 
-    private val mBooleanChangeListener = object : StatusChangeListener<Boolean> {
-
-        override fun onStatusChange(view: View, key: String, value: Boolean): Boolean {
-            sendRefreshPreferenceBroadcast(key, value)
-            return true
-        }
+    private val mBooleanChangeListener = TrackViewStatus.StatusChangeListener<Boolean> { _, key, value ->
+        sendRefreshPreferenceBroadcast(key, value)
+        true
     }
 }

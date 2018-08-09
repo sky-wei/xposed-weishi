@@ -16,9 +16,10 @@
 
 package com.sky.xposed.weishi.data
 
+import com.sky.xposed.common.data.CachePreferences
+import com.sky.xposed.common.util.ConversionUtil
 import com.sky.xposed.weishi.Constant
 import com.sky.xposed.weishi.hook.HookManager
-import com.sky.xposed.weishi.util.ConversionUtil
 
 class UserConfigManager(hookManager: HookManager) {
 

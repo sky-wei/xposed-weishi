@@ -17,17 +17,16 @@
 package com.sky.xposed.weishi.hook.support
 
 import android.app.Activity
-import android.os.Bundle
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
+import com.sky.xposed.common.util.Alog
 import com.sky.xposed.ktx.XposedPlus
 import com.sky.xposed.weishi.Constant
 import com.sky.xposed.weishi.hook.base.BaseHook
 import com.sky.xposed.weishi.hook.handler.*
 import com.sky.xposed.weishi.ui.dialog.SettingsDialog
-import com.sky.xposed.weishi.ui.util.ViewUtil
-import com.sky.xposed.weishi.util.Alog
+import com.sky.xposed.weishi.util.FindUtil
 import de.robv.android.xposed.XposedBridge
 import de.robv.android.xposed.XposedHelpers
 import de.robv.android.xposed.callbacks.XC_LoadPackage
@@ -44,8 +43,8 @@ open class WeiShiHook : BaseHook() {
 
     override fun onHandleLoadPackage(param: XC_LoadPackage.LoadPackageParam) {
 
-        if (Alog.debug) debugWeiShiHook()
-        if (Alog.debug) testHook()
+        if (Alog.isDebug()) debugWeiShiHook()
+        if (Alog.isDebug()) testHook()
 
         // 注入UI设置入口
         injectionUISettings()
@@ -91,7 +90,7 @@ open class WeiShiHook : BaseHook() {
         ) {
 
             val viewGroup = it.args[0] as ViewGroup
-            val textView = ViewUtil.findFirstView(viewGroup,
+            val textView = FindUtil.findFirstView(viewGroup,
                     mVersionConfig.classAppCompatTextView) as TextView?
             val name = textView?.text
 

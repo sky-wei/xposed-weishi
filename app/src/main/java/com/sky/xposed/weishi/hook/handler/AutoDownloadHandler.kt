@@ -17,12 +17,12 @@
 package com.sky.xposed.weishi.hook.handler
 
 import android.os.Environment
+import com.sky.xposed.common.util.Alog
+import com.sky.xposed.common.util.MD5Util
+import com.sky.xposed.common.util.RandomUtil
+import com.sky.xposed.common.util.ToastUtil
 import com.sky.xposed.weishi.hook.HookManager
-import com.sky.xposed.weishi.ui.util.CommUtil
-import com.sky.xposed.weishi.util.Alog
-import com.sky.xposed.weishi.util.MD5Util
-import com.sky.xposed.weishi.util.RandomUtil
-import com.sky.xposed.weishi.util.VToast
+import com.sky.xposed.weishi.ui.util.DialogUtil
 import com.zhy.http.okhttp.OkHttpUtils
 import com.zhy.http.okhttp.callback.FileCallBack
 import de.robv.android.xposed.XposedHelpers
@@ -46,7 +46,7 @@ class AutoDownloadHandler(hookManager: HookManager) : CommonHandler(hookManager)
         }
 
         // 下载视频
-        postDelayed(this, RandomUtil.randomLong(500, 1200))
+        postDelayed(this, RandomUtil.random(500, 1200).toLong())
     }
 
     fun cancel() {
@@ -100,11 +100,11 @@ class AutoDownloadHandler(hookManager: HookManager) : CommonHandler(hookManager)
         val downloadFile = File(mDownloadDir, fileName)
 
         if (downloadFile.exists()) {
-            VToast.show("视频文件本地已存在不需要下载！")
+            ToastUtil.show("视频文件本地已存在不需要下载！")
             return
         }
 
-        VToast.show("开始下载当前视频")
+        ToastUtil.show("开始下载当前视频")
 
         OkHttpUtils
                 .get()
@@ -113,13 +113,13 @@ class AutoDownloadHandler(hookManager: HookManager) : CommonHandler(hookManager)
                 .execute(object : FileCallBack(mDownloadDir.path, fileName) {
                     override fun onError(call: Call, e: Exception, id: Int) {
                         Alog.e(TAG, e)
-                        VToast.show("视频下载错误！")
+                        ToastUtil.show("视频下载错误！")
                     }
 
                     override fun onResponse(response: File, id: Int) {
                         Alog.e(TAG, "onResponse :$response")
-                        VToast.show("视频下载完成：" + response.path)
-                        CommUtil.scanFile(mContext, response.path)
+                        ToastUtil.show("视频下载完成：" + response.path)
+                        DialogUtil.scanFile(mContext, response.path)
                     }
                 })
 

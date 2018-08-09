@@ -56,16 +56,6 @@ object Constant {
         const val HB_LAST_TIME = "hb_last_time"
     }
 
-    object Action {
-
-        const val REFRESH_PREFERENCE = BuildConfig.APPLICATION_ID + ".ACTION_REFRESH_PREFERENCE"
-    }
-
-    object Key {
-
-        const val DATA = "data"
-    }
-
     object Name {
 
         const val WEI_SHI = "weishi"
@@ -73,23 +63,6 @@ object Constant {
         const val PLUGIN = "微视助手"
 
         const val SAVE_VIDEO = "无水印保存"
-    }
-
-    object InputType {
-
-        const val NUMBER = 0
-
-        const val NUMBER_SIGNED = 1
-
-        const val NUMBER_DECIMAL = 2
-
-        const val TEXT = 3
-
-        const val PHONE = 4
-
-        const val TEXT_PASSWORD = 5
-
-        const val NUMBER_PASSWORD = 6
     }
 
     object DefaultValue {
