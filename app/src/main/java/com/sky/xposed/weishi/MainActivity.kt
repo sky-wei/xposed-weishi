@@ -30,6 +30,7 @@ import com.sky.xposed.common.util.ToastUtil
 import com.sky.xposed.weishi.ui.dialog.DonateDialog
 import com.sky.xposed.weishi.ui.dialog.SettingsDialog
 import com.sky.xposed.weishi.ui.util.DialogUtil
+import com.sky.xposed.weishi.ui.util.DonateUtil
 
 class MainActivity : Activity() {
 
@@ -84,6 +85,10 @@ class MainActivity : Activity() {
                 // 捐赠
                 val donateDialog = DonateDialog()
                 donateDialog.show(fragmentManager, "donate")
+            }
+            R.id.im_hb -> {
+                // 领取红包
+                DonateUtil.receiveAliPayHb(this)
             }
             R.id.im_about -> {
                 DialogUtil.showAboutDialog(this)

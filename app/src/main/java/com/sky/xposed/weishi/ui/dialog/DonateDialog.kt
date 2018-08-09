@@ -17,7 +17,6 @@
 package com.sky.xposed.weishi.ui.dialog
 
 import android.app.AlertDialog
-import android.content.Intent
 import android.graphics.Bitmap
 import android.graphics.Color
 import android.graphics.drawable.Drawable
@@ -42,6 +41,7 @@ import com.sky.xposed.common.util.ToastUtil
 import com.sky.xposed.weishi.R
 import com.sky.xposed.weishi.ui.base.BaseDialog
 import com.sky.xposed.weishi.ui.util.DialogUtil
+import com.sky.xposed.weishi.ui.util.DonateUtil
 import com.squareup.picasso.Picasso
 import com.squareup.picasso.Target
 import java.io.File
@@ -60,8 +60,6 @@ class DonateDialog : BaseDialog() {
 
     companion object {
 
-        const val ALI_PAY_URI = "alipayqr://platformapi/startapp?saId=10000007&clientVersion=3.7.0.0718&qrcode="
-
         const val CLICK = 0x01
 
         const val LONG_CLICK = 0x02
@@ -73,7 +71,7 @@ class DonateDialog : BaseDialog() {
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
 
         mCommonFrameLayout = CommonFrameLayout(context)
-        mToolbar = mCommonFrameLayout.getTitleView()
+        mToolbar = mCommonFrameLayout.titleView
 
         sivAliPayDonate = ViewUtil.newSimpleItemView(context, "支付宝捐赠")
         sivWeChatDonate = ViewUtil.newSimpleItemView(context, "微信捐赠")
@@ -97,7 +95,10 @@ class DonateDialog : BaseDialog() {
 
                 // 直接拉起支付宝
                 ToastUtil.show("正在启动支付宝，感谢您的支持！")
-                aliPayDonate()
+                if (!DonateUtil.startAlipay(context,
+                                "HTTPS://QR.ALIPAY.COM/FKX05224Z5KOVCQ61BQ729")) {
+                    ToastUtil.show("启动支付宝失败")
+                }
                 true
             }
         }
@@ -137,31 +138,6 @@ class DonateDialog : BaseDialog() {
 
                 true
             }
-        }
-    }
-
-    /**
-     * 启动支付宝捐赠
-     */
-    private fun aliPayDonate() {
-
-        try {
-            val intent = Intent().apply {
-                action = "android.intent.action.VIEW"
-            }
-
-            val payUrl = "HTTPS://QR.ALIPAY.COM/FKX05224Z5KOVCQ61BQ729"
-            intent.data = Uri.parse("$ALI_PAY_URI$payUrl")
-
-            if (intent.resolveActivity(activity.packageManager) != null) {
-                startActivity(intent)
-            } else {
-                intent.data = Uri.parse(payUrl)
-                startActivity(intent)
-            }
-        } catch (tr: Throwable) {
-            Alog.e("启动失败", tr)
-            ToastUtil.show("启动支付宝失败")
         }
     }
 

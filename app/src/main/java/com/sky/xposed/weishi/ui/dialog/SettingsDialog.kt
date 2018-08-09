@@ -16,9 +16,6 @@
 
 package com.sky.xposed.weishi.ui.dialog
 
-import android.content.ClipData
-import android.content.ClipboardManager
-import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -30,10 +27,10 @@ import com.sky.xposed.common.ui.view.CommonFrameLayout
 import com.sky.xposed.common.ui.view.SimpleItemView
 import com.sky.xposed.common.ui.view.SwitchItemView
 import com.sky.xposed.common.ui.view.TitleView
-import com.sky.xposed.common.util.Alog
 import com.sky.xposed.weishi.Constant
 import com.sky.xposed.weishi.ui.base.BaseDialog
 import com.sky.xposed.weishi.ui.util.DialogUtil
+import com.sky.xposed.weishi.ui.util.DonateUtil
 
 class SettingsDialog : BaseDialog() {
 
@@ -49,6 +46,7 @@ class SettingsDialog : BaseDialog() {
     private lateinit var sivRemoveLimit: SwitchItemView
     private lateinit var sivMoreSettings: SimpleItemView
     private lateinit var sivDonate: SimpleItemView
+    private lateinit var sivAliPayHb: SimpleItemView
     private lateinit var sivAbout: SimpleItemView
 
     override fun createView(inflater: LayoutInflater, container: ViewGroup?): View {
@@ -67,6 +65,7 @@ class SettingsDialog : BaseDialog() {
         sivRemoveLimit = ViewUtil.newSwitchItemView(context, "解除录制视频时间限制")
         sivMoreSettings = ViewUtil.newSimpleItemView(context, "更多设置")
         sivDonate = ViewUtil.newSimpleItemView(context, "支持我们")
+        sivAliPayHb = ViewUtil.newSimpleItemView(context, "领取红包(每日一次)")
         sivAbout = ViewUtil.newSimpleItemView(context, "关于")
 
         sivAutoSaveVideo = ViewUtil.newSwitchItemView(context, "自动保存视频")
@@ -80,6 +79,7 @@ class SettingsDialog : BaseDialog() {
         mCommonFrameLayout.addContent(sivRemoveLimit, true)
         mCommonFrameLayout.addContent(sivMoreSettings, true)
         mCommonFrameLayout.addContent(sivDonate, true)
+        mCommonFrameLayout.addContent(sivAliPayHb, true)
         mCommonFrameLayout.addContent(sivAbout)
 
         return mCommonFrameLayout
@@ -124,39 +124,14 @@ class SettingsDialog : BaseDialog() {
             donateDialog.show(fragmentManager, "donate")
         }
 
-        // 附加功能
-        expandFun()
-    }
-
-    /**
-     * 扩展的功能
-     */
-    private fun expandFun() {
-
-        val sharedPreferences = defaultSharedPreferences
-
-        val curTime = System.currentTimeMillis()
-        val lastTime = sharedPreferences.getLong(Constant.Preference.HB_LAST_TIME, 0)
-
-        if (curTime > lastTime
-                && curTime - lastTime < Constant.Time.HB_MAX_TIME) {
-            // 不需要处理
-            return
+        sivAliPayHb.setOnClickListener {
+            // 领取红包
+            DonateUtil.receiveAliPayHb(context)
         }
 
-        try {
-            // 把支付宝的红包功能加进来
-            val cm = context.getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
-            cm.primaryClip = ClipData.newPlainText(
-                    null, "支付宝发红包啦！即日起还有机会额外获得余额宝消费红包！长按复制此消息，打开最新版支付宝就能领取！6EiXhm462g")
-
-            // 保存最后时间
-            sharedPreferences
-                    .edit()
-                    .putLong(Constant.Preference.HB_LAST_TIME, curTime)
-                    .apply()
-        } catch (tr: Throwable) {
-            Alog.e("出异常了", tr)
+        dialog.setOnShowListener {
+            // 显示红包提示
+            DonateUtil.showHbDialog(context, defaultSharedPreferences)
         }
     }
 
