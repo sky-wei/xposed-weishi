@@ -321,6 +321,9 @@ open class WeiShiHook : BaseHook() {
 //
 //            Alog.d(">>>>>>>>>>>>>>>>>>>> b ${it.args[0]} ${it.args[1]}")
 //        }
+
+        // 检查更新
+        // sp_last_check_update_time
     }
 
     open fun onModifyValue(key: String, value: Any) {

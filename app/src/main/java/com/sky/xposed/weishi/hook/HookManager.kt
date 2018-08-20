@@ -22,6 +22,7 @@ import android.os.Handler
 import com.sky.xposed.common.data.CachePreferences
 import com.sky.xposed.common.helper.ReceiverHelper
 import com.sky.xposed.common.util.Alog
+import com.sky.xposed.common.util.Pair
 import com.sky.xposed.common.util.ToastUtil
 import com.sky.xposed.ktx.XposedPlus
 import com.sky.xposed.weishi.BuildConfig
@@ -32,7 +33,6 @@ import com.sky.xposed.weishi.hook.support.WeiShiHook
 import com.squareup.picasso.Picasso
 import com.tencent.bugly.crashreport.CrashReport
 import de.robv.android.xposed.callbacks.XC_LoadPackage
-import java.util.*
 
 class HookManager private constructor() {
 
@@ -135,10 +135,10 @@ class HookManager private constructor() {
             val data = intent.getSerializableExtra(
                     com.sky.xposed.common.Constant.Key.DATA) as ArrayList<Pair<String, Any>>
 
-            for ((first, second) in data) {
+            for (item in data) {
                 // 重新设置值
-                mCachePreferences.putObject(first, second)
-                mWeiShiHook?.onModifyValue(first, second)
+                mCachePreferences.putObject(item.first, item.second)
+                mWeiShiHook?.onModifyValue(item.first, item.second)
             }
         }
     }

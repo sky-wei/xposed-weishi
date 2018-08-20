@@ -13,7 +13,7 @@
 1. 视频界面 -> 分享 -> 微视助手
 
 ##### 支持的版本
-1. v1.5.0版本支持微视(4.2.0.88,4.2.5.88,4.3.0.88,4.3.2.88,4.4.1.88,4.5.0.588)
+1. v1.6.1版本支持微视(4.2.0.88,4.2.5.88,4.3.0.88,4.3.2.88,4.4.1.88,4.5.0.588,4.5.1.588)
 
 #### Xposed Module Repository
 [http://repo.xposed.info/module/com.sky.xposed.weishi](http://repo.xposed.info/module/com.sky.xposed.weishi)
