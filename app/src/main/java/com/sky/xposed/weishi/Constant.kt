@@ -54,6 +54,9 @@ object Constant {
 
         /** 红包的最大时间  */
         const val HB_LAST_TIME = "hb_last_time"
+
+        /** 禁用更新  */
+        const val DISABLE_UPDATE = "disable_update"
     }
 
     object Name {

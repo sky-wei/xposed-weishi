@@ -49,6 +49,10 @@ class UserConfigManager(hookManager: HookManager) {
         return getBoolean(Constant.Preference.REMOVE_LIMIT)!!
     }
 
+    fun isDisableUpdate(): Boolean {
+        return getBoolean(Constant.Preference.DISABLE_UPDATE)!!
+    }
+
     fun isCommentListEmpty(): Boolean {
 
         val commentSet = mCachePreferences.getStringSet(

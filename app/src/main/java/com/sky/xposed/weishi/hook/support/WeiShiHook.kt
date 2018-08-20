@@ -17,6 +17,7 @@
 package com.sky.xposed.weishi.hook.support
 
 import android.app.Activity
+import android.text.TextUtils
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
@@ -57,6 +58,9 @@ open class WeiShiHook : BaseHook() {
 
         // 移除时间限制
         removeLimitHook()
+
+        // 更新
+        disableUpdateHook()
     }
 
     /**
@@ -214,6 +218,29 @@ open class WeiShiHook : BaseHook() {
     }
 
     /**
+     * 更新的Hook
+     */
+    open fun disableUpdateHook() {
+
+        if (TextUtils.isEmpty(mVersionConfig.classUpdate)) {
+            // 不需要处理
+            return
+        }
+
+        XposedPlus.findAndHookMethodReplacement(
+                mVersionConfig.classUpdate,
+                mVersionConfig.methodUpdate,
+                String::class.java, Boolean::class.java
+        ) {
+
+            if (!mUserConfigManager.isDisableUpdate()) {
+                // 调用旧方法
+                XposedBridge.invokeOriginalMethod(it.method, it.thisObject, it.args)
+            }
+        }
+    }
+
+    /**
      * 开始处理点赞跟关注
      */
     open fun startHandlerLike() {
@@ -324,6 +351,15 @@ open class WeiShiHook : BaseHook() {
 
         // 检查更新
         // sp_last_check_update_time
+
+//        XposedPlus.findAndHookMethodReplacement(
+//                "com.tencent.oscar.module.update.d",
+//                "a",
+//                Activity::class.java, Boolean::class.java, Boolean::class.java
+//        ) {
+//
+//            Alog.d(">>>>>>>>>>>>>>>>> ${it.args[0]}  >> ${it.args[1]} >> ${it.args[2]}")
+//        }
     }
 
     open fun onModifyValue(key: String, value: Any) {

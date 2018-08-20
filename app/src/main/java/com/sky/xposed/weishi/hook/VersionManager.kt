@@ -125,6 +125,7 @@ class VersionManager(hookManager: HookManager) {
 
             classFeedList = "com.tencent.oscar.module.feedlist.d.ap"
             classMainFeed = "com.tencent.oscar.module.main.feed.h"
+            classUpdate = "com.tencent.oscar.module.update.d"
 
             classItemModel = "com.tencent.oscar.module.main.feed.bi"
             classSendComment = "com.tencent.oscar.module.f.a.c"
@@ -231,6 +232,9 @@ class VersionManager(hookManager: HookManager) {
 
         var classShareType = "com.tencent.oscar.module.share.c.d"
 
+        /** sp_last_check_update_time */
+        var classUpdate = ""
+
         var methodShareCreateItem = "a"
 
         var methodShareClick = "a"
@@ -260,6 +264,8 @@ class VersionManager(hookManager: HookManager) {
         var methodGetAccountManager = "getAccountManager"
 
         var methodAccountPosterId = "b"
+
+        var methodUpdate = "a"
 
         var fieldShareActivity = "a"
 

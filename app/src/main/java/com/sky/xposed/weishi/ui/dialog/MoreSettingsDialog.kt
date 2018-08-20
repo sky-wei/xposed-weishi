@@ -22,8 +22,10 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.Window
 import com.sky.xposed.common.ui.interfaces.TrackViewStatus
+import com.sky.xposed.common.ui.util.ViewUtil
 import com.sky.xposed.common.ui.view.CommonFrameLayout
 import com.sky.xposed.common.ui.view.EditTextItemView
+import com.sky.xposed.common.ui.view.SwitchItemView
 import com.sky.xposed.common.ui.view.TitleView
 import com.sky.xposed.common.util.ConversionUtil
 import com.sky.xposed.common.util.ToastUtil
@@ -40,6 +42,7 @@ class MoreSettingsDialog : BaseDialog() {
 
     private lateinit var mAutoPlaySleepTime: EditTextItemView
     private lateinit var mRecordVideoTime: EditTextItemView
+    private lateinit var sivDisableUpdate: SwitchItemView
 
     override fun createView(inflater: LayoutInflater, container: ViewGroup?): View {
 
@@ -47,7 +50,7 @@ class MoreSettingsDialog : BaseDialog() {
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
 
         mCommonFrameLayout = CommonFrameLayout(context)
-        mToolbar = mCommonFrameLayout.getTitleView()
+        mToolbar = mCommonFrameLayout.titleView
 
         mAutoPlaySleepTime = EditTextItemView(context)
         mAutoPlaySleepTime.name = "自动播放休眠时间"
@@ -61,8 +64,11 @@ class MoreSettingsDialog : BaseDialog() {
         mRecordVideoTime.unit = "秒"
         mRecordVideoTime.inputType = com.sky.xposed.common.Constant.InputType.NUMBER_SIGNED
 
+        sivDisableUpdate = ViewUtil.newSwitchItemView(context, "禁用微视更新")
+
         mCommonFrameLayout.addContent(mAutoPlaySleepTime, true)
-        mCommonFrameLayout.addContent(mRecordVideoTime)
+        mCommonFrameLayout.addContent(mRecordVideoTime, true)
+        mCommonFrameLayout.addContent(sivDisableUpdate)
 
         return mCommonFrameLayout
     }
@@ -75,6 +81,7 @@ class MoreSettingsDialog : BaseDialog() {
                 Constant.DefaultValue.AUTO_PLAY_SLEEP_TIME.toString(), mStringChangeListener)
         trackBind(mRecordVideoTime, Constant.Preference.RECORD_VIDEO_TIME,
                 Constant.DefaultValue.RECORD_VIDEO_TIME.toString(), mStringChangeListener)
+        trackBind(sivDisableUpdate, Constant.Preference.DISABLE_UPDATE, false, mBooleanChangeListener)
     }
 
     private val mStringChangeListener = TrackViewStatus.StatusChangeListener<String> { _, key, value ->
@@ -102,6 +109,11 @@ class MoreSettingsDialog : BaseDialog() {
                 }
             }
         }
+        sendRefreshPreferenceBroadcast(key, value)
+        true
+    }
+
+    private val mBooleanChangeListener = TrackViewStatus.StatusChangeListener<Boolean> { _, key, value ->
         sendRefreshPreferenceBroadcast(key, value)
         true
     }
