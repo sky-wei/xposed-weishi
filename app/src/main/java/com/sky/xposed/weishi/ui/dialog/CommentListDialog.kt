@@ -37,17 +37,21 @@ import com.sky.xposed.common.ui.view.TitleView
 import com.sky.xposed.common.util.DisplayUtil
 import com.sky.xposed.common.util.ToastUtil
 import com.sky.xposed.weishi.Constant
+import com.sky.xposed.weishi.R
 import com.sky.xposed.weishi.ui.base.BaseDialog
+import com.sky.xposed.weishi.ui.util.UriUtil
+import com.squareup.picasso.Picasso
 
 /**
  * Created by sky on 18-6-3.
  */
 class CommentListDialog : BaseDialog(),
-        SwipeMenuListView.OnMenuItemClickListener, AdapterView.OnItemClickListener {
+        SwipeMenuListView.OnMenuItemClickListener, AdapterView.OnItemClickListener, View.OnClickListener {
 
     private lateinit var mToolbar: TitleView
     private lateinit var mCommonFrameLayout: CommonFrameLayout
     private lateinit var mAddCommonButton: Button
+    private lateinit var mMoreButton: ImageButton
     private lateinit var mSwipeMenuListView: SwipeMenuListView
 
     private lateinit var mCommentListAdapter: CommentListAdapter
@@ -60,7 +64,8 @@ class CommentListDialog : BaseDialog(),
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
 
         mCommonFrameLayout = CommonFrameLayout(context)
-        mToolbar = mCommonFrameLayout.getTitleView()
+        mToolbar = mCommonFrameLayout.titleView
+        mMoreButton = mToolbar.addMoreImageButton()
 
         val layout = LayoutUtil.newCommonLayout(context)
 
@@ -109,6 +114,16 @@ class CommentListDialog : BaseDialog(),
     override fun initView(view: View, args: Bundle?) {
 
         mToolbar.setTitle("评论内容列表")
+        mToolbar.showBack()
+        mToolbar.setOnBackEventListener { dismiss() }
+
+        // 设置图标
+        Picasso.get()
+                .load(UriUtil.getResource(R.drawable.ic_action_clear))
+                .into(mToolbar.backView)
+        Picasso.get()
+                .load(UriUtil.getResource(R.drawable.ic_action_more_vert))
+                .into(mMoreButton)
 
         mCommentListAdapter = CommentListAdapter(context)
         mCommentListAdapter.items = mCommentList
@@ -129,6 +144,7 @@ class CommentListDialog : BaseDialog(),
             }
         }
 
+        mMoreButton.setOnClickListener(this)
         mSwipeMenuListView.onItemClickListener = this
         mSwipeMenuListView.setOnMenuItemClickListener(this)
         mSwipeMenuListView.adapter = mCommentListAdapter
@@ -145,6 +161,16 @@ class CommentListDialog : BaseDialog(),
         if (mSaveCommentList) {
             // 保存评论列表
             saveUserComment(mCommentList)
+        }
+    }
+
+    override fun onClick(v: View) {
+
+        when(v) {
+            mMoreButton -> {
+                // 显示更多菜单
+                showMoreMenu()
+            }
         }
     }
 
@@ -172,6 +198,27 @@ class CommentListDialog : BaseDialog(),
         mCommentListAdapter.notifyDataSetChanged()
 
         return true
+    }
+
+    /**
+     * 显示更多菜单
+     */
+    private fun showMoreMenu() {
+
+        val popupMenu = PopupMenu(applicationContext, mMoreButton, Gravity.RIGHT)
+        val menu = popupMenu.menu
+
+        menu.add(1, 1, 1, "清除所有")
+
+        popupMenu.setOnMenuItemClickListener {
+            // 删除指定评论
+            mSaveCommentList = true
+            mCommentList.clear()
+            mCommentListAdapter.notifyDataSetChanged()
+            true
+        }
+
+        popupMenu.show()
     }
 
     /**

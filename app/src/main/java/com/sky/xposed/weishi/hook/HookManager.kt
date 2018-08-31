@@ -24,7 +24,6 @@ import com.sky.xposed.common.helper.ReceiverHelper
 import com.sky.xposed.common.util.Alog
 import com.sky.xposed.common.util.Pair
 import com.sky.xposed.common.util.ToastUtil
-import com.sky.xposed.ktx.XposedPlus
 import com.sky.xposed.weishi.BuildConfig
 import com.sky.xposed.weishi.Constant
 import com.sky.xposed.weishi.data.ObjectManager
@@ -56,7 +55,6 @@ class HookManager private constructor() {
 
     fun initialization(context: Context, param: XC_LoadPackage.LoadPackageParam): HookManager {
 
-        XposedPlus.initDefaultLoadPackage(param)
         Picasso.setSingletonInstance(Picasso.Builder(context).build())
 
         mContext = context

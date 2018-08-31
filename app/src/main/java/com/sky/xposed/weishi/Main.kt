@@ -17,10 +17,9 @@
 package com.sky.xposed.weishi
 
 import android.app.Application
+import com.sky.xposed.ktx.XposedPlus
 import com.sky.xposed.weishi.hook.HookManager
 import de.robv.android.xposed.IXposedHookLoadPackage
-import de.robv.android.xposed.XC_MethodHook
-import de.robv.android.xposed.XposedHelpers
 import de.robv.android.xposed.callbacks.XC_LoadPackage
 
 class Main : IXposedHookLoadPackage {
@@ -35,26 +34,22 @@ class Main : IXposedHookLoadPackage {
         }
     }
 
-    fun hookWeiShiApplication(lparam: XC_LoadPackage.LoadPackageParam) {
+    private fun hookWeiShiApplication(lparam: XC_LoadPackage.LoadPackageParam) {
 
-        XposedHelpers.findAndHookMethod(
+        // 初始化
+        XposedPlus.initDefaultLoadPackage(lparam)
+
+        XposedPlus.findAndBeforeHookMethod(
                 "com.tencent.oscar.app.LifePlayApplication",
-                lparam.classLoader,
-                "onCreate",
-                object : XC_MethodHook() {
+                "onCreate") {
 
-                    override fun beforeHookedMethod(param: MethodHookParam) {
-                        super.beforeHookedMethod(param)
+            val application = it.thisObject as Application
+            val context = application.applicationContext
 
-                        val application = param.thisObject as Application
-                        val context = application.applicationContext
-
-                        HookManager
-                                .getInstance()
-                                .initialization(context, lparam)
-                                .handleLoadPackage()
-                    }
-                }
-        )
+            HookManager
+                    .getInstance()
+                    .initialization(context, lparam)
+                    .handleLoadPackage()
+        }
     }
 }

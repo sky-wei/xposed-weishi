@@ -22,27 +22,26 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.Window
 import com.sky.xposed.common.ui.interfaces.TrackViewStatus
-import com.sky.xposed.common.ui.util.ViewUtil
 import com.sky.xposed.common.ui.view.CommonFrameLayout
 import com.sky.xposed.common.ui.view.EditTextItemView
-import com.sky.xposed.common.ui.view.SwitchItemView
 import com.sky.xposed.common.ui.view.TitleView
 import com.sky.xposed.common.util.ConversionUtil
 import com.sky.xposed.common.util.ToastUtil
 import com.sky.xposed.weishi.Constant
+import com.sky.xposed.weishi.R
 import com.sky.xposed.weishi.ui.base.BaseDialog
+import com.sky.xposed.weishi.ui.util.UriUtil
+import com.squareup.picasso.Picasso
 
 /**
- * Created by sky on 18-6-3.
+ * Created by sky on 2018/8/31.
  */
-class MoreSettingsDialog : BaseDialog() {
+class LimitDialog : BaseDialog() {
 
     private lateinit var mToolbar: TitleView
     private lateinit var mCommonFrameLayout: CommonFrameLayout
 
-    private lateinit var mAutoPlaySleepTime: EditTextItemView
     private lateinit var mRecordVideoTime: EditTextItemView
-    private lateinit var sivDisableUpdate: SwitchItemView
 
     override fun createView(inflater: LayoutInflater, container: ViewGroup?): View {
 
@@ -52,49 +51,34 @@ class MoreSettingsDialog : BaseDialog() {
         mCommonFrameLayout = CommonFrameLayout(context)
         mToolbar = mCommonFrameLayout.titleView
 
-        mAutoPlaySleepTime = EditTextItemView(context)
-        mAutoPlaySleepTime.name = "自动播放休眠时间"
-        mAutoPlaySleepTime.setExtendHint("未设置")
-        mAutoPlaySleepTime.unit = "秒"
-        mAutoPlaySleepTime.inputType = com.sky.xposed.common.Constant.InputType.NUMBER_SIGNED
-
         mRecordVideoTime = EditTextItemView(context)
         mRecordVideoTime.name = "录制视频最大限制时间"
         mRecordVideoTime.setExtendHint("未设置")
         mRecordVideoTime.unit = "秒"
         mRecordVideoTime.inputType = com.sky.xposed.common.Constant.InputType.NUMBER_SIGNED
 
-        sivDisableUpdate = ViewUtil.newSwitchItemView(context, "禁用微视更新")
-
-        mCommonFrameLayout.addContent(mAutoPlaySleepTime, true)
-        mCommonFrameLayout.addContent(mRecordVideoTime, true)
-        mCommonFrameLayout.addContent(sivDisableUpdate)
+        mCommonFrameLayout.addContent(mRecordVideoTime)
 
         return mCommonFrameLayout
     }
 
     override fun initView(view: View, args: Bundle?) {
 
-        mToolbar.setTitle("更多设置")
+        mToolbar.setTitle("时间设置")
+        mToolbar.showBack()
+        mToolbar.setOnBackEventListener { dismiss() }
 
-        trackBind(mAutoPlaySleepTime, Constant.Preference.AUTO_PLAY_SLEEP_TIME,
-                Constant.DefaultValue.AUTO_PLAY_SLEEP_TIME.toString(), mStringChangeListener)
+        // 设置图标
+        Picasso.get()
+                .load(UriUtil.getResource(R.drawable.ic_action_clear))
+                .into(mToolbar.backView)
+
         trackBind(mRecordVideoTime, Constant.Preference.RECORD_VIDEO_TIME,
                 Constant.DefaultValue.RECORD_VIDEO_TIME.toString(), mStringChangeListener)
-        trackBind(sivDisableUpdate, Constant.Preference.DISABLE_UPDATE, false, mBooleanChangeListener)
     }
 
     private val mStringChangeListener = TrackViewStatus.StatusChangeListener<String> { _, key, value ->
         when(key) {
-            Constant.Preference.AUTO_PLAY_SLEEP_TIME -> {
-
-                val sleepTime = ConversionUtil.parseInt(value)
-
-                if (sleepTime <= 5) {
-                    ToastUtil.show("设置的休眠数不能少于5秒，请重新设置")
-                    return@StatusChangeListener false
-                }
-            }
             Constant.Preference.RECORD_VIDEO_TIME -> {
 
                 val recordTime = ConversionUtil.parseInt(value)
@@ -109,11 +93,6 @@ class MoreSettingsDialog : BaseDialog() {
                 }
             }
         }
-        sendRefreshPreferenceBroadcast(key, value)
-        true
-    }
-
-    private val mBooleanChangeListener = TrackViewStatus.StatusChangeListener<Boolean> { _, key, value ->
         sendRefreshPreferenceBroadcast(key, value)
         true
     }

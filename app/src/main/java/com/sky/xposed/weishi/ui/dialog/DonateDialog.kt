@@ -42,6 +42,7 @@ import com.sky.xposed.weishi.R
 import com.sky.xposed.weishi.ui.base.BaseDialog
 import com.sky.xposed.weishi.ui.util.DialogUtil
 import com.sky.xposed.weishi.ui.util.DonateUtil
+import com.sky.xposed.weishi.ui.util.UriUtil
 import com.squareup.picasso.Picasso
 import com.squareup.picasso.Target
 import java.io.File
@@ -76,7 +77,7 @@ class DonateDialog : BaseDialog() {
         sivAliPayDonate = ViewUtil.newSimpleItemView(context, "支付宝捐赠")
         sivWeChatDonate = ViewUtil.newSimpleItemView(context, "微信捐赠")
 
-        mCommonFrameLayout.addContent(sivAliPayDonate, true)
+        mCommonFrameLayout.addContent(sivAliPayDonate)
         mCommonFrameLayout.addContent(sivWeChatDonate)
 
         return mCommonFrameLayout
@@ -84,7 +85,14 @@ class DonateDialog : BaseDialog() {
 
     override fun initView(view: View, args: Bundle?) {
 
-        mToolbar.setTitle("捐赠")
+        mToolbar.setTitle("支持我们")
+        mToolbar.showBack()
+        mToolbar.setOnBackEventListener { dismiss() }
+
+        // 设置图标
+        Picasso.get()
+                .load(UriUtil.getResource(R.drawable.ic_action_clear))
+                .into(mToolbar.backView)
 
         sivAliPayDonate.setOnClickListener {
             // 启动支付宝
