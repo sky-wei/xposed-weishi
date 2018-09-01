@@ -59,7 +59,7 @@ object DialogUtil {
             val tvHead = TextView(context)
             tvHead.setTextColor(Color.BLACK)
             tvHead.textSize = 14f
-            tvHead.text = "版本：v${BuildConfig.VERSION_NAME}\n想了解更多类似作品或者二叶草最新动态,加入二叶草社区"
+            tvHead.text = "版本：v${BuildConfig.VERSION_NAME}\n想了解更多类似作品\n请关注公众号"
 
             val ivCommunity = ImageView(context)
             ivCommunity.layoutParams = LayoutUtil.newWrapLinearLayoutParams()

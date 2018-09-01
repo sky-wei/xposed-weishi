@@ -52,7 +52,7 @@ class MainActivity : Activity() {
         imVersion.setDesc("v${BuildConfig.VERSION_NAME}")
         imWeiShiVersion.setDesc(getWeiShiVersionName())
 
-        tvSupportVersion.text = "支持微视的版本: v4.2.0.88,v4.2.5.88,v4.3.0.88,v4.3.2.88,v4.4.1.88,v4.5.0.588,4.5.1.588"
+        tvSupportVersion.text = "支持微视的版本: v4.2.0.88,v4.2.5.88,v4.3.0.88,v4.3.2.88,v4.4.1.88,v4.5.0.588,4.5.1.588,4.6.0.588"
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {

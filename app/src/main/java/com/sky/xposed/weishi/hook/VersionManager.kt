@@ -122,18 +122,26 @@ class VersionManager(hookManager: HookManager) {
     class Config460588 : Config() {
 
         init {
-            classShareDialog = "com.tencent.oscar.module.share.a.b"
+            classShareDialog = "com.tencent.oscar.module.share.shareDialog.ShareDialog"
             classShareType = "com.tencent.oscar.module.share.ShareConstants\$ShareOptionsId"
 
-            classFeedList = "com.tencent.oscar.module.feedlist.d.ap"
-            classMainFeed = "com.tencent.oscar.module.main.feed.h"
+            classFeedList = "com.tencent.oscar.module.feedlist.d.an"
+            classMainFeed = "com.tencent.oscar.module.main.feed.i"
             classUpdate = "com.tencent.oscar.module.update.d"
+            classWeishiParams = "com.tencent.oscar.a.f"
 
-            classItemModel = "com.tencent.oscar.module.main.feed.bi"
-            classSendComment = "com.tencent.oscar.module.f.a.c"
+            classItemModel = "com.tencent.oscar.module.main.feed.bk"
+            classSendComment = "com.tencent.oscar.module.e.a.c"
+            methodParamsLimit = "a"
 
-            fieldItemModeList = "l"
-            fieldItemModeList2 = "j"
+            methodShareCreateItem = "addOptionBtn"
+            methodShareClick = "lambda\$new\$2"
+
+            fieldShareActivity = "mContext"
+            fieldItemModeList = "m"
+            fieldItemModeList2 = "k"
+
+            idAttention = "follow_area"
         }
     }
 
@@ -237,6 +245,7 @@ class VersionManager(hookManager: HookManager) {
 
         var classRecyclerViewPager = "com.lsjwzh.widget.recyclerviewpager.RecyclerViewPager"
 
+        /** PREFS_USER_VIDEO_DURATION_LIMIT_ */
         var classWeishiParams = "com.tencent.oscar.config.WeishiParams"
 
         var classItemModel = "com.tencent.oscar.module.main.feed.as"
