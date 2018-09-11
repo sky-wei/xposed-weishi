@@ -44,6 +44,7 @@ class VersionManager(hookManager: HookManager) {
         CONFIG_MAP["4.5.0.588"] = Config450588::class.java
         CONFIG_MAP["4.5.1.588"] = Config451588::class.java
         CONFIG_MAP["4.6.0.588"] = Config460588::class.java
+        CONFIG_MAP["4.6.5.588"] = Config460588::class.java
 
         /** Hook */
         HOOK_MAP["4.3.0.88"] = WeiShiHook43088::class.java
@@ -52,6 +53,7 @@ class VersionManager(hookManager: HookManager) {
         HOOK_MAP["4.5.0.588"] = WeiShiHook44188::class.java
         HOOK_MAP["4.5.1.588"] = WeiShiHook44188::class.java
         HOOK_MAP["4.6.0.588"] = WeiShiHook44188::class.java
+        HOOK_MAP["4.6.5.588"] = WeiShiHook44188::class.java
     }
 
     fun isSupportVersion(): Boolean {
